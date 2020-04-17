@@ -1,0 +1,27 @@
+$bullet-size: 5px;
+$bullet-indent: 20px;
+
+ul {
+  padding-left: rem($bullet-indent);
+  list-style: none;
+
+  li::before {
+    display: inline-block;
+    width: rem($bullet-size);
+    height: rem($bullet-size);
+    margin-right: $bullet-indent / 2;
+    margin-left: -$bullet-indent;
+    vertical-align: middle;
+    content: '';
+    background-color: theme-color(primary);
+    border-radius: $bullet-indent / 2;
+  }
+}
+
+.list-unstyled {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+
+  li::before { display: none; }
+}

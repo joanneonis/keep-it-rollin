@@ -1,0 +1,17 @@
+/*
+  Absolute position mixin
+  Default: Absolute full
+  Usage:
+
+  .absolute-div {
+    @include absolute-full(10px, 10px, auto, auto);
+  }
+*/
+
+@mixin absolute-position($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}

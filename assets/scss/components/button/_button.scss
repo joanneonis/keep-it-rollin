@@ -1,0 +1,63 @@
+$button-size: 50px;
+$button-padding-x: 30px;
+$font-baseline-offset: 5px;
+
+.button {
+  display: inline-flex;
+  position: relative;
+  height: rem($button-size);
+  align-items: center;
+  padding-right: rem($button-padding-x);
+  padding-left: rem($button-padding-x);
+  overflow: hidden;
+  font-family: $headings-font-family;
+  font-weight: bold;
+  line-height: 1; // rem($button-size + $font-baseline-offset)
+  border-radius: rem($button-size / 2);
+  transition: all 200ms ease-in-out;
+  color: white;
+
+  @include media-breakpoint-up(md) {
+    height: rem($button-size * 1.2);
+    padding-right: rem($button-padding-x * 1.2);
+    padding-left: rem($button-padding-x * 1.2);
+    border-radius: rem(($button-size * 1.2) / 2);
+  }
+
+  &[disabled] {
+    color: rgba(theme-color(light), .25);
+    pointer-events: none;
+    background-color: rgba(gray(900), .75);
+  }
+
+  // Size variants
+  &--sm {
+    height: rem($button-size / 1.1);
+    padding-right: rem(20px);
+    font-size: rem(15px);
+    padding-left: rem(20px);
+    border-radius: rem($button-size / 2);
+  }
+
+  &-select {
+    padding: 0;
+
+    &__select {
+      padding-right: rem($button-padding-x);
+      padding-left: rem($button-padding-x);
+      color: inherit;
+      text-transform: uppercase;
+
+      * { color: theme-color(dark); } // windows bug fix
+    }
+
+    .icon {
+      pointer-events: none;
+    }
+  }
+
+  > span {
+    height: rem($button-size);
+    line-height: rem($button-size + $font-baseline-offset);
+  }
+}

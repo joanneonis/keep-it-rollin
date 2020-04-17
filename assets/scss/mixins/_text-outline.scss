@@ -1,0 +1,8 @@
+@mixin text-outline() {
+  -webkit-text-stroke: 1px rgba(theme-color(light), .5);
+  color: transparent;
+  letter-spacing: rem(1.5px);
+
+  &:hover,
+  &:focus { color: transparent; }
+}

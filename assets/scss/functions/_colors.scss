@@ -1,0 +1,11 @@
+@function color($key) {
+  @return get-value-if-key-exists($colors, $key);
+}
+
+@function theme-color($key) {
+  @return get-value-if-key-exists($theme-colors, $key);
+}
+
+@function gray-color($key) {
+  @return get-value-if-key-exists($grays, $key);
+}

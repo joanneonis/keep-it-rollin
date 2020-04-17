@@ -1,0 +1,24 @@
+$type-outline-width: 1px;
+$type-outline-glow-size: 7px;
+
+@mixin type-outline-glow($color) {
+  text-shadow: rgba($color, .6) 0 rem($type-outline-width) rem($type-outline-glow-size);
+
+  @include media-breakpoint-up(md) {
+    text-shadow: rgba($color, .6) 0 rem($type-outline-width * 2) rem($type-outline-glow-size * 2);
+  }
+}
+
+@mixin type-outline($color: theme-color(light)) {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-color: $color;
+  -webkit-text-stroke-width: rem($type-outline-width);
+
+  @include media-breakpoint-up(md) {
+    -webkit-text-stroke-width: rem($type-outline-width * 2);
+  }
+
+  &--glow {
+    @include type-outline-glow($color);
+  }
+}

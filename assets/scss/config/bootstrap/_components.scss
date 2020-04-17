@@ -1,0 +1,12 @@
+$border-width: rem(1px);
+$border-color: theme-color(primary);
+
+$border-radius: rem(10px);
+$border-radius-lg: 0;
+$border-radius-sm: 0;
+
+$footer: (
+  border-color: lighten(theme-color(dark), 15%),
+  border-width: 1px,
+  padding-y: 40px,
+);

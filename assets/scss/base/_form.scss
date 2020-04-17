@@ -1,0 +1,23 @@
+::placeholder {
+  font-family: $placeholder-font-family;
+  color: $placeholder-color;
+  opacity: 1;
+}
+
+textarea {
+  resize: vertical;
+}
+
+textarea,
+input {
+  -webkit-appearance: none;
+  font-weight: bold;
+  color: theme-color(light);
+  background: none;
+  border: 0;
+  box-shadow: none;
+
+  &:focus {
+    outline: none;
+  }
+}

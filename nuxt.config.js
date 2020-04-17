@@ -26,7 +26,19 @@ export default {
   ** Global CSS
   */
   css: [
+    '~/assets/scss/main.scss'
   ],
+
+  styleResources: {
+    scss: [
+      '~assets/scss/functions/*.scss',
+      '~assets/scss/mixins/*.scss',
+      '~assets/scss/_config.scss',
+      '~assets/scss/placeholders/*.scss',
+      '~assets/scss/bootstrap/_variables.scss'
+    ]
+  },
+
   /*
   ** Plugins to load before mounting the App
   */
@@ -41,7 +53,8 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
-    '@nuxtjs/stylelint-module'
+    '@nuxtjs/stylelint-module',
+    '@nuxtjs/markdownit'
   ],
   /*
   ** Nuxt.js modules
@@ -51,7 +64,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/style-resources'
   ],
   /*
   ** Axios module configuration
@@ -67,5 +81,9 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+
+  markdownit: {
+    injected: true
   }
 }

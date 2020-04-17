@@ -1,0 +1,52 @@
+// Base
+
+$default-font-size: 16px;
+$rfs-minimum-font-size: rem($default-font-size); // always use rem unit
+$rfs-base-font-size: rem($default-font-size); // always use rem unit
+$transition-base: all .15s ease-in-out;
+$font-size-base: strip-units(18px); // overwrites default bootstrap variable with stripped font-size
+
+// Body
+
+$body-bg: gray-color(100);
+$body-color: theme-color(dark);
+$text-muted: rgba(theme-color(light), .6);
+// Links
+
+$link-color: theme-color(secondary);
+$link-decoration: none;
+$link-hover-color: darken($link-color, 15%);
+$link-hover-decoration: underline;
+
+// Default font stack (used on <body>)
+$font-family-sans-serif: 'Montserrat', sans-serif;
+
+// Headings
+$headings-margin-bottom: .7em;
+$headings-font-family: 'Montserrat', sans-serif;
+$headings-font-weight: bold;
+$headings-line-height: 1.3;
+$headings-color: theme-color(light);
+
+// Container
+
+$container-max-widths: (
+  sm: 725px,
+  xl: 1200px
+);
+
+// Spacing
+
+$spacer: 1rem;
+$spacers: (
+  5: ($spacer * 2)
+);
+
+// Form
+
+$placeholder-font-family: $font-family-sans-serif;
+$placeholder-color: gray-color(200);
+
+// Printing
+
+$print-page-size: a4;

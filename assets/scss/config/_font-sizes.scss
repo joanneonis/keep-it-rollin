@@ -1,0 +1,19 @@
+// We use the Responsive font-sizing of Bootstrap by enabling the responsive-font-sizes boolean.
+$enable-responsive-font-sizes: true; // Leave this on true
+
+// Set the maximum font-sizes here,
+// the Boostrap RFS takes care of the rest
+$font-sizes: (
+  h1: 100px,
+  h2: 60px,
+  h3: 30px,
+  h4: 24px,
+  h5: 22px,
+  h6: 18px,
+  // You can add more key value pairs,
+  // like an intro text for example:
+  // intro: 18px,
+  //
+  // Use it like this:
+  // @include get-font-size(intro);
+);

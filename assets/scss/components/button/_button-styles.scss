@@ -1,0 +1,17 @@
+@each $name, $colors in $button-base-styles {
+  $font-color: nth($colors, 1);
+  $bg-color: nth($colors, 2);
+
+  .button--#{$name} {
+    color: $font-color;
+    background-color: $bg-color;
+
+    .icon * { fill: $font-color; }
+
+    &:hover,
+    &:focus {
+      color: $font-color;
+      background-color: darken($bg-color, 15%);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+// Get the font-size from our font-sizes map
+// and pass it to Bootstrap's font-size mixin
+
+@mixin get-font-size($key) {
+  @if map-has-key($font-sizes, $key) {
+    @include font-size(map-get($font-sizes, $key));
+  }
+
+  @else {
+    @warn 'Unknown `#{$key}` in $map.';
+  }
+}

@@ -1,0 +1,14 @@
+/*
+  Pseudo mixin
+  Usage:
+
+  div::before {
+    @include pseudo;
+  }
+*/
+
+@mixin pseudo($display: block, $pos: absolute, $content: '') {
+  display: $display;
+  position: $pos;
+  content: $content;
+}

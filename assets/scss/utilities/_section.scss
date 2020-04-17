@@ -1,0 +1,57 @@
+/**
+ * Section class for inner padding, outer margin or negative margin.
+ * The negative option is used to pull a section over another to create overlapping content.
+ */
+
+[class^=section-] {
+  position: relative;
+}
+
+[class^=section-negative-] {
+  z-index: 1;
+}
+
+@mixin section-query($max-width) {
+  @media (min-width: $max-width) {
+    @content;
+  }
+}
+
+@each $type, $prop in (inset: padding, outset: margin, negative: margin) {
+  $class: 'section-#{$type}';
+  $max: $section-max-value;
+  $max-width: $max * 10px;
+  $fluid: $max * .1vw;
+
+  // Use negative values for pull
+  @if $type == negative {
+    $fluid: -$fluid;
+    $max: -$max;
+  }
+
+  .#{$class}-y {
+    #{$prop}-top: $fluid;
+    #{$prop}-bottom: $fluid;
+
+    @include section-query($max-width) {
+      #{$prop}-top: rem($max);
+      #{$prop}-bottom: rem($max);
+    }
+  }
+
+  .#{$class}-t {
+    #{$prop}-top: $fluid;
+
+    @include section-query($max-width) {
+      #{$prop}-top: rem($max);
+    }
+  }
+
+  .#{$class}-b {
+    #{$prop}-bottom: $fluid;
+
+    @include section-query($max-width) {
+      #{$prop}-bottom: rem($max);
+    }
+  }
+}
