@@ -4,27 +4,29 @@
       <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
     </figure>
     <div
-      v-if="active.messages"
+      v-if="messages.length > 0"
+      ref="chatbotMessages"
       class="chatbot-messages is--animating"
     >
       <ul
-        :style="{'--item-count': active.messages.length }"
+        :style="{'--item-count': messages.length }"
         class="list-unstyled chatbot-messages__list"
       >
         <li
-          v-for="(message, i) in active.messages"
+          v-for="(message, i) in messages"
           :key="i"
           class="chatbot-messages__list__item chatbot-text-message"
           :class="{ 'skip-animation' : skipDelay }"
-          :style="{'--item-index': i, '--item-delay': messageDelay(active.messages, i) }"
+          :style="{'--item-index': i, '--item-delay': messageDelay(messages, i) }"
           v-html="$md.render(message)"
         />
         <li
+          :key="messages.length + 1"
           class="chatbot-messages__list__item chatbot-actions"
-          :style="{'--item-index': active.messages.length + 1, '--item-delay': actionDelay(active.messages.length) }"
+          :style="{'--item-index': messages.length + 1, '--item-delay': actionDelay(messages.length) }"
         >
           <button
-            v-for="(action, i) in active.actions"
+            v-for="(action, i) in actions"
             :key="i"
             class="button button--sm"
             :class="action.type"
@@ -39,29 +41,55 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
       skipDelay: false,
-      active: {
-        messages: null,
-        actions: null
-      }
+      animating: false
     }
   },
 
   mounted () {
-    this.active = {
-      messages: this.initMessages,
-      actions: this.initActions
-    }
-
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
         if (!this.skipDelay) { console.log('skipping messages') }
         this.skipDelay = true
       }
     })
+  },
+
+  computed: {
+    ...mapState({
+      storyId: state => state.chatbot.storyId,
+      messages: state => state.chatbot.activeMessages,
+      actions: state => state.chatbot.activeActions,
+      timer: state => state.chatbot.timer
+    })
+  },
+
+  watch: {
+    timer (newValue) {
+      console.log('timer changed', newValue, this)
+      if (newValue > 0) {
+        this.setTimer(newValue)
+      }
+    },
+
+    storyId () {
+      this.animating = false
+      const element = document.querySelector('.chatbot-messages')
+
+      if (element) {
+        element.classList.remove('is--animating')
+        // trick to force reflow and trigger animation on same element
+        // eslint-disable-next-line no-void
+        void element.offsetWidth
+        element.classList.add('is--animating')
+        this.animating = true
+      }
+    }
   },
 
   methods: {
@@ -94,8 +122,15 @@ export default {
     },
 
     bindScope (inputAction) {
-      console.log(inputAction)
-      // inputAction.action.call(this)
+      this.$store.commit('chatbot/setAction', inputAction.action)
+    },
+
+    setTimer (time) {
+      const that = this
+
+      setTimeout(function () {
+        that.$store.commit('chatbot/setToIdle')
+      }, time)
     }
   }
 }
@@ -121,6 +156,7 @@ $chatbot-icon-size: 80px;
   right: 0;
   margin-top: 20px;
   align-items: flex-start;
+  z-index: 20;
 }
 
 .chatbot-messages {

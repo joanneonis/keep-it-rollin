@@ -48,7 +48,7 @@ export const mutations = {
 
 export const actions = {
   async checkLogin ({ commit }) {
-    if (this.authInited) { return this.isAuthed }
+    // if (this.authInited) { return this.isAuthed }
 
     // console.log(this.initClient)
     // await gapi.load('client:auth2', this.initClient)
@@ -66,15 +66,18 @@ export const actions = {
       commit('setUserState', {})
     }
 
-    console.log('Checked login status')
+    console.log('Checked login status', this.isAuthed)
+
+    // this.authInited = true
     return isAuthed
   },
 
   initClient ({ commit }) {
     const that = this
-    apiInstance.load('client:auth2', () => {
-      return apiInstance.client.init(credentiels).then(() => {
-        console.log('Api client inited')
+    apiInstance.load('client:auth2', (a) => {
+      console.log(a)
+      return apiInstance.client.init(credentiels).then((e) => {
+        console.log('Api client inited', e)
         commit('setClient', true)
         return apiInstance.auth2.getAuthInstance().isSignedIn.listen(that.authed)
       }).catch((error) => {
@@ -87,10 +90,13 @@ export const actions = {
   handleAuth ({ commit }) {
     const auth2 = apiInstance.auth2.getAuthInstance()
 
-    auth2.signIn().then(() => {
+    auth2.signIn().then((e) => {
+      console.log('signin accepted scopes', e.uc.scope)
       const user = auth2Instance.currentUser.get()
       commit('setUserState', user.Qt.Ad)
       commit('setAuthState', true)
+    }).catch((error) => {
+      console.log(error)
     })
   },
 
@@ -100,10 +106,13 @@ export const actions = {
     auth2.signOut().then(() => {
       commit('setUserState', '')
       commit('setAuthState', false)
+    }).catch((error) => {
+      console.log(error)
     })
   }
 }
 
 export const getters = {
-  authInited: state => state.authInited
+  authInited: state => state.authInited,
+  authed: state => state.authed
 }

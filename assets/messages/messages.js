@@ -1,5 +1,6 @@
 export const staticMessages = {
   welcome: {
+    storyId: 1,
     messages: [
       'Hallo!',
       'Ik zie dat je de tool nog niet eerder hebt gebruikt! Ik zal je even helpen opstarten.',
@@ -10,20 +11,17 @@ export const staticMessages = {
       {
         type: 'button--secondary',
         text: 'Meer info',
-        action: () => {
-          alert(this.text)
-        }
+        action: 'moreInfo'
       },
       {
         type: 'button--primary',
         text: 'Start met bouwen',
-        action: () => {
-          alert(this.text)
-        }
+        action: 'start'
       }
     ]
   },
   connectCalendar: {
+    storyId: 2,
     messages: [
       'Oh! Voordat we beginnen, wil je een **Google Calender** koppelen? Dan kan ik betere tips geven, en al wat bouwwerkzaamheden voorbereiden.',
       'Taken die je hier invult kan je dan ook direct in je agenda laten vullen.'
@@ -32,17 +30,12 @@ export const staticMessages = {
       {
         type: 'button--secondary',
         text: 'Misschien later',
-        action: () => {
-          alert(this.text)
-        }
+        action: 'later'
       },
       {
         type: 'button--primary',
         text: 'Koppel agenda',
-        link: '',
-        action: () => {
-          alert(this.text)
-        }
+        action: 'connectCalendar'
       }
     ]
   }
