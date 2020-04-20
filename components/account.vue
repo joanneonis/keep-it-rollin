@@ -1,41 +1,42 @@
 <template>
   <div>
-    <button v-if="!isAuthed" @click="handleAuthClick">
-      Sign In
+    <span
+      v-if="$store.state.auth.authed"
+    >
+      Logged in as: <strong>{{ $store.state.auth.user }}</strong>
+    </span>
+    <button
+      v-if="!$store.state.auth.authed"
+      class="button button--primary"
+      @click="signIn()"
+    >
+      login
     </button>
-    <button v-if="isAuthed" @click="handleSignoutClick">
-      Sign Out
+    <button
+      v-if="$store.state.auth.authed"
+      class="button button--primary"
+      @click="signOut()"
+    >
+      logout
     </button>
   </div>
 </template>
 
 <script>
-import { GoogleAuth } from '~/plugins/gapi'
-
 export default {
   data () {
     return {
-      isAuthed: false,
-      auth: new GoogleAuth()
+      //
     }
   },
 
-  mounted () {
-    this.isAuthed = this.auth.isAuthed
-  },
-
   methods: {
-    handleAuthClick () {
-      this.auth.handleAuthClick().then((e) => {
-        console.log(e)
-        this.isAuthed = true
-      })
+    signIn () {
+      this.$store.dispatch('auth/handleAuth')
     },
 
-    handleSignoutClick () {
-      this.auth.handleSignoutClick().then((e) => {
-        console.log(e)
-      })
+    signOut () {
+      this.$store.dispatch('auth/handleSignout')
     }
   }
 }

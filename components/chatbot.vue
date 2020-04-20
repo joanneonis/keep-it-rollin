@@ -43,64 +43,6 @@ export default {
   data () {
     return {
       skipDelay: false,
-      // temp static
-      animating: true,
-      calendar: false,
-      initMessagesLength: 4,
-      initMessages: [
-        'Hallo!',
-        'Ik zie dat je de tool nog niet eerder hebt gebruikt! Ik zal je even helpen opstarten.',
-        'Het doel is simpel. **Hou het balletje rollende!** Aan de hand van jouw taken krijg je tips hoe je dit kan doen.',
-        'Zullen we gewoon starten? Voor meer informatie kan je terecht bij het info knopje.'
-      ],
-      initActions: [
-        {
-          type: 'button--secondary',
-          text: 'Meer info',
-          action: () => {
-            alert('excuses, ik heb nog niet meer info. Hier wordt aan gewerkt!')
-          }
-        },
-        {
-          type: 'button--primary',
-          text: 'Start met bouwen',
-          action: function switchActive () {
-            this.animating = false
-
-            const element = document.querySelector('.chatbot-messages')
-
-            element.classList.remove('is--animating')
-            // eslint-disable-next-line no-void
-            void element.offsetWidth
-            element.classList.add('is--animating')
-
-            this.animating = true
-            this.active.messages = this.connectCalendarMessages
-            this.active.actions = this.connectCalendarActions
-          }
-        }
-      ],
-      connectCalendarMessages: [
-        'Oh! Voordat we beginnen, wil je een **Google Calender** koppelen? Dan kan ik betere tips geven, en al wat bouwwerkzaamheden voorbereiden.',
-        'Taken die je hier invult kan je dan ook direct in je agenda laten vullen.'
-      ],
-      connectCalendarActions: [
-        {
-          type: 'button--secondary',
-          text: 'Misschien later',
-          action: function skip () {
-            console.log('skipped')
-          }
-        },
-        {
-          type: 'button--primary',
-          text: 'Koppel agenda',
-          link: '',
-          action: function signIn () {
-            console.log('TODO signin action')
-          }
-        }
-      ],
       active: {
         messages: null,
         actions: null
@@ -152,7 +94,8 @@ export default {
     },
 
     bindScope (inputAction) {
-      inputAction.action.call(this)
+      console.log(inputAction)
+      // inputAction.action.call(this)
     }
   }
 }

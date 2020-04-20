@@ -1,17 +1,20 @@
 <template>
-  <div class="app-container">
-    <div class="toolbar-top container">
-      <chatbot />
-    </div>
+  <div class="app-container container">
+    <h2>Hallo</h2>
+    <account />
   </div>
 </template>
 
 <script>
-import chatbot from '~/components/chatbot'
+import account from '~/components/account'
 
 export default {
   components: {
-    chatbot
+    account
+  },
+
+  async fetch ({ store }) {
+    await store.dispatch('auth/checkLogin')
   },
 
   mounted () {
