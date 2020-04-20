@@ -15,6 +15,7 @@ export default {
 
   async fetch ({ store }) {
     await store.dispatch('auth/checkLogin')
+    await store.dispatch('auth/initClient')
   },
 
   mounted () {

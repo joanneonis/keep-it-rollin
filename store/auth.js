@@ -9,7 +9,7 @@ const credentiels = {
 
 let auth2Instance // this.auth2
 
-const apiInstance = gapi // this.api
+export const apiInstance = gapi // this.api
 
 export const state = () => ({
   authed: false,
@@ -50,7 +50,8 @@ export const actions = {
   async checkLogin ({ commit }) {
     if (this.authInited) { return this.isAuthed }
 
-    await gapi.load('client:auth2', this.initClient)
+    // console.log(this.initClient)
+    // await gapi.load('client:auth2', this.initClient)
 
     auth2Instance = await loadAuth2WithProps(credentiels)
     const isAuthed = auth2Instance.isSignedIn.get()
@@ -65,17 +66,21 @@ export const actions = {
       commit('setUserState', {})
     }
 
-    console.log('checklogin')
+    console.log('Checked login status')
     return isAuthed
   },
 
   initClient ({ commit }) {
-    return apiInstance.client.init(credentiels).then((e) => {
-      commit('setClient', true)
-      // return apiInstance.auth2.getAuthInstance().isSignedIn.listen(vm.isAuthed)
-    }).catch((error) => {
-      commit('setClient', false)
-      console.log('Api client not inited', error)
+    const that = this
+    apiInstance.load('client:auth2', () => {
+      apiInstance.client.init(credentiels).then(() => {
+        console.log('Api client inited')
+        commit('setClient', true)
+        return apiInstance.auth2.getAuthInstance().isSignedIn.listen(that.authed)
+      }).catch((error) => {
+        commit('setClient', false)
+        console.log('Api client not inited', error)
+      })
     })
   },
 
