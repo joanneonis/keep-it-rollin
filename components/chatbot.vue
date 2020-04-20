@@ -4,24 +4,28 @@
       <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
     </figure>
     <div
-      v-if="messages.length > 0"
       ref="chatbotMessages"
       class="chatbot-messages is--animating"
     >
-      <ul
+      <!-- :leave-active-class="messages.length > 0 ? 'fade-out' : 'no-transition'" -->
+      <transition-group
+        key="messageList"
+        :name="'slide-fade'"
+        tag="ul"
         :style="{'--item-count': messages.length }"
         class="list-unstyled chatbot-messages__list"
       >
         <li
           v-for="(message, i) in messages"
-          :key="i"
+          :key="message.substring(0, 7)"
           class="chatbot-messages__list__item chatbot-text-message"
           :class="{ 'skip-animation' : skipDelay }"
           :style="{'--item-index': i, '--item-delay': messageDelay(messages, i) }"
           v-html="$md.render(message)"
         />
         <li
-          :key="messages.length + 1"
+          v-if="actions"
+          :key="'actions'"
           class="chatbot-messages__list__item chatbot-actions"
           :style="{'--item-index': messages.length + 1, '--item-delay': actionDelay(messages.length) }"
         >
@@ -35,7 +39,7 @@
             {{ action.text }}
           </button>
         </li>
-      </ul>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -71,7 +75,6 @@ export default {
 
   watch: {
     timer (newValue) {
-      console.log('timer changed', newValue, this)
       if (newValue > 0) {
         this.setTimer(newValue)
       }
@@ -175,12 +178,12 @@ $chatbot-icon-size: 80px;
   align-items: flex-start;
 
   .is--animating &__item {
-    transform: translate(0, 20px);
-    opacity: 0;
+    // transform: translate(0, 20px);
+    // opacity: 0;
     margin-bottom: rem(7px);
-    animation: fadeUp .3s;
-    animation-delay: calc(1s * var(--item-delay));
-    animation-fill-mode: forwards;
+    // animation: fadeUp .3s;
+    // animation-delay: calc(1s * var(--item-delay));
+    // animation-fill-mode: forwards;
   }
 }
 
@@ -212,5 +215,25 @@ $chatbot-icon-size: 80px;
 
 .chatbot-actions {
   margin-top: 7px;
+}
+
+$temp-duration: .25s;
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all $temp-duration ease;
+  transition-delay: calc(1s * var(--item-delay));
+}
+.slide-fade-leave-active {
+  // position: absolute;
+  transition: all $temp-duration ease;
+}
+.slide-fade-enter {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
 }
 </style>
