@@ -60,7 +60,7 @@ export const actions = {
     commit('setInitState', true)
 
     if (isAuthed) {
-      const user = auth2Instance.currentUser.get().getBasicProfile().Ad
+      const user = auth2Instance.currentUser.get().getBasicProfile().vW
       commit('setUserState', user)
     } else {
       commit('setUserState', {})
@@ -93,7 +93,7 @@ export const actions = {
     auth2.signIn().then((e) => {
       console.log('signin accepted scopes', e.uc.scope)
       const user = auth2Instance.currentUser.get()
-      commit('setUserState', user.Qt.Ad)
+      commit('setUserState', user.Qt.vW)
       commit('setAuthState', true)
     }).catch((error) => {
       console.log(error)

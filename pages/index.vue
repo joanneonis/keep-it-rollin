@@ -2,7 +2,7 @@
   <div class="app-container container">
     <intro v-if="!$store.state.auth.authed" />
     <div v-if="$store.state.auth.authed">
-      <h2>already signed in as {{ $store.state.auth.user }}</h2>
+      <h2>Signed in as {{ $store.state.auth.user }}</h2>
       <button
         class="button button--primary"
         @click="signOut()"
@@ -27,7 +27,7 @@ export default {
       welcomeMessage: {
         storyId: 3,
         messages: [
-          `Hallo ${this.$store.state.auth.user}`
+          `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.user)}`
         ],
         actions: [],
         timer: 2000
@@ -66,6 +66,11 @@ export default {
   methods: {
     signOut () {
       this.$store.dispatch('auth/handleSignout')
+    },
+
+    capitalizeFirstLetter (string) {
+      if (!string.length) { return '' }
+      return string.charAt(0).toUpperCase() + string.slice(1)
     }
   }
 }
