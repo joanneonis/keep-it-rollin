@@ -2,6 +2,7 @@
   <div>
     <div class="toolbar-top container">
       <chatbot />
+      <account />
     </div>
     <div class="body-container">
       <nuxt />
@@ -10,10 +11,12 @@
 </template>
 <script>
 import chatbot from '~/components/chatbot'
+import account from '~/components/account'
 
 export default {
   components: {
-    chatbot
+    chatbot,
+    account
   },
 
   methods: {
@@ -26,7 +29,10 @@ export default {
 </script>
 
 <style lang="scss">
-.body-container {
-  padding-top: 16vh;
+.toolbar-top.container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 </style>

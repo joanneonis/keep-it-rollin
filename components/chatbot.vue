@@ -1,5 +1,5 @@
 <template>
-  <div class="chatbot container">
+  <div class="chatbot">
     <figure class="chatbot-icon">
       <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
     </figure>
@@ -154,12 +154,13 @@ $chatbot-icon-size: 80px;
 
 .chatbot {
   display: flex;
-  position: absolute;
   left: 0;
   right: 0;
   margin-top: 20px;
   align-items: flex-start;
   z-index: 20;
+  width: 100%;
+  max-width: 50%;
 }
 
 .chatbot-messages {
