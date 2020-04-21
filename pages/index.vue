@@ -1,7 +1,6 @@
 <template>
   <div class="app-container container">
     <intro v-if="!$store.state.auth.authed" />
-    <account />
     <div v-if="$store.state.auth.authed">
       <h2>Signed in as {{ $store.state.auth.user }}</h2>
       <button
@@ -17,12 +16,10 @@
 <script>
 import { mapState } from 'vuex'
 import intro from '~/components/intro'
-import account from '~/components/account'
 
 export default {
   components: {
-    intro,
-    account
+    intro
   },
 
   data () {
@@ -78,9 +75,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.chatbot-messages {
-  display: none;
-}
-</style>
