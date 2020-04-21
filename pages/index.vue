@@ -9,6 +9,25 @@
       >
         logout
       </button>
+
+      <section>
+        <br>
+        <br>
+        <h3>Your calendaritems</h3>
+        <ul>
+          <li
+            v-for="item in calendarItems"
+            :key="item.id"
+          >
+            <a
+              :href="item.htmlLink"
+              target="_blank"
+            >
+              {{ item.summary }}
+            </a>
+          </li>
+        </ul>
+      </section>
     </div>
   </div>
 </template>
@@ -16,6 +35,7 @@
 <script>
 import { mapState } from 'vuex'
 import intro from '~/components/intro'
+import { apiInstance } from '~/store/auth'
 
 export default {
   components: {
@@ -31,7 +51,8 @@ export default {
         ],
         actions: [],
         timer: 2000
-      }
+      },
+      calendarItems: null
     }
   },
 
@@ -45,9 +66,9 @@ export default {
 
   watch: {
     authedState (newValue, oldValue) {
-      console.log('signed in?', newValue, oldValue)
-      if (newValue) {
+      if (newValue !== oldValue && newValue) {
         this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
+        this.getCalendarItems()
       }
     }
   },
@@ -60,6 +81,7 @@ export default {
   mounted () {
     if (this.$store.state.auth.authed) {
       this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
+      this.getCalendarItems()
     }
   },
 
@@ -71,6 +93,23 @@ export default {
     capitalizeFirstLetter (string) {
       if (!string.length) { return '' }
       return string.charAt(0).toUpperCase() + string.slice(1)
+    },
+
+    async getCalendarItems () {
+      try {
+        const calendarItems = await apiInstance.client.calendar.events.list({
+          calendarId: 'primary',
+          timeMin: (new Date()).toISOString(),
+          showDeleted: false,
+          singleEvents: true,
+          maxResults: 10,
+          orderBy: 'startTime'
+        })
+
+        this.calendarItems = calendarItems.result.items
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
