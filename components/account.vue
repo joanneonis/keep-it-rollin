@@ -54,6 +54,7 @@ export default {
 
   mounted () {
     // this.getCalendarItems()
+    // apiInstance.load('client:auth2', this.initCalendar)
   },
 
   methods: {
@@ -65,24 +66,39 @@ export default {
       this.$store.dispatch('auth/handleSignout')
     },
 
-    getCalendarItems () {
+    initCalendar () {
       // const vm = this
-
-      console.log(apiInstance.client.calendar, this.$store.state.auth.clientInited)
-
-      // apiInstance.client.calendar.events.list({
-      //   calendarId: 'primary',
-      //   timeMin: (new Date()).toISOString(),
-      //   showDeleted: false,
-      //   singleEvents: true,
-      //   maxResults: 10,
-      //   orderBy: 'startTime'
-      // }).then((response) => {
-      //   vm.items = response.result.items
-      //   console.log('jeuuuj gotten items!', vm.items)
+      // return vm.api.client.init({
+      //   apiKey: 'AIzaSyAPykd0raJFpDk-42TLcTMHWTWh-k_-Itc',
+      //   clientId: '443423667490-ajenbs6802otm1s605v9c4l6sc8vs8dh.apps.googleusercontent.com',
+      //   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+      //   scope: 'https://www.googleapis.com/auth/calendar'
+      // }).then((e) => {
+      //   // Listen for sign-in state changes.
+      //   return vm.api.auth2.getAuthInstance().isSignedIn.listen(vm.isAuthed)
       // }).catch((error) => {
-      //   console.log('no calendar items because', error)
+      //   console.log('Api client not inited', error)
       // })
+    },
+
+    getCalendarItems () {
+      const vm = this
+
+      console.log(apiInstance.client, this.$store.state.auth.clientInited)
+
+      apiInstance.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: (new Date()).toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime'
+      }).then((response) => {
+        vm.items = response.result.items
+        console.log('jeuuuj gotten items!', vm.items)
+      }).catch((error) => {
+        console.log('no calendar items because', error)
+      })
     }
   }
 }

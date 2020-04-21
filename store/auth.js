@@ -72,18 +72,12 @@ export const actions = {
     return isAuthed
   },
 
-  initClient ({ commit }) {
+  async initClient ({ commit }) {
     const that = this
-    apiInstance.load('client:auth2', (a) => {
-      console.log(a)
-      return apiInstance.client.init(credentiels).then((e) => {
-        console.log('Api client inited', e)
-        commit('setClient', true)
-        return apiInstance.auth2.getAuthInstance().isSignedIn.listen(that.authed)
-      }).catch((error) => {
-        commit('setClient', false)
-        console.log('Api client not inited', error)
-      })
+    await apiInstance.load('client:auth2', async () => {
+      await apiInstance.client.init(credentiels)
+      commit('setClient', true)
+      return apiInstance.auth2.getAuthInstance().isSignedIn.listen(that.authed)
     })
   },
 
