@@ -5,7 +5,9 @@
 <script>
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Scene, rotateObject } from '~/plugins/threejs/scene'
+import { Scene } from '~/plugins/threejs/scene'
+
+// TODO delete stuff on destroy
 
 export default {
   data () {
@@ -24,54 +26,29 @@ export default {
       const loader = new GLTFLoader()
 
       // const fileName = 'RobotExpressive' //
-      const fileName = 'tube-v0'
+      const fileName = 'tube v3'
 
       loader.load(`/three-assets/${fileName}.glb`, (gltf) => {
         const model = gltf.scene
-        model.position.y = 2
-        let runPart
+
+        console.log(model)
 
         model.traverse((node) => {
           if (node instanceof THREE.Mesh) {
-            runPart = node
+            const halfPipe = node
             node.castShadow = true
+
+            const expressions = Object.keys(halfPipe.morphTargetDictionary)
+            const expressionFolder = this.scene.gui.addFolder(`MorphTargets - ${halfPipe.name}`)
+            for (let i = 0; i < expressions.length; i++) {
+              expressionFolder.add(halfPipe.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
+            }
           }
         })
 
-        const expressions = Object.keys(runPart.morphTargetDictionary)
-        const expressionFolder = this.scene.gui.addFolder('Blob')
-        for (let i = 0; i < expressions.length; i++) {
-          expressionFolder.add(runPart.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
-        }
-
         this.scene.tubeModel = model
         this.scene.scene.add(this.scene.tubeModel)
-        this.addGui()
       })
-    },
-
-    addGui () {
-      const tubeFolder = this.scene.gui.addFolder('Tube')
-      const rotation = {
-        x: 0,
-        y: 0,
-        z: 0
-      }
-
-      tubeFolder.add(rotation, 'x', 0, 360).step(1).onChange((e) => {
-        rotateObject(this.scene.tubeModel, rotation.x, rotation.y, rotation.z)
-      })
-      tubeFolder.add(rotation, 'y', 0, 360).step(1).onChange((e) => {
-        rotateObject(this.scene.tubeModel, rotation.x, rotation.y, rotation.z)
-      })
-      tubeFolder.add(rotation, 'z', 0, 360).step(1).onChange((e) => {
-        rotateObject(this.scene.tubeModel, rotation.x, rotation.y, rotation.z)
-      })
-
-      tubeFolder.close()
-      tubeFolder.add(this.scene.tubeModel.position, 'x', -50, 50).step(1)
-      tubeFolder.add(this.scene.tubeModel.position, 'y', -50, 50).step(1)
-      tubeFolder.add(this.scene.tubeModel.position, 'z', -50, 50).step(1)
     }
   }
 }
@@ -83,8 +60,9 @@ export default {
 }
 
 .dg.ac {
-    color: white;
-    z-index: 20;
+  color: white;
+  z-index: 20;
+  right: 30vw;
 }
 
 .dg li {

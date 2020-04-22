@@ -5,7 +5,7 @@
       <!-- <calendar-items /> -->
     </div>
 
-    <tube />
+    <tube v-if="$store.state.auth.authed" />
   </div>
 </template>
 

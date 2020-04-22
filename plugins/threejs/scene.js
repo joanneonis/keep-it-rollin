@@ -3,28 +3,24 @@ import * as dat from 'dat.gui'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'stats.js'
 
-export class Scene {
-  cameratarget
+// TODO delete stuff on destroy
 
+export class Scene {
   constructor (
     container
   ) {
-    this.cameratarget = {
-      x: 0,
-      y: 5,
-      z: 0
-    }
     this.gui = new dat.GUI()
     this.stats = new Stats()
     this.container = container
 
     // scene
     this.scene = new THREE.Scene()
-    // camera
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
-    this.camera.position.set(0, -18, 9)
+    this.scene.background = new THREE.Color('#F7FAFC')
 
-    // this.camera.lookAt(new THREE.Vector3(this.cameratarget.x, this.cameratarget.y, this.cameratarget.z))
+    // camera
+    this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000)
+    this.camera.position.set(-0.546, 1.084, 2.859)
+    this.camera.rotation.set(-20.89, -10.19, -3.86)
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -33,14 +29,17 @@ export class Scene {
     this.renderer.shadowMapEnabled = true
     this.renderer.shadowMapSoft = true
 
+    this.renderer.gammaOutput = true
+    this.renderer.gammaFactor = 2.2
+
     this.container.appendChild(this.renderer.domElement)
 
     // controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
     this.baseElements()
-    this.cube()
-    this.cylinder()
+    // this.cube()
+    // this.cylinder()
     this.plane()
 
     this.cameraGui()
@@ -61,51 +60,44 @@ export class Scene {
 
   baseElements () {
     // lights
+    const ambientLight = new THREE.AmbientLight(0x404040) // soft white light
+    this.scene.add(ambientLight)
 
     // directional light
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
-    directionalLight.position.set(5, 0, 5)
+    directionalLight.position.set(5, 10, 7.5)
+    directionalLight.intensity = 1
     directionalLight.target.position.set(0, 0, 0)
 
     directionalLight.castShadow = true
-    directionalLight.shadowDarkness = 0.5
-    directionalLight.shadowCameraVisible = true
+    // directionalLight.shadowDarkness = 0.5
+    // directionalLight.shadowCameraVisible = true
 
-    directionalLight.shadowCameraNear = 0
-    directionalLight.shadowCameraFar = 15
+    // directionalLight.shadowCameraNear = 0
+    // directionalLight.shadowCameraFar = 15
 
-    directionalLight.shadowCameraLeft = -5
-    directionalLight.shadowCameraRight = 5
-    directionalLight.shadowCameraTop = 5
-    directionalLight.shadowCameraBottom = -5
+    // directionalLight.shadowCameraLeft = -5
+    // directionalLight.shadowCameraRight = 5
+    // directionalLight.shadowCameraTop = 5
+    // directionalLight.shadowCameraBottom = -5
 
     this.scene.add(directionalLight)
-
-    // spotlight
-    const spotLight = new THREE.SpotLight(0xFFFFFF, 1)
-    spotLight.position.set(5, 0, 6)
-
-    spotLight.castShadow = true
-    spotLight.shadowCameraVisible = true
-
-    spotLight.target.position.set(-1, 0, 1)
-    spotLight.shadowDarkness = 0.5
-
-    spotLight.shadowCameraNear = 6
-    spotLight.shadowCameraFar = 13
-
-    this.scene.add(spotLight)
   }
 
   // plane
   plane () {
     const geometry = new THREE.PlaneGeometry(300, 300)
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xCCCCCC
+    const material = new THREE.MeshLambertMaterial({
+      color: new THREE.Color('#F7FAFC')
+      // emissive: new THREE.Color('#F7FAFC'),
+      // emissiveIntensity: 0.345
     })
     const plane = new THREE.Mesh(geometry, material)
-    // plane.rotation.x = THREE.Math.degToRad(90)
-    // plane.position.y = 10
+
+    // plane.emissive
+
+    plane.rotation.x = THREE.Math.degToRad(-90)
+    plane.position.y = 0.061
     plane.receiveShadow = true
     this.scene.add(plane)
   }
