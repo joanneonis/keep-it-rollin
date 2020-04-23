@@ -102,31 +102,6 @@ export class Scene {
     this.scene.add(plane)
   }
 
-  cube () {
-    // cube
-    const geometry = new THREE.CubeGeometry(1, 1, 1)
-    const material = new THREE.MeshLambertMaterial({
-      color: 0xFFFFFF
-    })
-    const cube = new THREE.Mesh(geometry, material)
-    cube.position.set(-4, 0, 0.5)
-    cube.castShadow = true
-    this.scene.add(cube)
-  }
-
-  cylinder () {
-    // cylinder
-    const geometry = new THREE.CylinderGeometry(1, 0, 3, 50, 50, false)
-    const material = new THREE.MeshLambertMaterial({
-      color: 0xFFFFFF
-    })
-    const cylinder = new THREE.Mesh(geometry, material)
-    cylinder.position.set(-1, -2, 1)
-    cylinder.rotation.x = -Math.PI / 2
-    cylinder.castShadow = true
-    this.scene.add(cylinder)
-  }
-
   cameraGui () {
     const cameraFolder = this.gui.addFolder('camera')
 
