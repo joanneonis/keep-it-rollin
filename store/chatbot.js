@@ -10,6 +10,8 @@ export const mutations = {
   setActiveMessages (stateMutation, input) {
     const sm = stateMutation
 
+    if (!input) { return }
+
     sm.activeMessages = input.messages
     sm.storyId = input.storyId
     if (input.actions) {

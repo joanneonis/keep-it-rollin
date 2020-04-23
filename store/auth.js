@@ -1,4 +1,5 @@
 import { gapi, loadAuth2WithProps } from 'gapi-script'
+import firebase from 'firebase'
 
 const credentiels = {
   apiKey: process.env.apiKey,
@@ -32,6 +33,8 @@ export const mutations = {
   setUserState (stateMutation, user) {
     const sm = stateMutation
 
+    console.log(sm.user)
+
     sm.user = user
   },
   setApi (stateMutation, api) {
@@ -48,25 +51,20 @@ export const mutations = {
 
 export const actions = {
   async checkLogin ({ commit }) {
-    // if (this.authInited) { return this.isAuthed }
-
-    // console.log(this.initClient)
-    // await gapi.load('client:auth2', this.initClient)
-
     auth2Instance = await loadAuth2WithProps(credentiels)
     const isAuthed = auth2Instance.isSignedIn.get()
 
     commit('setAuthState', isAuthed)
-    commit('setInitState', true)
 
     if (isAuthed) {
-      const user = auth2Instance.currentUser.get().getBasicProfile().vW
+      const user = auth2Instance.currentUser.get().Qt.DW
       commit('setUserState', user)
+      console.log('already authed', auth2Instance.currentUser.get().Qt.DW)
     } else {
       commit('setUserState', {})
     }
 
-    console.log('Checked login status', this.isAuthed)
+    commit('setInitState', true)
 
     // this.authInited = true
     return isAuthed
@@ -81,21 +79,24 @@ export const actions = {
     })
   },
 
-  handleAuth ({ commit }) {
-    const auth2 = apiInstance.auth2.getAuthInstance()
+  async handleAuth ({ commit }) {
+    const googleAuth = apiInstance.auth2.getAuthInstance()
+    const googleUser = await googleAuth.signIn()
 
-    auth2.signIn().then((e) => {
-      console.log('signin accepted scopes', e.uc.scope)
-      const user = auth2Instance.currentUser.get()
-      commit('setUserState', user.Qt.vW)
-      commit('setAuthState', true)
-    }).catch((error) => {
-      console.log(error)
-    })
+    const token = googleUser.getAuthResponse().id_token
+    const credential = firebase.auth.GoogleAuthProvider.credential(token)
+
+    await firebase.auth().signInAndRetrieveDataWithCredential(credential)
+
+    const user = auth2Instance.currentUser.get()
+
+    commit('setUserState', user.Qt.DW)
+    commit('setAuthState', true)
   },
 
   handleSignout ({ commit }) {
     const auth2 = apiInstance.auth2.getAuthInstance()
+    firebase.auth().signOut()
 
     auth2.signOut().then(() => {
       commit('setUserState', '')

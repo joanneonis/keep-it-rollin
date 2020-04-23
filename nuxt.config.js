@@ -13,10 +13,10 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    ],
+    script: [
+      { src: 'https://apis.google.com/js/api.js' }
     ]
-    // script: [
-    //   { src: 'https://apis.google.com/js/api.js' }
-    // ]
   },
   /*
   ** Customize the progress-bar color

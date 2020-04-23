@@ -4,6 +4,7 @@
       <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
     </figure>
     <div
+      v-if="messages"
       ref="chatbotMessages"
       class="chatbot-messages is--animating"
     >
