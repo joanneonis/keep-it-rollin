@@ -1,7 +1,7 @@
 <template>
   <div class="app-container container">
     <intro v-if="!$store.state.auth.authed" />
-    <!-- <calendar-items /> -->
+    <calendar-items v-if="$store.state.auth.authed" />
   </div>
 </template>
 
@@ -21,9 +21,7 @@ export default {
     return {
       welcomeMessage: {
         storyId: 3,
-        messages: [
-          `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.user)}`
-        ],
+        messages: null,
         actions: [],
         timer: 2000
       }
@@ -53,6 +51,9 @@ export default {
 
   mounted () {
     if (this.$store.state.auth.authed) {
+      this.welcomeMessage.messages = [
+        `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.user)}`
+      ]
       this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
     }
   },
@@ -63,7 +64,7 @@ export default {
     },
 
     capitalizeFirstLetter (string) {
-      if (!string.length) { return '' }
+      if (!string) { return '' }
       return string.charAt(0).toUpperCase() + string.slice(1)
     }
   }
