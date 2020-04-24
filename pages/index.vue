@@ -1,7 +1,11 @@
 <template>
-  <div class="app-container container">
-    <intro v-if="!$store.state.auth.authed" />
-    <calendar-items v-if="$store.state.auth.authed" />
+  <div>
+    <div class="app-container container">
+      <intro v-if="!$store.state.auth.authed" />
+      <!-- <calendar-items /> -->
+    </div>
+
+    <tube v-if="$store.state.auth.authed" />
   </div>
 </template>
 
@@ -9,12 +13,14 @@
 import { mapState } from 'vuex'
 import intro from '~/components/intro'
 import calendarItems from '~/components/calendarItems'
+import tube from '~/components/three/tube'
 
 export default {
   components: {
     intro,
     // eslint-disable-next-line vue/no-unused-components
-    calendarItems
+    calendarItems,
+    tube
   },
 
   data () {

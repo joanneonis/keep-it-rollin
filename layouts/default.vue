@@ -29,10 +29,18 @@ export default {
 </script>
 
 <style lang="scss">
-.toolbar-top.container {
+.toolbar-top {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  z-index: 2;
+}
+
+.body-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 </style>
