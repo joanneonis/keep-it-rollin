@@ -33,8 +33,6 @@ export const mutations = {
   setUserState (stateMutation, user) {
     const sm = stateMutation
 
-    console.log(sm.user)
-
     sm.user = user
   },
   setApi (stateMutation, api) {

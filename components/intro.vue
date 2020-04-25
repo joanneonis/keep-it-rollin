@@ -20,7 +20,6 @@ export default {
 
   watch: {
     action (newValue) {
-      console.log('action changed', newValue)
       this.introActions(newValue)
     }
   },

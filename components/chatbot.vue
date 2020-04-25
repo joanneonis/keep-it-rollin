@@ -56,15 +56,6 @@ export default {
     }
   },
 
-  mounted () {
-    document.addEventListener('keydown', (event) => {
-      if (event.code === 'Space') {
-        if (!this.skipDelay) { console.log('skipping messages') }
-        this.skipDelay = true
-      }
-    })
-  },
-
   computed: {
     ...mapState({
       storyId: state => state.chatbot.storyId,
