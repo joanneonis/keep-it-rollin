@@ -1,9 +1,20 @@
+/*
+* authed { Boolean } is the user signed in?
+* authInited { } fired after all autentication functions are done
+* user { String } Username gotten from google profile
+!* userId { String } Refrences with firestore collection
+!* userSettings Object {
+!*  -- calenderConnectionState { ENUM } not connected / skipped / connected
+!*  -- notificationSettings
+!* } user configurable settings
+*/
+
 import { gapi, loadAuth2WithProps } from 'gapi-script'
 import firebase from 'firebase'
 
 const credentiels = {
-  apiKey: process.env.apiKey,
-  client_id: process.env.clientid,
+  apiKey: process.env.apiKey, // firebase web API key
+  client_id: process.env.clientid, // oAuth client_id found in Google Cloud console
   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
   scope: 'https://www.googleapis.com/auth/calendar'
 }
@@ -15,8 +26,7 @@ export const apiInstance = gapi // this.api
 export const state = () => ({
   authed: false,
   authInited: false,
-  user: null,
-  clientInited: false
+  user: null
 })
 
 export const mutations = {
@@ -39,11 +49,6 @@ export const mutations = {
     const sm = stateMutation
 
     sm.api = api
-  },
-  setClient (stateMutation, boolean) {
-    const sm = stateMutation
-
-    sm.clientInited = boolean
   }
 }
 

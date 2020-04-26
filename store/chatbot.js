@@ -1,3 +1,11 @@
+/*
+* activeMessages { Array<string> } messages as seen on screen
+* activeActions { Array<string> } buttons as seen on screen
+* storyId { Number } unique id
+* clickedAction { String } when a vue scoped function needs to fire
+* timer { Number } in Millis. Timer is disabled when 0. After timer fires messages are hidden
+*/
+
 export const state = () => ({
   activeMessages: [],
   activeActions: null,
