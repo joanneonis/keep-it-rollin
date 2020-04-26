@@ -3,6 +3,7 @@
     <div class="app-container container">
       <intro v-if="!$store.state.auth.authed" />
       <!-- <calendar-items /> -->
+      <first-item-of-day />
     </div>
 
     <!-- <tube v-if="$store.state.auth.authed" /> -->
@@ -14,12 +15,14 @@ import { mapState } from 'vuex'
 import intro from '~/components/intro'
 // import calendarItems from '~/components/calendarItems'
 // import tube from '~/components/three/tube'
+import firstItemOfDay from '~/components/firstItemOfDay'
 
 export default {
   components: {
-    intro
+    intro,
     // calendarItems,
     // tube
+    firstItemOfDay
   },
 
   data () {

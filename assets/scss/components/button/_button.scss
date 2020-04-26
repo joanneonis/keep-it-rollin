@@ -1,5 +1,5 @@
-$button-size: 50px;
-$button-padding-x: 30px;
+$button-size: 30px;
+$button-padding-x: 20px;
 $font-baseline-offset: 5px;
 
 .button {
@@ -16,6 +16,7 @@ $font-baseline-offset: 5px;
   border-radius: rem($button-size / 2);
   transition: all 200ms ease-in-out;
   color: white;
+  font-size: rem(12px);
 
   @include media-breakpoint-up(md) {
     height: rem($button-size * 1.2);
@@ -34,7 +35,7 @@ $font-baseline-offset: 5px;
   &--sm {
     height: rem($button-size / 1.1);
     padding-right: rem(20px);
-    font-size: rem(15px);
+    font-size: rem(10px);
     padding-left: rem(20px);
     border-radius: rem($button-size / 2);
   }

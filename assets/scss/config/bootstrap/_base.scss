@@ -1,10 +1,10 @@
 // Base
 
-$default-font-size: 16px;
+$default-font-size: 12px;
 $rfs-minimum-font-size: rem($default-font-size); // always use rem unit
 $rfs-base-font-size: rem($default-font-size); // always use rem unit
 $transition-base: all .15s ease-in-out;
-$font-size-base: strip-units(18px); // overwrites default bootstrap variable with stripped font-size
+$font-size-base: strip-units(14px); // overwrites default bootstrap variable with stripped font-size
 
 // Body
 

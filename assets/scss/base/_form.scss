@@ -16,8 +16,26 @@ input {
   background: none;
   border: 0;
   box-shadow: none;
+  width: 100%;
 
   &:focus {
     outline: none;
+  }
+}
+
+label {
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.form-field {
+  & + & {
+    margin-top: rem(10px);
+  }
+
+  textarea,
+  input {
+    background-color: gray-color(100);
   }
 }
