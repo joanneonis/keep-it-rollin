@@ -3,7 +3,7 @@
     <div class="app-container container">
       <intro v-if="!$store.state.auth.authed" />
       <!-- <calendar-items /> -->
-      <first-item-of-day />
+      <first-item-of-day v-if="$store.state.track.activeParts.length === 0" />
     </div>
 
     <!-- <tube v-if="$store.state.auth.authed" /> -->
@@ -55,6 +55,7 @@ export default {
   async fetch ({ store }) {
     await store.dispatch('auth/initClient')
     await store.dispatch('auth/checkLogin')
+    await store.dispatch('track/getTrack')
   },
 
   mounted () {

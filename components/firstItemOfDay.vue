@@ -26,6 +26,7 @@
     <div slot="footer">
       <button
         class="button button--primary"
+        @click="setTrackpartData()"
       >
         Opslaan
       </button>
@@ -53,6 +54,14 @@ export default {
   methods: {
     getEnergyLevel ($event) {
       this.energyLevel = $event
+    },
+
+    setTrackpartData () {
+      this.$store.dispatch('track/setTrackPart', {
+        type: 'start-of-day',
+        energy: this.energyLevel,
+        note: this.note
+      })
     }
   }
 }
