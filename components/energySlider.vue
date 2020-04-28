@@ -12,11 +12,25 @@
       type="range"
       min="0"
       max="100"
-      value="50"
-      lass="slider"
+      :value="energyLevel"
+      @change="$emit('energyLevel', $event.target.value)"
     >
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      energyLevel: 50
+    }
+  },
+
+  created () {
+    this.$emit('energyLevel', this.energyLevel)
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .energy-slider {

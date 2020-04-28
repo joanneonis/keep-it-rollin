@@ -1,8 +1,8 @@
 /*
 * authed { Boolean } is the user signed in?
 * authInited { } fired after all autentication functions are done
-* user { String } Username gotten from google profile
-!* userId { String } Refrences with firestore collection
+* userData { Object } Userdata from firebase !!TODO create userdata inteface?
+* userUid { String } Refrences with firestore collection
 !* userSettings Object {
 !*  -- calenderConnectionState { ENUM } not connected / skipped / connected
 !*  -- notificationSettings
@@ -11,73 +11,83 @@
 
 import { gapi, loadAuth2WithProps } from 'gapi-script'
 import firebase from 'firebase'
+import { db } from '~/plugins/firebase'
 
-const credentiels = {
+let auth2Instance
+const credentials = {
   apiKey: process.env.apiKey, // firebase web API key
   client_id: process.env.clientid, // oAuth client_id found in Google Cloud console
   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
   scope: 'https://www.googleapis.com/auth/calendar'
 }
 
-let auth2Instance // this.auth2
-
-export const apiInstance = gapi // this.api
+export const apiInstance = gapi
 
 export const state = () => ({
   authed: false,
   authInited: false,
-  user: null
+  userUid: null,
+  userData: null
+  // errorDetected: false
 })
 
 export const mutations = {
+  // if true, loading authentication is done
   setInitState (stateMutation, boolean) {
     const sm = stateMutation
 
     sm.authInited = boolean
   },
+  // update sign in state
   setAuthState (stateMutation, boolean) {
     const sm = stateMutation
 
     sm.authed = boolean
   },
-  setUserState (stateMutation, user) {
+
+  setUserId (stateMutation, uid) {
     const sm = stateMutation
 
-    sm.user = user
+    sm.userUid = uid
   },
-  setApi (stateMutation, api) {
+
+  setUserData (stateMutation, user) {
     const sm = stateMutation
 
-    sm.api = api
+    sm.userData = user
   }
 }
 
 export const actions = {
   async checkLogin ({ commit }) {
-    auth2Instance = await loadAuth2WithProps(credentiels)
+    // checks if user is signed in through gapi
+    auth2Instance = await loadAuth2WithProps(credentials)
     const isAuthed = auth2Instance.isSignedIn.get()
 
+    // sets signin state
     commit('setAuthState', isAuthed)
 
     if (isAuthed) {
-      const user = auth2Instance.currentUser.get().Qt.DW
-      commit('setUserState', user)
-      console.log('already authed', auth2Instance.currentUser.get().Qt.DW)
+      // if authed, set/update user
+      const fbUserData = firebase.auth().currentUser
+      console.log('already authed', fbUserData)
+      commit('setUserId', fbUserData.uid)
+
+      const userData = await getUserDocs(fbUserData)
+      commit('setUserData', userData)
     } else {
-      commit('setUserState', {})
+      // if not authed, clear user
+      commit('setUserData', {})
     }
 
+    // sets loading state
     commit('setInitState', true)
-
-    // this.authInited = true
-    return isAuthed
   },
 
-  async initClient ({ commit }) {
+  async initClient () {
     const that = this
     await apiInstance.load('client:auth2', async () => {
-      await apiInstance.client.init(credentiels)
-      commit('setClient', true)
+      await apiInstance.client.init(credentials)
       return apiInstance.auth2.getAuthInstance().isSignedIn.listen(that.authed)
     })
   },
@@ -89,11 +99,18 @@ export const actions = {
     const token = googleUser.getAuthResponse().id_token
     const credential = firebase.auth.GoogleAuthProvider.credential(token)
 
-    await firebase.auth().signInAndRetrieveDataWithCredential(credential)
+    let firebaseResponse
+    try {
+      firebaseResponse = await firebase.auth().signInWithCredential(credential)
+    } catch (error) {
+      console.log(error)
+    }
+    console.log('new signin firebase UID', firebaseResponse.user.uid)
+    commit('setUserId', firebaseResponse.user.uid)
 
-    const user = auth2Instance.currentUser.get()
+    const userData = await getUserDocs(firebaseResponse.user)
+    commit('setUserData', userData)
 
-    commit('setUserState', user.Qt.DW)
     commit('setAuthState', true)
   },
 
@@ -110,7 +127,28 @@ export const actions = {
   }
 }
 
-export const getters = {
-  authInited: state => state.authInited,
-  authed: state => state.authed
+function getUserDocs (firebaseUser) {
+  const UID = firebaseUser.uid
+  const ref = db.collection('users')
+  return ref.doc(UID)
+    .get().then(
+      async (doc) => {
+        let userData
+
+        if (doc.exists) {
+          console.log('userdoc exists', doc.data(), doc)
+          userData = doc.data()
+        } else {
+          console.log('userdoc does not exist yet, first time signin')
+          userData = {
+            displayName: firebaseUser.displayName,
+            email: firebaseUser.email,
+            photoURL: firebaseUser.photoURL
+          }
+
+          await ref.doc(UID).set(userData)
+        }
+
+        return userData
+      })
 }

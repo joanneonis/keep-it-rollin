@@ -60,7 +60,7 @@ export default {
   mounted () {
     if (this.$store.state.auth.authed) {
       this.welcomeMessage.messages = [
-        `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.user)}`
+        `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.userData.displayName)}`
       ]
       this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
     }

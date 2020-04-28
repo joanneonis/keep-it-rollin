@@ -4,7 +4,7 @@
       slot="body"
       class="input-panel__large"
     >
-      <energy-slider />
+      <energy-slider @energyLevel="getEnergyLevel" />
     </div>
     <div
       slot="body"
@@ -16,6 +16,7 @@
         </label>
         <textarea
           id="note"
+          v-model="note"
           name="note"
           cols="30"
           rows="10"
@@ -26,7 +27,7 @@
       <button
         class="button button--primary"
       >
-        Volgende stap
+        Opslaan
       </button>
     </div>
   </input-panel>
@@ -40,6 +41,19 @@ export default {
   components: {
     energySlider,
     inputPanel
+  },
+
+  data () {
+    return {
+      energyLevel: null,
+      note: null
+    }
+  },
+
+  methods: {
+    getEnergyLevel ($event) {
+      this.energyLevel = $event
+    }
   }
 }
 </script>
