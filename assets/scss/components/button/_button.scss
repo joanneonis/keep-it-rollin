@@ -15,8 +15,8 @@ $font-baseline-offset: 5px;
   line-height: 1; // rem($button-size + $font-baseline-offset)
   border-radius: rem($button-size / 2);
   transition: all 200ms ease-in-out;
-  color: white;
   font-size: rem(12px);
+  cursor: pointer;
 
   @include media-breakpoint-up(md) {
     height: rem($button-size * 1.2);

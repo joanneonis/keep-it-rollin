@@ -1,5 +1,5 @@
 /* track
-!* viewState { ENUM } as overview or playing etc.
+* viewState { ENUM } as overview or playing etc.
 * activeParts { trackPart } what trackparts are placed
 * date { Timestamp } what day is active (usually today)
 * trackData { Object } metadata about the track (like creationtime etc.)
@@ -8,15 +8,23 @@
 import moment from 'moment'
 import firebase from 'firebase'
 import { db } from '~/plugins/firebase'
+import { trackViewStates } from '~/helpers/trackHelpers'
 
 export const state = () => ({
   activeParts: [],
   trackData: null,
   date: moment().format('DDMMYYYY'),
-  trackInited: false
+  trackInited: false,
+  viewState: trackViewStates.OVERVIEW
 })
 
 export const mutations = {
+  viewState (stateMutation, state) {
+    const sm = stateMutation
+
+    sm.viewState = state
+  },
+
   setTrackInited (stateMutation, boolean) {
     const sm = stateMutation
 
@@ -51,6 +59,10 @@ export const actions = {
     // if user is not signed in, do not try to fetch
     if (!rootState.auth.userUid) { return }
     const track = await checkTrack(db.collection('users').doc(rootState.auth.userUid))
+    if (!track.trackParts || track.trackParts.length === 0) {
+      commit('viewState', trackViewStates.CREATION.FIRST)
+    }
+
     commit('setTrack', track)
     commit('setTrackInited', true)
   },

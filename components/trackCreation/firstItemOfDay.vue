@@ -1,8 +1,11 @@
 <template>
-  <input-panel>
+  <input-panel
+    :title="title"
+    :description="description"
+  >
     <div
       slot="body"
-      class="input-panel__large"
+      class="input-panel__large input-panel__large--primary"
     >
       <energy-slider @energyLevel="getEnergyLevel" />
     </div>
@@ -37,6 +40,7 @@
 <script>
 import energySlider from '~/components/energySlider'
 import inputPanel from '~/components/inputPanel'
+import { trackViewStates } from '~/helpers/trackHelpers'
 
 export default {
   components: {
@@ -47,7 +51,9 @@ export default {
   data () {
     return {
       energyLevel: null,
-      note: null
+      note: null,
+      title: 'Yes, een nieuwe dag!',
+      description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?'
     }
   },
 
@@ -57,6 +63,7 @@ export default {
     },
 
     setTrackpartData () {
+      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
       this.$store.dispatch('track/setTrackPart', {
         type: 'start-of-day',
         energy: this.energyLevel,

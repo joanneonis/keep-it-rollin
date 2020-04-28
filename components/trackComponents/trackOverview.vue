@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    trackparts:
+    <strong>viewState:</strong> {{ $store.state.track.viewState }}
+    <br>
+    <strong>trackparts:</strong>
     <pre>
       {{ activeTrackParts }}
     </pre>

@@ -2,7 +2,7 @@
   $font-color: nth($colors, 1);
   $bg-color: nth($colors, 2);
 
-  .button--#{$name} {
+  .button.button--#{$name} {
     color: $font-color;
     background-color: $bg-color;
 

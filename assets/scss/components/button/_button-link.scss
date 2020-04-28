@@ -1,0 +1,8 @@
+.button-link {
+  padding: rem(10px) rem(15px);
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+
+  &--primary { color: theme-color(primary); }
+}

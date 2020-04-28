@@ -1,0 +1,14 @@
+.checkbox {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: gray-color(200);
+  padding: rem(12px);
+  border-radius: rem(20px);
+  margin-right: 2px;
+
+  input[type="radio"] {
+    -webkit-appearance: checkbox;
+    margin-right: rem(7px);
+    width: auto;
+  }
+}

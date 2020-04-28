@@ -4,7 +4,7 @@
       for="energySlider"
       class="energy-slider__label"
     >
-      Je energie-niveau
+      Jouw huidige energie-niveau
     </label>
     <input
       id="energySlider"

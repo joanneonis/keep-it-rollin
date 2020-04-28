@@ -122,6 +122,7 @@ export const actions = {
 
     auth2.signOut().then(() => {
       commit('setUserState', '')
+      commit('setUserData', {})
       commit('setAuthState', false)
     }).catch((error) => {
       console.log(error)

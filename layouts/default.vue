@@ -37,8 +37,4 @@ export default {
   align-items: flex-start;
   z-index: 2;
 }
-
-.body-container {
-  height: 100vh;
-}
 </style>
