@@ -2,26 +2,22 @@
   <div>
     <div class="app-container container">
       <intro v-if="!$store.state.auth.authed" />
-      <!-- <calendar-items /> -->
-      <first-item-of-day v-if="$store.state.track.activeParts.length === 0" />
+      <first-item-of-day v-if="$store.state.track.trackInited && $store.state.track.activeParts.length === 0" />
     </div>
-
-    <!-- <tube v-if="$store.state.auth.authed" /> -->
+    <track-overview v-if="$store.state.track.trackInited" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import intro from '~/components/intro'
-// import calendarItems from '~/components/calendarItems'
-// import tube from '~/components/three/tube'
-import firstItemOfDay from '~/components/firstItemOfDay'
+import firstItemOfDay from '~/components/trackCreation/firstItemOfDay' // TODO dynamic import with inputcards
+import trackOverview from '~/components/trackOverview'
 
 export default {
   components: {
     intro,
-    // calendarItems,
-    // tube
+    trackOverview,
     firstItemOfDay
   },
 

@@ -1,7 +1,8 @@
 /* track
 !* viewState { ENUM } as overview or playing etc.
-!* activeParts { trackPart } what trackparts are placed
-!* date { Timestamp } what day is active (usually today)
+* activeParts { trackPart } what trackparts are placed
+* date { Timestamp } what day is active (usually today)
+* trackData { Object } metadata about the track (like creationtime etc.)
 */
 
 import moment from 'moment'
@@ -11,10 +12,17 @@ import { db } from '~/plugins/firebase'
 export const state = () => ({
   activeParts: [],
   trackData: null,
-  todaysDocRef: moment().format('DDMMYYYY')
+  date: moment().format('DDMMYYYY'),
+  trackInited: false
 })
 
 export const mutations = {
+  setTrackInited (stateMutation, boolean) {
+    const sm = stateMutation
+
+    sm.trackInited = boolean
+  },
+
   setTrack (stateMutation, trackDoc) {
     const sm = stateMutation
 
@@ -40,12 +48,14 @@ export const mutations = {
 
 export const actions = {
   async getTrack ({ commit, rootState }) {
+    // if user is not signed in, do not try to fetch
+    if (!rootState.auth.userUid) { return }
     const track = await checkTrack(db.collection('users').doc(rootState.auth.userUid))
     commit('setTrack', track)
+    commit('setTrackInited', true)
   },
 
   setTrackPart ({ commit, rootState }, trackPartData) {
-    console.log('settrackpart', trackPartData)
     const docRefDate = moment().format('DDMMYYYY')
     const todaysTrack = db.collection('users').doc(rootState.auth.userUid).collection('tracks').doc(docRefDate)
 

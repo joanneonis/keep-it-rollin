@@ -133,18 +133,19 @@ export default {
 
 <style lang="scss">
 $chatbot-message-icon-size: 10px;
-$chatbot-icon-size: 80px;
+$chatbot-icon-size: 60px;
 
 .chatbot-icon {
   border-radius: 100px;
   box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
 
   img {
-    width: $chatbot-icon-size;
+    width: rem($chatbot-icon-size);
   }
 }
 
 .chatbot {
+  position: relative;
   display: flex;
   left: 0;
   right: 0;
@@ -156,6 +157,8 @@ $chatbot-icon-size: 80px;
 }
 
 .chatbot-messages {
+  position: absolute;
+  margin-left: rem($chatbot-icon-size);
   width: calc(100% - #{$chatbot-icon-size});
 }
 

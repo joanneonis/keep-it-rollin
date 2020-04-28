@@ -92,7 +92,7 @@ export const actions = {
     })
   },
 
-  async handleAuth ({ commit }) {
+  async handleAuth ({ commit, dispatch }) {
     const googleAuth = apiInstance.auth2.getAuthInstance()
     const googleUser = await googleAuth.signIn()
 
@@ -112,6 +112,8 @@ export const actions = {
     commit('setUserData', userData)
 
     commit('setAuthState', true)
+
+    dispatch('track/getTrack', null, { root: true })
   },
 
   handleSignout ({ commit }) {
