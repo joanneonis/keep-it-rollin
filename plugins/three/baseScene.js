@@ -6,6 +6,12 @@ import Stats from 'stats.js'
 // TODO delete stuff on destroy
 
 export class BaseScene {
+  cameraPos = {
+    x: -0.5,
+    y: 1,
+    z: 3
+  }
+
   constructor (container) {
     this.container = container
 
@@ -52,8 +58,7 @@ export class BaseScene {
   }
 
   cameraSettings () {
-    this.camera.position.set(-0.546, 1.084, 2.859)
-    this.camera.rotation.set(-20.89, -10.19, -3.86)
+    this.camera.position.set(this.cameraPos.x, this.cameraPos.y, this.cameraPos.z)
   }
 
   rendererSettings () {

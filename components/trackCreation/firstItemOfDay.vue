@@ -2,6 +2,7 @@
   <input-panel
     :title="title"
     :description="description"
+    :has-close="false"
   >
     <div
       slot="body"

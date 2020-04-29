@@ -7,6 +7,15 @@
       {{ activeTrackParts }}
     </pre>
 
+    <!-- <div class="testControls">
+      <button
+        class="button button--primary"
+        @click="changeTarget()"
+      >
+        change target
+      </button>
+    </div> -->
+
     <div
       id="scene-container"
       ref="sceneContainer"
@@ -23,25 +32,49 @@ export default {
     return {
       activeTrackParts: this.$store.state.track.activeParts,
       baseScene: null,
-      halfPipe: null
+      target: [0, 0, 0],
+      sceneModels: {
+        item1: {
+          model: null,
+          position: [2, 0, 1]
+        },
+        item2: {
+          model: null,
+          position: [0, 0, 0]
+        }
+      }
     }
   },
 
   mounted () {
     // create main scene
     this.baseScene = new BaseScene(this.$refs.sceneContainer)
-    this.addTestObject()
+
+    const models = Object.keys(this.sceneModels)
+    models.forEach(async (key) => {
+      await this.addTestObject(key, this.sceneModels[key])
+      await this.addTestObject(key, this.sceneModels[key])
+    })
+
+    console.log(this.baseScene.scene)
   },
 
   methods: {
-    async addTestObject () {
+    async addTestObject (name, modelObj) {
+      modelObj.model = new BasePart('halfpipe', name, modelObj.position)
+
       // create and load halfpipe
-      this.halfPipe = new BasePart('halfpipe')
-      await this.halfPipe.loadModel()
-      this.halfPipe.generateExpressionsFolder(this.baseScene.gui)
+      await modelObj.model.loadModel()
+      modelObj.model.generateExpressionsFolder(this.baseScene.gui)
+      modelObj.model.generatePartPositionFolder(this.baseScene.gui)
 
       // add halfpipe to main scene
-      this.baseScene.scene.add(this.halfPipe.scene)
+      this.baseScene.scene.add(modelObj.model.scene)
+    },
+
+    changeTarget () {
+      this.baseScene.controls.target.set(...this.sceneModels.item1.position)
+      this.baseScene.controls.update()
     }
   }
 }
@@ -68,5 +101,11 @@ export default {
       display: none;
     }
   }
+}
+
+.testControls {
+  position: fixed;
+  z-index: 20;
+  bottom: 20px;
 }
 </style>
