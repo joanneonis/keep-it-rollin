@@ -5,7 +5,7 @@ import Stats from 'stats.js'
 
 // TODO delete stuff on destroy
 
-export class Scene {
+export class BaseScene {
   constructor (
     container
   ) {
@@ -74,7 +74,7 @@ export class Scene {
     this.scene.add(directionalLight)
   }
 
-  // plane
+  // floorPlane
   plane () {
     const geometry = new THREE.PlaneGeometry(300, 300)
     const material = new THREE.MeshLambertMaterial({
