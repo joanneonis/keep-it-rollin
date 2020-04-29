@@ -1,9 +1,12 @@
 import * as THREE from 'three'
 import { loadGlb } from '~/plugins/three/helpers/helpers'
 
-export class HalfPipe {
+export class BasePart {
   scene
-  fileName = 'halfpipe'
+
+  constructor (fileName) {
+    this.fileName = fileName
+  }
 
   async loadModel () {
     const gltf = await loadGlb(this.fileName)

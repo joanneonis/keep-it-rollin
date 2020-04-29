@@ -16,7 +16,7 @@
 
 <script>
 import { BaseScene } from '~/plugins/three/baseScene'
-import { HalfPipe } from '~/plugins/three/parts/tube'
+import { BasePart } from '~/plugins/three/parts/basePart'
 
 export default {
   data () {
@@ -27,17 +27,22 @@ export default {
     }
   },
 
-  async mounted () {
+  mounted () {
     // create main scene
     this.baseScene = new BaseScene(this.$refs.sceneContainer)
+    this.addTestObject()
+  },
 
-    // create and load halfpipe
-    this.halfPipe = new HalfPipe()
-    await this.halfPipe.loadModel()
-    this.halfPipe.generateExpressionsFolder(this.baseScene.gui)
+  methods: {
+    async addTestObject () {
+      // create and load halfpipe
+      this.halfPipe = new BasePart('halfpipe')
+      await this.halfPipe.loadModel()
+      this.halfPipe.generateExpressionsFolder(this.baseScene.gui)
 
-    // add halfpipe to main scene
-    this.baseScene.scene.add(this.halfPipe.scene)
+      // add halfpipe to main scene
+      this.baseScene.scene.add(this.halfPipe.scene)
+    }
   }
 }
 </script>

@@ -92,6 +92,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.app-container {
+  position: relative;
+  z-index: 10;
+}
+
 .app-footer {
   position: absolute;
   bottom: 0;
