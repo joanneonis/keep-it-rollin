@@ -3,7 +3,6 @@ import * as THREE from 'three'
 // eslint-disable-next-line no-unused-vars
 import CameraControls from 'camera-controls'
 import * as dat from 'dat.gui'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'stats.js'
 
 // TODO delete stuff on destroy
@@ -53,9 +52,6 @@ export class BaseScene {
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.rendererSettings()
 
-    // developer controls
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-
     // lights
     this.addLights()
 
@@ -78,6 +74,11 @@ export class BaseScene {
 
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
+    this.cameraControls.maxPolarAngle = Math.PI / 2
+
+    this.cameraControls.addEventListener('controlstart', this.dragControls)
+    this.cameraControls.addEventListener('control', this.dragControls)
+    this.cameraControls.addEventListener('controlend', this.dragControls)
   }
 
   sceneSettings () {
@@ -140,8 +141,14 @@ export class BaseScene {
     }
   }
 
-  zoomTo (mesh) {
-    this.cameraControls.fitTo(mesh, true)
+  zoomTo (mesh, panelActive = false) {
+    const padding = 0.3
+    this.cameraControls.fitTo(mesh, true, {
+      paddingLeft: panelActive ? 0 : padding,
+      paddingRight: panelActive ? 1.5 : padding,
+      paddingBottom: padding,
+      paddingTop: padding
+    })
     this.cameraControls.rotateTo(-Math.PI * 0.4, Math.PI * 0.4, true)
   }
 
@@ -204,5 +211,9 @@ export class BaseScene {
     // event.preventDefault()
     this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
+  }
+
+  dragControls (event) {
+    console.log(event)
   }
 }

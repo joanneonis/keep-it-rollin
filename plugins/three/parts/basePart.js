@@ -23,7 +23,7 @@ export class BasePart {
   generateExpressionsFolder (gui) {
     this.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
-        const halfPipe = node
+        const mesh = node
         node.castShadow = true
         node.name = this.objectName
         node.testPos = this.position
@@ -31,10 +31,11 @@ export class BasePart {
         // temp set random color
         node.material.color.setHex(Math.random() * 0xFFFFFF)
 
-        const expressions = Object.keys(halfPipe.morphTargetDictionary)
+        if (!mesh.morphTargetDictionary) { return }
+        const expressions = Object.keys(mesh.morphTargetDictionary)
         const expressionFolder = gui.addFolder(`MorphTargets - ${this.objectName}`)
         for (let i = 0; i < expressions.length; i++) {
-          expressionFolder.add(halfPipe.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
+          expressionFolder.add(mesh.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
         }
       }
     })

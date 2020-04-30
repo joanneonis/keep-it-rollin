@@ -35,20 +35,24 @@ export default {
       target: [0, 0, 0],
       sceneModels: {
         item1: {
+          fileName: 'halfpipe',
           model: null,
-          position: [-2.45, 0, 0]
+          position: [1, 0, -1.6]
         },
         item2: {
+          fileName: 'kegel',
           model: null,
-          position: [2, 0, 1]
+          position: [1.9, 0, 0]
         },
         item3: {
+          fileName: 'halfpipe',
           model: null,
-          position: [1.2, 0, -0.6]
+          position: [0.8, 0, 1.45]
         },
         item4: {
+          fileName: 'kegel',
           model: null,
-          position: [3, 0, 0.2]
+          position: [1, 0, 6]
         }
       }
     }
@@ -66,7 +70,7 @@ export default {
 
   methods: {
     async addTestObject (name, modelObj) {
-      modelObj.model = new BasePart('halfpipe', name, modelObj.position)
+      modelObj.model = new BasePart(modelObj.fileName, name, modelObj.position)
 
       // create and load halfpipe
       await modelObj.model.loadModel()
