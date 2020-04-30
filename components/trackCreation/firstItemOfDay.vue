@@ -2,6 +2,7 @@
   <input-panel
     :title="title"
     :description="description"
+    :has-close="false"
   >
     <div
       slot="body"
@@ -20,6 +21,7 @@
         <textarea
           id="note"
           v-model="note"
+          placeholder="Waardoor voel je je zo? Door iets bijzonders of juist iets kleins?"
           name="note"
           cols="30"
           rows="10"
