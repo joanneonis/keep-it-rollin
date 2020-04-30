@@ -36,11 +36,19 @@ export default {
       sceneModels: {
         item1: {
           model: null,
-          position: [2, 0, 1]
+          position: [0, 0, 0]
         },
         item2: {
           model: null,
-          position: [0, 0, 0]
+          position: [2, 0, 1]
+        },
+        item3: {
+          model: null,
+          position: [1.2, 0, -0.6]
+        },
+        item4: {
+          model: null,
+          position: [3, 0, 0.2]
         }
       }
     }
