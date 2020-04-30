@@ -36,7 +36,7 @@ export default {
       sceneModels: {
         item1: {
           model: null,
-          position: [0, 0, 0]
+          position: [-2.45, 0, 0]
         },
         item2: {
           model: null,

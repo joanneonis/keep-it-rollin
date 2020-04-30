@@ -8,12 +8,15 @@ export class BasePart {
     this.fileUrl = fileUrl
     this.objectName = objectName
     this.position = position
+
+    // temp random colors
+    this.color = new THREE.Color(0xFFFFFF)
   }
 
   async loadModel () {
     const gltf = await loadGlb(this.fileUrl)
     this.scene = gltf.scene
-    this.scene.name = this.objectName
+    this.scene.name = `scene-${this.objectName}`
     this.scene.position.set(...this.position)
   }
 
@@ -22,6 +25,11 @@ export class BasePart {
       if (node instanceof THREE.Mesh) {
         const halfPipe = node
         node.castShadow = true
+        node.name = this.objectName
+        node.testPos = this.position
+
+        // temp set random color
+        node.material.color.setHex(Math.random() * 0xFFFFFF)
 
         const expressions = Object.keys(halfPipe.morphTargetDictionary)
         const expressionFolder = gui.addFolder(`MorphTargets - ${this.objectName}`)
@@ -34,9 +42,9 @@ export class BasePart {
 
   generatePartPositionFolder (gui) {
     const positionFolder = gui.addFolder(`${this.objectName} position`)
-    positionFolder.add(this.scene.position, 'x', -20, 20).step(0.01)
-    positionFolder.add(this.scene.position, 'y', -20, 20).step(0.01)
-    positionFolder.add(this.scene.position, 'z', -20, 20).step(0.01)
+    positionFolder.add(this.scene.position, 'x', -10, 10).step(0.01)
+    positionFolder.add(this.scene.position, 'y', -10, 10).step(0.01)
+    positionFolder.add(this.scene.position, 'z', -10, 10).step(0.01)
   }
 
   update () {

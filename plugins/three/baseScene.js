@@ -1,4 +1,7 @@
 import * as THREE from 'three'
+// import TWEEN from '@tweenjs/tween.js'
+// eslint-disable-next-line no-unused-vars
+import CameraControls from 'camera-controls'
 import * as dat from 'dat.gui'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'stats.js'
@@ -6,7 +9,7 @@ import Stats from 'stats.js'
 // TODO delete stuff on destroy
 
 export class BaseScene {
-  cameraPos = {
+  cameraOrigin = {
     x: -0.5,
     y: 1,
     z: 3
@@ -19,9 +22,14 @@ export class BaseScene {
   radius = 100
   theta = 0
 
+  clock = new THREE.Clock()
+  delta
+  cameraControls
+
   trackParts = new THREE.Group()
 
   constructor (container) {
+    CameraControls.install({ THREE })
     this.container = container
 
     // develop tools
@@ -67,6 +75,9 @@ export class BaseScene {
 
     // listen to mouse events
     document.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
+
+    // init controls
+    this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
   }
 
   sceneSettings () {
@@ -74,7 +85,7 @@ export class BaseScene {
   }
 
   cameraSettings () {
-    this.camera.position.set(this.cameraPos.x, this.cameraPos.y, this.cameraPos.z)
+    this.camera.position.set(this.cameraOrigin.x, this.cameraOrigin.y, this.cameraOrigin.z)
   }
 
   rendererSettings () {
@@ -88,6 +99,9 @@ export class BaseScene {
   }
 
   render () {
+    this.delta = this.clock.getDelta()
+    this.cameraControls.update(this.delta)
+
     this.theta += 0.1
     this.raycaster.setFromCamera(this.mouseClick, this.camera)
     this.checkIntersection()
@@ -99,11 +113,14 @@ export class BaseScene {
   // checks if mouse intersects with something in the trackpartgroup
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
-    if (intersects.length > 0) {
+    if (intersects.length > 0 && intersects.length < this.trackParts.children.length) {
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
+
+        // hopefully animate camera to target
+        this.zoomTo(intersects[0])
 
         // set currently clicked hex
         this.INTERSECTED = intersects[0].object
@@ -117,6 +134,11 @@ export class BaseScene {
       // reset intersection history
       this.INTERSECTED = null
     }
+  }
+
+  zoomTo (intersection) {
+    this.cameraControls.fitTo(intersection.object, true)
+    console.log(intersection.object.name, intersection)
   }
 
   addLights () {
