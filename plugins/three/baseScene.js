@@ -13,7 +13,8 @@ export class BaseScene {
   }
 
   raycaster = new THREE.Raycaster()
-  mouse = new THREE.Vector2()
+  mouseMove = new THREE.Vector2()
+  mouseClick = new THREE.Vector2()
   INTERSECTED
   radius = 100
   theta = 0
@@ -65,7 +66,7 @@ export class BaseScene {
     this.container.appendChild(this.stats.dom)
 
     // listen to mouse events
-    document.addEventListener('mousemove', this.onDocumentMouseMove.bind(this), false)
+    document.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
   }
 
   sceneSettings () {
@@ -88,28 +89,32 @@ export class BaseScene {
 
   render () {
     this.theta += 0.1
-    this.raycaster.setFromCamera(this.mouse, this.camera)
+    this.raycaster.setFromCamera(this.mouseClick, this.camera)
     this.checkIntersection()
 
     this.renderer.render(this.scene, this.camera)
     this.stats.update()
   }
 
+  // checks if mouse intersects with something in the trackpartgroup
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
     if (intersects.length > 0) {
+      // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
+        // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
+        // set currently clicked hex
         this.INTERSECTED = intersects[0].object
         this.INTERSECTED.currentHex = this.INTERSECTED.material.emissive.getHex()
         this.INTERSECTED.material.emissive.setHex(0xFF0000)
-
-        // console.log('intersects', this.INTERSECTED)
       }
     } else {
+      // also reset hex previous clicked if no target is found on new click (clickoff)
       if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
+      // reset intersection history
       this.INTERSECTED = null
     }
   }
@@ -167,5 +172,11 @@ export class BaseScene {
     event.preventDefault()
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+  }
+
+  onDocumentMouseClick (event) {
+    event.preventDefault()
+    this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
+    this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
   }
 }
