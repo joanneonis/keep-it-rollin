@@ -30,7 +30,7 @@ export default {
     intro,
     trackOverview,
     // eslint-disable-next-line vue/no-unused-components
-    firstItemOfDay,
+    firstItemOfDay, // !TODO set back
     trackFooterActions,
     createTask,
     createBooster

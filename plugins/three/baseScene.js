@@ -12,6 +12,14 @@ export class BaseScene {
     z: 3
   }
 
+  raycaster = new THREE.Raycaster()
+  mouse = new THREE.Vector2()
+  INTERSECTED
+  radius = 100
+  theta = 0
+
+  trackParts = new THREE.Group()
+
   constructor (container) {
     this.container = container
 
@@ -22,6 +30,10 @@ export class BaseScene {
     // scene
     this.scene = new THREE.Scene()
     this.sceneSettings()
+
+    // add trackpart container (used for interactivity also)
+    this.trackParts.name = 'trackparts'
+    this.scene.add(this.trackParts)
 
     // camera
     this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100)
@@ -51,6 +63,9 @@ export class BaseScene {
 
     // add stats to dom
     this.container.appendChild(this.stats.dom)
+
+    // listen to mouse events
+    document.addEventListener('mousemove', this.onDocumentMouseMove.bind(this), false)
   }
 
   sceneSettings () {
@@ -72,8 +87,31 @@ export class BaseScene {
   }
 
   render () {
+    this.theta += 0.1
+    this.raycaster.setFromCamera(this.mouse, this.camera)
+    this.checkIntersection()
+
     this.renderer.render(this.scene, this.camera)
     this.stats.update()
+  }
+
+  checkIntersection () {
+    const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
+    if (intersects.length > 0) {
+      if (this.INTERSECTED !== intersects[0].object) {
+        if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
+
+        this.INTERSECTED = intersects[0].object
+        this.INTERSECTED.currentHex = this.INTERSECTED.material.emissive.getHex()
+        this.INTERSECTED.material.emissive.setHex(0xFF0000)
+
+        // console.log('intersects', this.INTERSECTED)
+      }
+    } else {
+      if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
+
+      this.INTERSECTED = null
+    }
   }
 
   addLights () {
@@ -101,6 +139,7 @@ export class BaseScene {
     plane.rotation.x = THREE.Math.degToRad(-90)
     plane.position.y = 0.061
     plane.receiveShadow = true
+    plane.name = 'floorplane'
     this.scene.add(plane)
   }
 
@@ -122,5 +161,11 @@ export class BaseScene {
       // this.camera.lookAt(new THREE.Vector3(this.cameratarget.x, this.cameratarget.y, this.cameratarget.z))
       this.camera.updateProjectionMatrix()
     })
+  }
+
+  onDocumentMouseMove (event) {
+    event.preventDefault()
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
   }
 }

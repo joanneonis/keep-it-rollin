@@ -61,10 +61,7 @@ export default {
     const models = Object.keys(this.sceneModels)
     models.forEach(async (key) => {
       await this.addTestObject(key, this.sceneModels[key])
-      await this.addTestObject(key, this.sceneModels[key])
     })
-
-    console.log(this.baseScene.scene)
   },
 
   methods: {
@@ -77,7 +74,10 @@ export default {
       modelObj.model.generatePartPositionFolder(this.baseScene.gui)
 
       // add halfpipe to main scene
-      this.baseScene.scene.add(modelObj.model.scene)
+      const trackPartContainer = this.baseScene.scene.children.find((obj) => {
+        return obj.name === 'trackparts'
+      })
+      trackPartContainer.add(modelObj.model.scene)
     },
 
     changeTarget () {
