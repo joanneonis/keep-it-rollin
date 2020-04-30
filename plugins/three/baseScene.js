@@ -74,7 +74,7 @@ export class BaseScene {
     this.container.appendChild(this.stats.dom)
 
     // listen to mouse events
-    document.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
+    this.renderer.domElement.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
 
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
@@ -99,12 +99,13 @@ export class BaseScene {
   }
 
   render () {
+    this.checkIntersection()
+
     this.delta = this.clock.getDelta()
     this.cameraControls.update(this.delta)
 
     this.theta += 0.1
     this.raycaster.setFromCamera(this.mouseClick, this.camera)
-    this.checkIntersection()
 
     this.renderer.render(this.scene, this.camera)
     this.stats.update()
@@ -113,14 +114,15 @@ export class BaseScene {
   // checks if mouse intersects with something in the trackpartgroup
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
-    if (intersects.length > 0 && intersects.length < this.trackParts.children.length) {
+
+    if (intersects.length > 0) {
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
         // hopefully animate camera to target
-        this.zoomTo(intersects[0])
+        this.zoomTo(intersects[0].object)
 
         // set currently clicked hex
         this.INTERSECTED = intersects[0].object
@@ -131,14 +133,16 @@ export class BaseScene {
       // also reset hex previous clicked if no target is found on new click (clickoff)
       if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
+      // this.cameraControls.reset(true) // TODO
+
       // reset intersection history
       this.INTERSECTED = null
     }
   }
 
-  zoomTo (intersection) {
-    this.cameraControls.fitTo(intersection.object, true)
-    console.log(intersection.object.name, intersection)
+  zoomTo (mesh) {
+    this.cameraControls.fitTo(mesh, true)
+    this.cameraControls.rotateTo(-Math.PI * 0.4, Math.PI * 0.4, true)
   }
 
   addLights () {
@@ -197,7 +201,7 @@ export class BaseScene {
   }
 
   onDocumentMouseClick (event) {
-    event.preventDefault()
+    // event.preventDefault()
     this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
   }

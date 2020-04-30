@@ -2,7 +2,7 @@
   <div>
     <div class="app-container container">
       <intro v-if="!$store.state.auth.authed" />
-      <!-- <first-item-of-day v-if="!$store.state.track.activeParts || $store.state.track.activeParts.length === 0" /> -->
+      <first-item-of-day v-if="!$store.state.track.activeParts || $store.state.track.activeParts.length === 0" />
       <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
       <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
     </div>
@@ -29,8 +29,7 @@ export default {
   components: {
     intro,
     trackOverview,
-    // eslint-disable-next-line vue/no-unused-components
-    firstItemOfDay, // !TODO set back
+    firstItemOfDay,
     trackFooterActions,
     createTask,
     createBooster
