@@ -6,16 +6,6 @@
     <pre>
       {{ activeTrackParts }}
     </pre>
-
-    <!-- <div class="testControls">
-      <button
-        class="button button--primary"
-        @click="changeTarget()"
-      >
-        change target
-      </button>
-    </div> -->
-
     <div
       id="scene-container"
       ref="sceneContainer"
@@ -82,11 +72,6 @@ export default {
         return obj.name === 'trackparts'
       })
       trackPartContainer.add(modelObj.model.scene)
-    },
-
-    changeTarget () {
-      this.baseScene.controls.target.set(...this.sceneModels.item1.position)
-      this.baseScene.controls.update()
     }
   }
 }

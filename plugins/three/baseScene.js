@@ -19,7 +19,6 @@ export class BaseScene {
   mouseClick = new THREE.Vector2()
   INTERSECTED
   radius = 100
-  theta = 0
 
   clock = new THREE.Clock()
   delta
@@ -105,7 +104,6 @@ export class BaseScene {
     this.delta = this.clock.getDelta()
     this.cameraControls.update(this.delta)
 
-    this.theta += 0.1
     this.raycaster.setFromCamera(this.mouseClick, this.camera)
 
     this.renderer.render(this.scene, this.camera)
