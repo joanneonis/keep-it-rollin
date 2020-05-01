@@ -19,6 +19,13 @@ export class BasePart {
     this.scene = gltf.scene
     this.scene.name = `scene-${this.objectName}`
     this.scene.position.set(...this.position)
+
+    // todo whatif more than one mesh?
+    this.scene.traverse((node) => {
+      if (node instanceof THREE.Mesh) {
+        this.mesh = node
+      }
+    })
   }
 
   generateExpressionsFolder (gui) {

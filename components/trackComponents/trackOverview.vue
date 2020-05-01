@@ -31,24 +31,6 @@ export default {
       trackPartContainer: null,
       localModel: null,
       activeTrackPartModels: []
-      // activeTrackParts: this.$store.state.track.activeParts
-      // sceneModels: { // temp test code
-      //   item2: {
-      //     fileName: 'kegel',
-      //     model: null,
-      //     position: [1.9, 0, 0]
-      //   },
-      //   item3: {
-      //     fileName: 'halfpipe',
-      //     model: null,
-      //     position: [0.8, 0, 1.45]
-      //   },
-      //   item4: {
-      //     fileName: 'kegel',
-      //     model: null,
-      //     position: [1, 0, 6]
-      //   }
-      // }
     }
   },
 
@@ -72,30 +54,22 @@ export default {
     }
   },
 
-  mounted () {
+  async mounted () {
     // create main scene
     this.baseScene = new BaseScene(this.$refs.sceneContainer)
     this.trackPartContainer = this.baseScene.scene.children.find(obj => obj.name === 'trackparts')
 
     if (this.viewState === trackViewStates.CREATION.FIRST) {
-      this.addActiveEdit()
+      await this.addActiveEdit()
+      // TODO why timout? Whats it waiting for?
+      setTimeout(() => {
+        this.baseScene.zoomTo(this.localModel.mesh, true)
+      })
     }
 
     if (this.viewState === trackViewStates.OVERVIEW) {
-      this.addModelsFromFb()
+      await this.addModelsFromFb()
     }
-
-    // very ugly tests yesyesyes
-    // if (this.viewState === trackViewStates.CREATION.FIRST) {
-    //   await this.addTestObject('firstObject', this.firstObject)
-
-    //   const that = this
-    //   // !todo something is too slow?
-    //   setTimeout(function () {
-    //     that.baseScene.zoomTo(that.firstObject.model.mesh, true)
-    //   }, 100)
-    // }
-    // this.testSceneModels()
   },
 
   methods: {
