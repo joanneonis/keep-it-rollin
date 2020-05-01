@@ -3,6 +3,7 @@ import { loadGlb } from '~/plugins/three/helpers/helpers'
 
 export class BasePart {
   scene
+  mesh
 
   constructor (fileUrl, objectName, position) {
     this.fileUrl = fileUrl
@@ -24,12 +25,13 @@ export class BasePart {
     this.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
         const mesh = node
-        node.castShadow = true
-        node.name = this.objectName
-        node.testPos = this.position
+        mesh.castShadow = true
+        mesh.name = this.objectName
+        mesh.testPos = this.position
 
+        this.mesh = mesh
         // temp set random color
-        node.material.color.setHex(Math.random() * 0xFFFFFF)
+        mesh.material.color.setHex(Math.random() * 0xFFFFFF)
 
         if (!mesh.morphTargetDictionary) { return }
         const expressions = Object.keys(mesh.morphTargetDictionary)

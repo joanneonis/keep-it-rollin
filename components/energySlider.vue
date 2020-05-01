@@ -13,7 +13,7 @@
       min="0"
       max="100"
       :value="energyLevel"
-      @change="$emit('energyLevel', $event.target.value)"
+      @input="$emit('energyLevel', $event.target.value)"
     >
   </div>
 </template>

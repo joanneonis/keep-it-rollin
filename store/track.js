@@ -15,7 +15,8 @@ export const state = () => ({
   trackData: null,
   date: moment().format('DDMMYYYY'),
   trackInited: false,
-  viewState: trackViewStates.OVERVIEW
+  viewState: trackViewStates.OVERVIEW,
+  trackPartTransforms: 0
 })
 
 export const mutations = {
@@ -29,6 +30,12 @@ export const mutations = {
     const sm = stateMutation
 
     sm.trackInited = boolean
+  },
+
+  setDeforms (stateMutation, deform) {
+    const sm = stateMutation
+
+    sm.trackPartTransforms = deform
   },
 
   setTrack (stateMutation, trackDoc) {

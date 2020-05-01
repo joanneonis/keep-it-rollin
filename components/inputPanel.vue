@@ -54,6 +54,7 @@ export default {
   float: right;
   min-width: rem(400px);
   position: relative;
+  box-shadow: 0 2px 4px 0 rgba(10,13,33,0.06), 0 1px 23px 0 rgba(20,23,52,0.02);
 
   &__header {
     padding: rem(40px) rem(30px) rem(30px);

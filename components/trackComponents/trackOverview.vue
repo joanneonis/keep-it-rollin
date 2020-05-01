@@ -6,16 +6,6 @@
     <pre>
       {{ activeTrackParts }}
     </pre>
-
-    <!-- <div class="testControls">
-      <button
-        class="button button--primary"
-        @click="changeTarget()"
-      >
-        change target
-      </button>
-    </div> -->
-
     <div
       id="scene-container"
       ref="sceneContainer"
@@ -24,8 +14,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { BasePart } from '~/plugins/three/parts/basePart'
+// eslint-disable-next-line no-unused-vars
+import { trackViewStates } from '~/helpers/trackHelpers'
 
 export default {
   data () {
@@ -33,12 +26,12 @@ export default {
       activeTrackParts: this.$store.state.track.activeParts,
       baseScene: null,
       target: [0, 0, 0],
-      sceneModels: {
-        item1: {
-          fileName: 'halfpipe',
-          model: null,
-          position: [1, 0, -1.6]
-        },
+      firstObject: {
+        fileName: 'halfpipe',
+        model: null,
+        position: [1, 0, -1.6]
+      },
+      sceneModels: { // temp test code
         item2: {
           fileName: 'kegel',
           model: null,
@@ -58,17 +51,46 @@ export default {
     }
   },
 
-  mounted () {
-    // create main scene
-    this.baseScene = new BaseScene(this.$refs.sceneContainer)
-
-    const models = Object.keys(this.sceneModels)
-    models.forEach(async (key) => {
-      await this.addTestObject(key, this.sceneModels[key])
+  computed: {
+    ...mapState({
+      viewState: state => state.track.viewState,
+      trackPartTransforms: state => state.track.trackPartTransforms
     })
   },
 
+  watch: {
+    trackPartTransforms (newValue) {
+      if (newValue === 0) { return }
+      const deform = newValue / 100
+      this.firstObject.model.mesh.morphTargetInfluences[1] = deform
+    }
+  },
+
+  async mounted () {
+    // create main scene
+    this.baseScene = new BaseScene(this.$refs.sceneContainer)
+
+    // very ugly tests yesyesyes
+    if (this.viewState === trackViewStates.CREATION.FIRST) {
+      await this.addTestObject('firstObject', this.firstObject)
+
+      const that = this
+      // !todo something is too slow?
+      setTimeout(function () {
+        that.baseScene.zoomTo(that.firstObject.model.mesh, true)
+      }, 100)
+    }
+    // this.testSceneModels()
+  },
+
   methods: {
+    testSceneModels () {
+      const models = Object.keys(this.sceneModels)
+      models.forEach(async (key) => {
+        await this.addTestObject(key, this.sceneModels[key])
+      })
+    },
+
     async addTestObject (name, modelObj) {
       modelObj.model = new BasePart(modelObj.fileName, name, modelObj.position)
 
@@ -82,11 +104,6 @@ export default {
         return obj.name === 'trackparts'
       })
       trackPartContainer.add(modelObj.model.scene)
-    },
-
-    changeTarget () {
-      this.baseScene.controls.target.set(...this.sceneModels.item1.position)
-      this.baseScene.controls.update()
     }
   }
 }
