@@ -64,21 +64,20 @@ export const actions = {
     auth2Instance = await loadAuth2WithProps(credentials)
     const isAuthed = auth2Instance.isSignedIn.get()
 
-    // sets signin state
-    commit('setAuthState', isAuthed)
+    // double check also in fb auth
+    firebase.auth().onAuthStateChanged(async function (user) {
+      if (user && isAuthed) {
+        commit('setAuthState', isAuthed)
+        commit('setUserId', user.uid)
 
-    if (isAuthed) {
-      // if authed, set/update user
-      const fbUserData = firebase.auth().currentUser
-      console.log('already authed', fbUserData)
-      commit('setUserId', fbUserData.uid)
-
-      const userData = await getUserDocs(fbUserData)
-      commit('setUserData', userData)
-    } else {
-      // if not authed, clear user
-      commit('setUserData', {})
-    }
+        await getUserDocs(user.providerData[0])
+        commit('setUserData', user.providerData[0])
+        // User is signed in.
+      } else {
+        // No user is signed in.
+        commit('setUserData', {})
+      }
+    })
 
     // sets loading state
     commit('setInitState', true)
