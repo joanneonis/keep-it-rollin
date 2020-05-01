@@ -212,6 +212,6 @@ export class BaseScene {
   }
 
   dragControls (event) {
-    console.log(event)
+    // console.log(event)
   }
 }

@@ -5,8 +5,8 @@ export class BasePart {
   scene
   mesh
 
-  constructor (fileUrl, objectName, position) {
-    this.fileUrl = fileUrl
+  constructor (objectName, position) {
+    this.fileUrl = 'loremobject' // loremobject
     this.objectName = objectName
     this.position = position
 
