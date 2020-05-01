@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="app-container container">
-      <intro v-if="!$store.state.auth.authed" />
+      <intro v-if="!$store.getters['auth/signedInState']" />
       <first-item-of-day v-if="!$store.state.track.activeParts || $store.state.track.activeParts.length === 0" />
       <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
       <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
@@ -70,7 +70,7 @@ export default {
   },
 
   mounted () {
-    if (this.$store.state.auth.authed) {
+    if (this.$store.getters['auth/signedInState']) {
       this.welcomeMessage.messages = [
         `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.userData.displayName)}`
       ]

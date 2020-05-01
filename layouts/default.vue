@@ -6,7 +6,7 @@
     </div>
     <div class="body-container">
       <div
-        v-if="!$store.state.auth.authed"
+        v-if="!$store.getters['auth/signedInState']"
         class="app-container container"
       >
         <intro />

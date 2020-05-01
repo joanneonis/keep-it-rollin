@@ -1,6 +1,6 @@
 <template>
   <div class="account">
-    <template v-if="!$store.state.auth.authed">
+    <template v-if="!$store.getters['auth/signedInState']">
       <span class="account__label">Heb je al een account?</span>
       <button
         class="button button--primary button--sm"
@@ -11,12 +11,9 @@
     </template>
 
     <template
-      v-if="$store.state.auth.authed"
+      v-if="$store.getters['auth/signedInState']"
     >
-      <button
-        v-if="$store.state.auth.authed"
-        @click="signOut()"
-      >
+      <button @click="signOut()">
         Uitloggen <!-- Instellingen -->
       </button>
     </template>

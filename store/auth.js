@@ -77,10 +77,10 @@ export const actions = {
         // No user is signed in.
         commit('setUserData', {})
       }
-    })
 
-    // sets loading state
-    commit('setInitState', true)
+      // sets loading state
+      commit('setInitState', true)
+    })
   },
 
   async initClient () {
@@ -126,6 +126,15 @@ export const actions = {
     }).catch((error) => {
       console.log(error)
     })
+  }
+}
+
+export const getters = {
+  signedInState: (stateAuth) => {
+    if (!stateAuth.authInited) { return false }
+    if (stateAuth.authed) { return true }
+    if (!stateAuth.authed) { return false }
+    return false
   }
 }
 
