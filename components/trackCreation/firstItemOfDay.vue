@@ -81,7 +81,6 @@ export default {
   },
 
   mounted () {
-    // console.log('hoi', this.trackPart)
     // setup local
     this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },

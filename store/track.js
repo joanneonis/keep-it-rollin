@@ -81,7 +81,7 @@ export const actions = {
     commit('setTrackInited', true)
   },
 
-  setTrackPart ({ commit, rootState }, trackPartData) {
+  setTrackPart ({ commit, dispatch, rootState }, trackPartData) {
     const docRefDate = moment().format('DDMMYYYY')
     const todaysTrack = db.collection('users').doc(rootState.auth.userUid).collection('tracks').doc(docRefDate)
 
@@ -96,6 +96,8 @@ export const actions = {
     })
 
     commit('addTrackPart', trackPartData)
+    // get newly added item from fb
+    dispatch('getTrack')
   }
 }
 

@@ -24,13 +24,17 @@ import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
 import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
 
+const tempRandomPositions = [[1, 0, -1.6], [1.9, 0, 0], [0.8, 0, 1.45], [1, 0, 6]]
+
 export default {
   data () {
     return {
       baseScene: null,
       trackPartContainer: null,
       localModel: null,
-      activeTrackPartModels: []
+      activeModelCount: 0,
+      activeTrackPartModels: [],
+      loadingNewPart: true
     }
   },
 
@@ -43,13 +47,27 @@ export default {
   },
 
   watch: {
-    activeLocalPart: {
+    activeLocalPart: { // todo change to a getter for only energy? (depends on other model properties)
       deep: true,
 
-      handler (e) {
-        console.log('activeLocalPart trackoverview changed to', e)
-        if (!this.localModel) { return }
-        this.localModel.updateEnergy(e.energyLevel)
+      handler (newVal, oldVal) {
+        if (!this.localModel || this.loadingNewPart) { return }
+
+        console.log('hihi ik voer dit stiekem te vroeg uit', newVal, oldVal)
+
+        // lala selecteer specifiek het laatste model
+        this.localModel.updateEnergy(newVal.energyLevel)
+      }
+    },
+
+    viewState (e) {
+      console.log('viewstate changed', e)
+      // if (this.viewState === trackViewStates.OVERVIEW) {
+      //   await this.addModelsFromFb()
+      // }
+
+      if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
+        this.addActiveEdit()
       }
     }
   },
@@ -59,37 +77,45 @@ export default {
     this.baseScene = new BaseScene(this.$refs.sceneContainer)
     this.trackPartContainer = this.baseScene.scene.children.find(obj => obj.name === 'trackparts')
 
+    // always load current track
+    await this.addModelsFromFb()
+
+    // then if
     if (this.viewState === trackViewStates.CREATION.FIRST) {
       await this.addActiveEdit()
-      // TODO why timout? Whats it waiting for?
-      setTimeout(() => {
-        this.baseScene.zoomTo(this.localModel.mesh, true)
-      })
-    }
-
-    if (this.viewState === trackViewStates.OVERVIEW) {
-      await this.addModelsFromFb()
     }
   },
 
   methods: {
     async addActiveEdit () {
-      // TODO - make generic for also booster and task
-      const testFirstPart = new EnergyPart(trackPartTypes.ENERGY, [0, 0, 0])
+      this.loadingNewPart = true
+
+      // TODO - per type part also for booster and task
+      const testFirstPart = new EnergyPart(trackPartTypes.ENERGY, tempRandomPositions[this.activeModelCount])
       await testFirstPart.loadModel()
       this.localModel = testFirstPart
       this.localModel.updateEnergy(this.activeLocalPart.energyLevel)
       this.trackPartContainer.add(testFirstPart.scene)
+      this.activeTrackPartModels.push(testFirstPart)
+
+      this.activeModelCount += 1
+
+      setTimeout(() => {
+        this.baseScene.zoomTo(this.localModel.mesh, true)
+      }, 100)
+
+      this.loadingNewPart = false
     },
     addModelsFromFb () {
-      this.activeTrackParts.forEach(async (trackpart) => {
-        if (trackpart.type === trackPartTypes.ENERGY) {
-          const testFirstPart = new EnergyPart('titel first item of the day', [0, 0, 0], trackpart.energyLevel, trackpart)
-          await testFirstPart.loadModel()
-          testFirstPart.initDeforms()
-          this.activeTrackPartModels.push(testFirstPart)
-          this.trackPartContainer.add(testFirstPart.scene)
-        }
+      this.activeModelCount = this.activeTrackParts.length
+
+      this.activeTrackParts.forEach(async (trackpart, i) => {
+        // TODO switch part type based on category
+        const testFirstPart = new EnergyPart(`generieke unieke uid? ${i}`, tempRandomPositions[i], trackpart.energyLevel, trackpart)
+        await testFirstPart.loadModel()
+        testFirstPart.initDeforms()
+        this.activeTrackPartModels.push(testFirstPart)
+        this.trackPartContainer.add(testFirstPart.scene)
       })
     }
   }
