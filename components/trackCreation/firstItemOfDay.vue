@@ -61,6 +61,7 @@ export default {
 
   methods: {
     getEnergyLevel ($event) {
+      this.$store.commit('track/setDeforms', $event)
       this.energyLevel = $event
     },
 

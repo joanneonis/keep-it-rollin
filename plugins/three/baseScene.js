@@ -114,7 +114,7 @@ export class BaseScene {
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
 
-    if (intersects.length > 0) {
+    if (intersects.length > 0 && this.trackParts.children.length > 0) {
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         // reset hex previous clicked
