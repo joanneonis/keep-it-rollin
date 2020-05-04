@@ -124,7 +124,7 @@ export class BaseScene {
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
 
-    if (intersects.length > 0 && intersects.length < this.trackParts.children.length) {
+    if (intersects.length > 0) {
       if (this.loading) { return }
 
       // if its not same as previous target
@@ -152,11 +152,13 @@ export class BaseScene {
   }
 
   zoomTo (mesh, panelActive = false) {
+    console.log('looking fur dif', mesh)
+
     const padding = 0.3
     this.cameraControls.fitTo(mesh, true, {
       paddingLeft: panelActive ? 0 : padding,
-      paddingRight: panelActive ? 1.5 : padding,
-      paddingBottom: padding,
+      paddingRight: panelActive ? 3 : padding,
+      paddingBottom: panelActive ? 1 : padding,
       paddingTop: padding
     })
     this.cameraControls.rotateTo(-Math.PI * 0.4, Math.PI * 0.4, true)

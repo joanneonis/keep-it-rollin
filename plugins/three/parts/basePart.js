@@ -6,11 +6,12 @@ export class BasePart {
   scene
   mesh
 
-  constructor (debug, objectName, position) {
+  constructor (debug, objectName, position, metadata) {
     this.debug = debug
     this.fileUrl = 'loremobject' // loremobject
     this.objectName = objectName
     this.position = position
+    this.meta = metadata
 
     // temp random colors
     this.color = new THREE.Color(0xFFFFFF)
@@ -26,6 +27,7 @@ export class BasePart {
       if (node instanceof THREE.Mesh) {
         const mesh = node
         this.mesh = mesh
+
         this.mesh.position.set(...this.position)
 
         BufferGeometryUtils.computeTangents(mesh.geometry) // generates bad data due to degenerate UVs
@@ -68,9 +70,9 @@ export class BasePart {
 
   generatePartPositionFolder (gui, uuid) {
     const positionFolder = gui.addFolder(`${this.objectName} position - ${uuid}`)
-    positionFolder.add(this.scene.position, 'x', -20, 20).step(0.01)
-    positionFolder.add(this.scene.position, 'y', -20, 20).step(0.01)
-    positionFolder.add(this.scene.position, 'z', -20, 20).step(0.01)
+    positionFolder.add(this.mesh.position, 'x', -20, 20).step(0.01)
+    positionFolder.add(this.mesh.position, 'y', -20, 20).step(0.01)
+    positionFolder.add(this.mesh.position, 'z', -20, 20).step(0.01)
   }
 
   update () {

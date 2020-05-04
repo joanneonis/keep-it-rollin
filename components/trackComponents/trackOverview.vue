@@ -11,11 +11,11 @@
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
-import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
+import { trackViewStates } from '~/helpers/trackHelpers'
 
 const tempRandomPositions = [
-  [1, 0.2, -1.6],
-  [1.9, 0.2, 0],
+  [0, 0.2, 0],
+  [1.9, 0.2, 0.6],
   [0.8, 0.2, 1.45],
   [1.6, 0.2, 2.75],
   [0.58, 0.2, 4.05],
@@ -34,8 +34,7 @@ export default {
     return {
       baseScene: { loading: true },
       localModel: null,
-      activeModelCount: 0,
-      activeTrackPartModels: [],
+      localModelCount: 0,
       loadingNewPart: true,
       debug: false
     }
@@ -74,6 +73,7 @@ export default {
 
     action (e) {
       if (e === 'cancelled') {
+        this.localModelCount--
         this.baseScene.trackParts.remove(this.localModel.scene)
         this.zoomOverview()
       }
@@ -82,9 +82,10 @@ export default {
       this.$store.commit('track/setAction', null)
     },
 
-    viewState (e) {
+    async viewState (e) {
       if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
-        this.addActiveEdit()
+        await this.addActiveEdit()
+        this.baseScene.zoomTo(this.localModel.scene, true)
       }
     }
   },
@@ -101,18 +102,22 @@ export default {
       // always load current track
       await this.addModelsFromFb()
 
-      // then if
-      if (this.viewState === trackViewStates.CREATION.FIRST) {
-        await this.addActiveEdit()
-      }
-
+      // after loading all the models etc. center the generated scene
       this.baseScene.centerTrackParts()
 
       // after everything is done enable interactivity (and visibility?)
       this.baseScene.loading = false
 
       // and zoom to desired object
-      this.zoomOverview()
+      if (this.viewState !== trackViewStates.CREATION.FIRST) {
+        this.zoomOverview()
+      }
+
+      // if first item of the day, add energyPart
+      if (this.viewState === trackViewStates.CREATION.FIRST) {
+        await this.addActiveEdit()
+        this.baseScene.zoomTo(this.localModel.mesh, true)
+      }
     },
 
     zoomOverview () {
@@ -130,17 +135,15 @@ export default {
       this.loadingNewPart = true
 
       // TODO - per type part also for booster and task
-      this.localModel = new EnergyPart(this.debug, trackPartTypes.ENERGY, tempRandomPositions[this.activeModelCount])
+      this.localModel = new EnergyPart(this.debug, `trackpart ${this.localModelCount}`, tempRandomPositions[this.localModelCount])
       await this.localModel.loadModel()
-      this.localModel.generatePartPositionFolder(this.baseScene.gui, this.activeModelCount)
-      this.localModel.updateEnergy(this.activeLocalPart.energyLevel)
+      this.localModel.generatePartPositionFolder(this.baseScene.gui, this.localModelCount)
+      this.localModel.initDeforms()
+
       await this.baseScene.trackParts.add(this.localModel.scene)
-      this.activeTrackPartModels.push(this.localModel)
 
-      this.activeModelCount += 1
       this.loadingNewPart = false
-
-      this.baseScene.zoomTo(this.localModel.scene, true)
+      this.localModelCount += 1
     },
 
     // helper function to await an foreach loop
@@ -151,17 +154,17 @@ export default {
     },
 
     async addModelsFromFb () {
-      this.activeModelCount = this.activeTrackParts.length
-
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
+        const number = this.localModelCount + i + 1
         // TODO switch part type based on category
-        this.localModel = new EnergyPart(this.debug, `generieke unieke uid? ${i}`, tempRandomPositions[i], trackpart.energyLevel, trackpart)
-        await this.localModel.loadModel(this.baseScene)
-        this.localModel.generatePartPositionFolder(this.baseScene.gui, i)
+        this.localModel = new EnergyPart(this.debug, `generieke unieke uid? ${number}`, tempRandomPositions[number], trackpart, trackpart.energyLevel)
+        await this.localModel.loadModel()
+        this.localModel.generatePartPositionFolder(this.baseScene.gui, number)
         this.localModel.initDeforms()
-        this.activeTrackPartModels.push(this.localModel)
         await this.baseScene.trackParts.add(this.localModel.scene)
       })
+
+      this.localModelCount += this.activeTrackParts.length
     }
   }
 }
