@@ -138,22 +138,25 @@ export class BaseScene {
         // set currently clicked hex
         this.INTERSECTED = intersects[0].object
         this.INTERSECTED.currentHex = this.INTERSECTED.material.emissive.getHex()
-        this.INTERSECTED.material.emissive.setHex(0xFF0000)
+        this.INTERSECTED.material.emissiveIntensity = 0.2
+        this.INTERSECTED.material.emissive.setHex(0xFFFFFF)
       }
     } else {
-      // also reset hex previous clicked if no target is found on new click (clickoff)
-      if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
-
-      // this.cameraControls.reset(true) // TODO
-
-      // reset intersection history
-      this.INTERSECTED = null
+      this.resetIntersected()
     }
   }
 
-  zoomTo (mesh, panelActive = false) {
-    console.log('looking fur dif', mesh)
+  resetIntersected () {
+    // also reset hex previous clicked if no target is found on new click (clickoff)
+    if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
+    // this.cameraControls.reset(true) // TODO maybe?
+
+    // reset intersection history
+    this.INTERSECTED = null
+  }
+
+  zoomTo (mesh, panelActive = false, rotationV = -Math.PI * 0.4, rotationH = Math.PI * 0.4) {
     const padding = 0.3
     this.cameraControls.fitTo(mesh, true, {
       paddingLeft: panelActive ? 0 : padding,
@@ -161,7 +164,7 @@ export class BaseScene {
       paddingBottom: panelActive ? 1 : padding,
       paddingTop: padding
     })
-    this.cameraControls.rotateTo(-Math.PI * 0.4, Math.PI * 0.4, true)
+    this.cameraControls.rotateTo(rotationV, rotationH, true)
   }
 
   addLights () {

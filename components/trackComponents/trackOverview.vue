@@ -65,6 +65,7 @@ export default {
     controls (e) {
       if (e === 'overviewZoom') {
         this.zoomOverview()
+        this.baseScene.resetIntersected()
       }
 
       // then when control is handled, empty action
@@ -75,6 +76,12 @@ export default {
       if (e === 'cancelled') {
         this.localModelCount--
         this.baseScene.trackParts.remove(this.localModel.scene)
+
+        if (this.debug) {
+          this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
+          this.baseScene.gui.removeFolder(this.localModel.positionFolder)
+        }
+
         this.zoomOverview()
       }
 
@@ -91,6 +98,7 @@ export default {
   },
 
   mounted () {
+    // moved to function for async
     this.init()
   },
 
@@ -115,35 +123,35 @@ export default {
 
       // if first item of the day, add energyPart
       if (this.viewState === trackViewStates.CREATION.FIRST) {
-        await this.addActiveEdit()
-        this.baseScene.zoomTo(this.localModel.mesh, true)
+        this.addActiveEdit()
       }
     },
 
     zoomOverview () {
-      const padding = 1
-      this.baseScene.cameraControls.fitTo(this.baseScene.trackParts, true, {
-        paddingLeft: padding,
-        paddingRight: padding,
-        paddingBottom: padding,
-        paddingTop: padding
-      })
-      this.baseScene.cameraControls.rotateTo(-Math.PI * 0.5, Math.PI * 0.4, true)
+      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.5)
     },
 
     async addActiveEdit () {
       this.loadingNewPart = true
 
-      // TODO - per type part also for booster and task
-      this.localModel = new EnergyPart(this.debug, `trackpart ${this.localModelCount}`, tempRandomPositions[this.localModelCount])
-      await this.localModel.loadModel()
-      this.localModel.generatePartPositionFolder(this.baseScene.gui, this.localModelCount)
-      this.localModel.initDeforms()
+      // TODO - per type different classss
+      this.localModel = new EnergyPart(
+        this.debug,
+        `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+        tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
+      )
+      await this.localModel.loadModel() // loads GLTF file
+      await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
-      await this.baseScene.trackParts.add(this.localModel.scene)
+      if (this.debug) {
+        this.localModel.generateExpressionsFolder(this.baseScene.gui)
+        this.localModel.generatePartPositionFolder(this.baseScene.gui)
+      }
 
       this.loadingNewPart = false
-      this.localModelCount += 1
+      this.localModelCount += 1 // TODO temp code for creating UID and selecting temp position at the same time
+
+      this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
     // helper function to await an foreach loop
@@ -154,17 +162,12 @@ export default {
     },
 
     async addModelsFromFb () {
+      // iterate through trackparts from firebase
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
-        const number = this.localModelCount + i + 1
-        // TODO switch part type based on category
-        this.localModel = new EnergyPart(this.debug, `generieke unieke uid? ${number}`, tempRandomPositions[number], trackpart, trackpart.energyLevel)
-        await this.localModel.loadModel()
-        this.localModel.generatePartPositionFolder(this.baseScene.gui, number)
-        this.localModel.initDeforms()
-        await this.baseScene.trackParts.add(this.localModel.scene)
+        await this.addActiveEdit()
+        // set saved deforms
+        this.localModel.initDeforms(trackpart.energyLevel)
       })
-
-      this.localModelCount += this.activeTrackParts.length
     }
   }
 }

@@ -64,15 +64,19 @@ export class BasePart {
         for (let i = 0; i < expressions.length; i++) {
           expressionFolder.add(mesh.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
         }
+
+        this.expressionFolder = expressionFolder
       }
     })
   }
 
-  generatePartPositionFolder (gui, uuid) {
-    const positionFolder = gui.addFolder(`${this.objectName} position - ${uuid}`)
+  generatePartPositionFolder (gui) {
+    const positionFolder = gui.addFolder(`${this.objectName} position`)
     positionFolder.add(this.mesh.position, 'x', -20, 20).step(0.01)
     positionFolder.add(this.mesh.position, 'y', -20, 20).step(0.01)
     positionFolder.add(this.mesh.position, 'z', -20, 20).step(0.01)
+
+    this.positionFolder = positionFolder
   }
 
   update () {
