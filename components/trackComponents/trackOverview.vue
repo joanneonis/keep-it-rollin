@@ -33,7 +33,6 @@ export default {
   data () {
     return {
       baseScene: { loading: true },
-      trackPartContainer: null,
       localModel: null,
       activeModelCount: 0,
       activeTrackPartModels: [],
@@ -75,7 +74,7 @@ export default {
 
     action (e) {
       if (e === 'cancelled') {
-        this.trackPartContainer.remove(this.localModel.scene)
+        this.baseScene.trackParts.remove(this.localModel.scene)
         this.zoomOverview()
       }
 
@@ -98,7 +97,6 @@ export default {
     async init () {
       // create main scene
       this.baseScene = new BaseScene(this.$refs.sceneContainer, this.debug)
-      this.trackPartContainer = this.baseScene.trackParts
 
       // always load current track
       await this.addModelsFromFb()
@@ -136,7 +134,7 @@ export default {
       await this.localModel.loadModel()
       this.localModel.generatePartPositionFolder(this.baseScene.gui, this.activeModelCount)
       this.localModel.updateEnergy(this.activeLocalPart.energyLevel)
-      await this.trackPartContainer.add(this.localModel.scene)
+      await this.baseScene.trackParts.add(this.localModel.scene)
       this.activeTrackPartModels.push(this.localModel)
 
       this.activeModelCount += 1
@@ -145,6 +143,7 @@ export default {
       this.baseScene.zoomTo(this.localModel.scene, true)
     },
 
+    // helper function to await an foreach loop
     async asyncForEach (array, callback) {
       for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array)
@@ -161,7 +160,7 @@ export default {
         this.localModel.generatePartPositionFolder(this.baseScene.gui, i)
         this.localModel.initDeforms()
         this.activeTrackPartModels.push(this.localModel)
-        await this.trackPartContainer.add(this.localModel.scene)
+        await this.baseScene.trackParts.add(this.localModel.scene)
       })
     }
   }

@@ -3,6 +3,8 @@
 * activeParts { trackPart } what trackparts are placed
 * date { Timestamp } what day is active (usually today)
 * trackData { Object } metadata about the track (like creationtime etc.)
+* action { String } save, update, cancel etc. // TODO ENUM
+* controls { String } three camera controls (like zoom to.. etc) // TODO ENUM
 */
 
 import moment from 'moment'
@@ -18,8 +20,8 @@ export const state = () => ({
   trackInited: false,
   viewState: trackViewStates.OVERVIEW,
   action: null,
-  trackPartTransforms: 0,
-  controls: null
+  controls: null,
+  trackPartTransforms: 0
 })
 
 export const mutations = {
