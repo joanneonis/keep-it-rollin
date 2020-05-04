@@ -8,22 +8,42 @@
 import moment from 'moment'
 import firebase from 'firebase'
 import { db } from '~/plugins/firebase'
-import { trackViewStates } from '~/helpers/trackHelpers'
+import { trackViewStates, trackPartData } from '~/helpers/trackHelpers'
 
 export const state = () => ({
   activeParts: [],
+  activeLocalPart: trackPartData,
   trackData: null,
   date: moment().format('DDMMYYYY'),
   trackInited: false,
   viewState: trackViewStates.OVERVIEW,
-  trackPartTransforms: 0
+  action: null,
+  trackPartTransforms: 0,
+  controls: null
 })
 
 export const mutations = {
+  setAction (stateMutation, action) {
+    const sm = stateMutation
+
+    sm.action = action
+  },
+
+  setControls (stateMutation, control) {
+    const sm = stateMutation
+
+    sm.controls = control
+  },
+
   viewState (stateMutation, state) {
     const sm = stateMutation
 
     sm.viewState = state
+  },
+
+  setActiveLocalPart (stateMutation, part) {
+    const sm = stateMutation
+    sm.activeLocalPart = part
   },
 
   setTrackInited (stateMutation, boolean) {
@@ -38,6 +58,7 @@ export const mutations = {
     sm.trackPartTransforms = deform
   },
 
+  // gets trackparts form trackdoc
   setTrack (stateMutation, trackDoc) {
     const sm = stateMutation
 
@@ -74,10 +95,14 @@ export const actions = {
     commit('setTrackInited', true)
   },
 
-  setTrackPart ({ commit, rootState }, trackPartData) {
+  setTrackPart ({ commit, dispatch, rootState }, trackPartData) {
     const docRefDate = moment().format('DDMMYYYY')
     const todaysTrack = db.collection('users').doc(rootState.auth.userUid).collection('tracks').doc(docRefDate)
 
+    // before push to fb, add creation time
+    trackPartData.createdAt = firebase.firestore.Timestamp.now()
+
+    // adds item to field array
     todaysTrack.update({
       trackParts: firebase.firestore.FieldValue.arrayUnion(trackPartData)
     }).catch((error) => {
@@ -85,11 +110,13 @@ export const actions = {
     })
 
     commit('addTrackPart', trackPartData)
+    // get newly added item from fb
+    dispatch('getTrack')
   }
 }
 
 export const getters = {
-  //
+  energyLevel: stateTrack => stateTrack.activeLocalPart.energyLevel
 }
 
 // eslint-disable-next-line no-unused-vars

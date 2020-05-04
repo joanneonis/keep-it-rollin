@@ -3,6 +3,7 @@
     :title="title"
     :description="description"
     :has-close="false"
+    @action="getPanelAction"
   >
     <div
       slot="body"
@@ -42,7 +43,7 @@
 <script>
 import energySlider from '~/components/energySlider'
 import inputPanel from '~/components/inputPanel'
-import { trackViewStates } from '~/helpers/trackHelpers'
+import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
 
 export default {
   components: {
@@ -52,26 +53,59 @@ export default {
 
   data () {
     return {
-      energyLevel: null,
-      note: null,
+      type: trackPartTypes.ENERGY,
+      energyLevel: 50,
+      note: '',
       title: 'Yes, een nieuwe dag!',
       description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?'
     }
   },
 
+  computed: {
+    trackPart () {
+      return {
+        type: this.type,
+        energyLevel: this.energyLevel,
+        note: this.note
+      }
+    }
+  },
+
+  watch: {
+    trackPart: {
+      deep: true,
+
+      handler () {
+        this.$store.commit('track/setActiveLocalPart', this.trackPart)
+      }
+    }
+  },
+
+  mounted () {
+    this.$on('action', (e) => {
+      console.log('hihi')
+    })
+    // setup local
+    this.$store.commit('track/setActiveLocalPart', this.trackPart)
+  },
+
   methods: {
     getEnergyLevel ($event) {
-      this.$store.commit('track/setDeforms', $event)
       this.energyLevel = $event
     },
 
     setTrackpartData () {
+      // zoom out to overview
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
-      this.$store.dispatch('track/setTrackPart', {
-        type: 'start-of-day',
-        energy: this.energyLevel,
-        note: this.note
-      })
+      // to firebase
+      this.$store.dispatch('track/setTrackPart', this.trackPart)
+      // empty local
+      // this.$store.commit('track/setActiveLocalPart', trackPartData)
+    },
+
+    getPanelAction ($event) {
+      this.$store.commit('track/setControls', 'overviewZoom')
+      this.$store.commit('track/setAction', $event)
     }
   }
 }

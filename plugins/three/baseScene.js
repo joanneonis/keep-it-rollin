@@ -26,12 +26,18 @@ export class BaseScene {
 
   trackParts = new THREE.Group()
 
-  constructor (container) {
+  loading = true
+
+  constructor (container, debug = false) {
+    this.debug = debug
+
     CameraControls.install({ THREE })
     this.container = container
 
     // develop tools
     this.gui = new dat.GUI()
+    this.gui.close()
+
     this.stats = new Stats()
 
     // scene
@@ -73,11 +79,17 @@ export class BaseScene {
 
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
-    this.cameraControls.maxPolarAngle = Math.PI / 2
+    this.cameraControls.maxPolarAngle = (Math.PI / 2) - 0.1
+    this.cameraControls.maxDistance = 15
+    this.cameraControls.minDistance = 2
 
-    this.cameraControls.addEventListener('controlstart', this.dragControls)
-    this.cameraControls.addEventListener('control', this.dragControls)
-    this.cameraControls.addEventListener('controlend', this.dragControls)
+    this.cameraControls.addEventListener('controlstart', this.dragControls.bind(this))
+    this.cameraControls.addEventListener('control', this.dragControls.bind(this))
+    this.cameraControls.addEventListener('controlend', this.dragControls.bind(this))
+
+    // temp helper
+    const axis = new THREE.AxisHelper(7.5)
+    this.scene.add(axis)
   }
 
   sceneSettings () {
@@ -99,8 +111,6 @@ export class BaseScene {
   }
 
   render () {
-    this.checkIntersection()
-
     this.delta = this.clock.getDelta()
     this.cameraControls.update(this.delta)
 
@@ -114,7 +124,9 @@ export class BaseScene {
   checkIntersection () {
     const intersects = this.raycaster.intersectObjects(this.trackParts.children, true)
 
-    if (intersects.length > 0 && this.trackParts.children.length > 0) {
+    if (intersects.length > 0 && intersects.length < this.trackParts.children.length) {
+      if (this.loading) { return }
+
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         // reset hex previous clicked
@@ -206,12 +218,28 @@ export class BaseScene {
   }
 
   onDocumentMouseClick (event) {
-    // event.preventDefault()
+    event.preventDefault()
+    this.checkIntersection()
     this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
   }
 
-  dragControls (event) {
-    console.log(event)
+  dragControls (e) {
+    const event = e.originalEvent
+    if (event.type === 'mousedown') {
+      this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
+      this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
+      this.checkIntersection()
+    }
+  }
+
+  centerTrackParts () {
+    this.trackParts.updateMatrixWorld(true)
+    new THREE.Box3().setFromObject(this.trackParts).getCenter(this.trackParts.position).multiplyScalar(-1)
+    this.trackParts.position.y = 0 // do not center y
+
+    if (this.debug) {
+      this.scene.add(new THREE.BoxHelper(this.trackParts))
+    }
   }
 }

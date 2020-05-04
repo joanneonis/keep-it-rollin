@@ -2,6 +2,7 @@
   <input-panel
     :title="title"
     :description="description"
+    @action="getPanelAction"
   >
     <div
       slot="body"
@@ -70,7 +71,7 @@
 </template>
 
 <script>
-import { trackViewStates } from '~/helpers/trackHelpers'
+import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
 import energySlider from '~/components/energySlider'
 
@@ -85,15 +86,36 @@ export default {
       title: 'Taak toevoegen',
       description: 'Waar ga je mee bezig? Vul het hieronder in, en een stukje baan wordt voor je uitgezocht!',
       checkboxes: [
-        'Werkblok',
-        'Meeting',
-        'Losse taken',
-        'Administratie'
+        trackPartTypes.WORKBLOCK,
+        trackPartTypes.MEETING,
+        trackPartTypes.SMALLTASKS
       ],
       energyLevel: null,
       selectedCategory: null,
       taskTitle: '',
       duration: 0
+    }
+  },
+
+  computed: {
+    trackPart () {
+      return {
+        type: this.selectedCategory,
+        category: 'task',
+        energyLevel: this.energyLevel,
+        title: this.taskTitle,
+        duration: this.duration
+      }
+    }
+  },
+
+  watch: {
+    trackPart: {
+      deep: true,
+
+      handler () {
+        this.$store.commit('track/setActiveLocalPart', this.trackPart)
+      }
     }
   },
 
@@ -103,14 +125,19 @@ export default {
     },
 
     saveTrackPart () {
-      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+      this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', {
         type: 'task',
         category: this.selectedCategory,
-        energy: this.energyLevel,
+        energyLevel: this.energyLevel,
         title: this.taskTitle,
         duration: this.duration
       })
+      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+    },
+
+    getPanelAction ($event) {
+      this.$store.commit('track/setAction', $event)
     }
   }
 }
