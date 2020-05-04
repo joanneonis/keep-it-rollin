@@ -2,8 +2,8 @@ import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackPartTypes } from '~/helpers/trackHelpers'
 export class EnergyPart extends BasePart {
-  constructor (objectName, position, energyLevel, metaData) {
-    super(objectName, position)
+  constructor (debug, objectName, position, energyLevel, metaData) {
+    super(debug, objectName, position)
     this.metaData = metaData
     this.energyLevel = energyLevel
     this.fileUrl = trackPartTypes.ENERGY

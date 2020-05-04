@@ -2,6 +2,7 @@
   <input-panel
     :title="title"
     :description="description"
+    @action="getPanelAction"
   >
     <div
       slot="body"
@@ -118,17 +119,13 @@ export default {
     }
   },
 
-  mounted () {
-    // setup local
-    // this.$store.commit('track/setActiveLocalPart', this.trackPart)
-  },
-
   methods: {
     getEnergyLevel ($event) {
       this.energyLevel = $event
     },
 
     saveTrackPart () {
+      this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', {
         type: 'task',
         category: this.selectedCategory,
@@ -137,6 +134,10 @@ export default {
         duration: this.duration
       })
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+    },
+
+    getPanelAction ($event) {
+      this.$store.commit('track/setAction', $event)
     }
   }
 }

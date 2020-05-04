@@ -1,21 +1,10 @@
 <template>
-  <div class="container">
-    <strong>viewState:</strong> {{ $store.state.track.viewState }}
-    <br>
-    <strong>local</strong>
-    <pre>
-      {{ activeLocalPart }}
-    </pre>
-    <strong>trackparts:</strong>
-    <pre>
-      {{ activeTrackParts }}
-    </pre>
-    <div
-      id="scene-container"
-      ref="sceneContainer"
-      :class="`scene--${viewState}`"
-    />
-  </div>
+  <div
+    id="scene-container"
+    ref="sceneContainer"
+    class="scene-container"
+    :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
+  />
 </template>
 
 <script>
@@ -24,17 +13,32 @@ import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
 import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
 
-const tempRandomPositions = [[1, 0, -1.6], [1.9, 0, 0], [0.8, 0, 1.45], [1, 0, 6]]
+const tempRandomPositions = [
+  [1, 0.2, -1.6],
+  [1.9, 0.2, 0],
+  [0.8, 0.2, 1.45],
+  [1.6, 0.2, 2.75],
+  [0.58, 0.2, 4.05],
+  [-0.29, 0.2, 5.57],
+  [1.01, 0.2, 6],
+  [0.15, 0.2, 6.87],
+  [1.48, 0.2, 8.12],
+  [0.59, 0.2, 9.67],
+  [1.76, 0.2, 10.39],
+  [0.9, 0.2, 11.5],
+  [2.19, 0.2, 13.42]
+]
 
 export default {
   data () {
     return {
-      baseScene: null,
+      baseScene: { loading: true },
       trackPartContainer: null,
       localModel: null,
       activeModelCount: 0,
       activeTrackPartModels: [],
-      loadingNewPart: true
+      loadingNewPart: true,
+      debug: false
     }
   },
 
@@ -42,7 +46,9 @@ export default {
     ...mapState({
       activeTrackParts: state => state.track.activeParts,
       viewState: state => state.track.viewState,
-      activeLocalPart: state => state.track.activeLocalPart
+      activeLocalPart: state => state.track.activeLocalPart,
+      action: state => state.track.action,
+      controls: state => state.track.controls
     })
   },
 
@@ -53,69 +59,109 @@ export default {
       handler (newVal, oldVal) {
         if (!this.localModel || this.loadingNewPart) { return }
 
-        console.log('hihi ik voer dit stiekem te vroeg uit', newVal, oldVal)
-
         // lala selecteer specifiek het laatste model
         this.localModel.updateEnergy(newVal.energyLevel)
       }
     },
 
-    viewState (e) {
-      console.log('viewstate changed', e)
-      // if (this.viewState === trackViewStates.OVERVIEW) {
-      //   await this.addModelsFromFb()
-      // }
+    controls (e) {
+      if (e === 'overviewZoom') {
+        this.zoomOverview()
+      }
 
+      // then when control is handled, empty action
+      this.$store.commit('track/setControls', null)
+    },
+
+    action (e) {
+      if (e === 'cancelled') {
+        this.trackPartContainer.remove(this.localModel.scene)
+        this.zoomOverview()
+      }
+
+      // then when action is handled, empty action
+      this.$store.commit('track/setAction', null)
+    },
+
+    viewState (e) {
       if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
         this.addActiveEdit()
       }
     }
   },
 
-  async mounted () {
-    // create main scene
-    this.baseScene = new BaseScene(this.$refs.sceneContainer)
-    this.trackPartContainer = this.baseScene.scene.children.find(obj => obj.name === 'trackparts')
-
-    // always load current track
-    await this.addModelsFromFb()
-
-    // then if
-    if (this.viewState === trackViewStates.CREATION.FIRST) {
-      await this.addActiveEdit()
-    }
+  mounted () {
+    this.init()
   },
 
   methods: {
+    async init () {
+      // create main scene
+      this.baseScene = new BaseScene(this.$refs.sceneContainer, this.debug)
+      this.trackPartContainer = this.baseScene.trackParts
+
+      // always load current track
+      await this.addModelsFromFb()
+
+      // then if
+      if (this.viewState === trackViewStates.CREATION.FIRST) {
+        await this.addActiveEdit()
+      }
+
+      this.baseScene.centerTrackParts()
+
+      // after everything is done enable interactivity (and visibility?)
+      this.baseScene.loading = false
+
+      // and zoom to desired object
+      this.zoomOverview()
+    },
+
+    zoomOverview () {
+      const padding = 1
+      this.baseScene.cameraControls.fitTo(this.baseScene.trackParts, true, {
+        paddingLeft: padding,
+        paddingRight: padding,
+        paddingBottom: padding,
+        paddingTop: padding
+      })
+      this.baseScene.cameraControls.rotateTo(-Math.PI * 0.5, Math.PI * 0.4, true)
+    },
+
     async addActiveEdit () {
       this.loadingNewPart = true
 
       // TODO - per type part also for booster and task
-      const testFirstPart = new EnergyPart(trackPartTypes.ENERGY, tempRandomPositions[this.activeModelCount])
-      await testFirstPart.loadModel()
-      this.localModel = testFirstPart
+      this.localModel = new EnergyPart(this.debug, trackPartTypes.ENERGY, tempRandomPositions[this.activeModelCount])
+      await this.localModel.loadModel()
+      this.localModel.generatePartPositionFolder(this.baseScene.gui, this.activeModelCount)
       this.localModel.updateEnergy(this.activeLocalPart.energyLevel)
-      this.trackPartContainer.add(testFirstPart.scene)
-      this.activeTrackPartModels.push(testFirstPart)
+      await this.trackPartContainer.add(this.localModel.scene)
+      this.activeTrackPartModels.push(this.localModel)
 
       this.activeModelCount += 1
-
-      setTimeout(() => {
-        this.baseScene.zoomTo(this.localModel.mesh, true)
-      }, 100)
-
       this.loadingNewPart = false
+
+      this.baseScene.zoomTo(this.localModel.scene, true)
     },
-    addModelsFromFb () {
+
+    async asyncForEach (array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
+      }
+    },
+
+    async addModelsFromFb () {
       this.activeModelCount = this.activeTrackParts.length
 
-      this.activeTrackParts.forEach(async (trackpart, i) => {
+      await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
         // TODO switch part type based on category
-        const testFirstPart = new EnergyPart(`generieke unieke uid? ${i}`, tempRandomPositions[i], trackpart.energyLevel, trackpart)
-        await testFirstPart.loadModel()
-        testFirstPart.initDeforms()
-        this.activeTrackPartModels.push(testFirstPart)
-        this.trackPartContainer.add(testFirstPart.scene)
+        this.localModel = new EnergyPart(this.debug, `generieke unieke uid? ${i}`, tempRandomPositions[i], trackpart.energyLevel, trackpart)
+        await this.localModel.loadModel(this.baseScene)
+        this.localModel.generatePartPositionFolder(this.baseScene.gui, i)
+        this.localModel.initDeforms()
+        this.activeTrackPartModels.push(this.localModel)
+        await this.trackPartContainer.add(this.localModel.scene)
       })
     }
   }
@@ -123,11 +169,16 @@ export default {
 </script>
 
 <style lang="scss">
-#scene-container {
+.scene-container {
   height: 100vh;
   position: absolute;
   left: 0px;
-  top: 0px
+  top: 0px;
+  transition: opacity .2s;
+
+  &.is-loading {
+    opacity: 0;
+  }
 }
 
 // fix GUI list styles
@@ -145,7 +196,9 @@ export default {
   }
 }
 
-.scene--first-part {
+.scene--first-part,
+.scene--task,
+.scene--booster {
   pointer-events: none;
 }
 </style>

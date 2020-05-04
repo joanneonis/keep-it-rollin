@@ -82,11 +82,12 @@ export default {
 
   methods: {
     saveTrackPart () {
-      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+      this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', {
         type: 'booster',
         category: this.selectedBooster
       })
+      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     }
   }
 }

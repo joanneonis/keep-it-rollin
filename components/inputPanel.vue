@@ -41,6 +41,7 @@ export default {
 
   methods: {
     close () {
+      this.$emit('action', 'cancelled')
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     }
   }

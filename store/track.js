@@ -17,10 +17,24 @@ export const state = () => ({
   date: moment().format('DDMMYYYY'),
   trackInited: false,
   viewState: trackViewStates.OVERVIEW,
-  trackPartTransforms: 0
+  action: null,
+  trackPartTransforms: 0,
+  controls: null
 })
 
 export const mutations = {
+  setAction (stateMutation, action) {
+    const sm = stateMutation
+
+    sm.action = action
+  },
+
+  setControls (stateMutation, control) {
+    const sm = stateMutation
+
+    sm.controls = control
+  },
+
   viewState (stateMutation, state) {
     const sm = stateMutation
 

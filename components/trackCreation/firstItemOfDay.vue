@@ -3,6 +3,7 @@
     :title="title"
     :description="description"
     :has-close="false"
+    @action="getPanelAction"
   >
     <div
       slot="body"
@@ -81,6 +82,9 @@ export default {
   },
 
   mounted () {
+    this.$on('action', (e) => {
+      console.log('hihi')
+    })
     // setup local
     this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },
@@ -97,6 +101,11 @@ export default {
       this.$store.dispatch('track/setTrackPart', this.trackPart)
       // empty local
       // this.$store.commit('track/setActiveLocalPart', trackPartData)
+    },
+
+    getPanelAction ($event) {
+      this.$store.commit('track/setControls', 'overviewZoom')
+      this.$store.commit('track/setAction', $event)
     }
   }
 }
