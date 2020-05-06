@@ -127,7 +127,7 @@ export default {
     },
 
     zoomOverview () {
-      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.5)
+      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.3)
     },
 
     async addActiveEdit (type = 'lorem', uuid) {
