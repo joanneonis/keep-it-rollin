@@ -6,12 +6,14 @@ export class BasePart {
   scene
   mesh
 
-  constructor (debug, objectName, position, metadata) {
+  constructor (debug, objectName, position, metadata, energyLevel = 50) {
     this.debug = debug
-    this.fileUrl = 'loremobject' // loremobject
+    this.fileUrl = 'Start van de dag' // loremobject
     this.objectName = objectName
     this.position = position
     this.meta = metadata
+
+    this.energyLevel = energyLevel
 
     // temp random colors
     this.color = new THREE.Color(0xFFFFFF)
@@ -19,32 +21,25 @@ export class BasePart {
 
   async loadModel () {
     const gltf = await loadGlb(this.fileUrl)
-    this.scene = new THREE.Scene()
+    this.gltf = gltf
+    this.scene = gltf.scene
     this.scene.name = `scene-${this.objectName}`
+    this.scene.position.set(...this.position)
+    this.scene.scale.multiplyScalar(1)
 
-    // todo whatif more than one mesh?
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
-        const mesh = node
-        this.mesh = mesh
-
-        this.mesh.position.set(...this.position)
-
-        BufferGeometryUtils.computeTangents(mesh.geometry) // generates bad data due to degenerate UVs
-        const group = new THREE.Group()
-        group.scale.multiplyScalar(1)
-        this.scene.add(group)
-
-        // To make sure that the matrixWorld is up to date for the boxhelpers
-        group.updateMatrixWorld(true)
-
-        group.add(mesh)
-
-        if (this.debug) {
-          this.scene.add(new THREE.BoxHelper(mesh))
-        }
+        BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
       }
     })
+
+    if (this.debug) {
+      this.scene.add(new THREE.BoxHelper(this.mesh))
+    }
+
+    // To make sure that the matrixWorld is up to date for the boxhelpers
+    this.scene.updateMatrixWorld(true)
+    this.mesh = this.scene
   }
 
   generateExpressionsFolder (gui) {
@@ -77,6 +72,23 @@ export class BasePart {
     positionFolder.add(this.mesh.position, 'z', -20, 20).step(0.01)
 
     this.positionFolder = positionFolder
+  }
+
+  initDeforms () {
+    this.updateEnergy(this.energyLevel)
+  }
+
+  updateEnergy (energy) {
+    this.scene.traverse((node) => {
+      if (node instanceof THREE.Mesh) {
+        if (!node.morphTargetInfluences) {
+          console.log('no morphtargets found!')
+          return
+        }
+
+        node.morphTargetInfluences[1] = energy / 100
+      }
+    })
   }
 
   update () {

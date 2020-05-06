@@ -43,7 +43,7 @@
 <script>
 import energySlider from '~/components/energySlider'
 import inputPanel from '~/components/inputPanel'
-import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
+import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
 
 export default {
   components: {
@@ -53,7 +53,7 @@ export default {
 
   data () {
     return {
-      type: trackPartTypes.ENERGY,
+      type: 'energy',
       energyLevel: 50,
       note: '',
       title: 'Yes, een nieuwe dag!',
@@ -66,7 +66,8 @@ export default {
       return {
         type: this.type,
         energyLevel: this.energyLevel,
-        note: this.note
+        note: this.note,
+        uuid: uuidv4()
       }
     }
   },

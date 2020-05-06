@@ -10,7 +10,9 @@
 <script>
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
+// eslint-disable-next-line no-unused-vars
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
+import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates } from '~/helpers/trackHelpers'
 
 const tempRandomPositions = [
@@ -124,7 +126,7 @@ export default {
 
       // if first item of the day, add energyPart
       if (this.viewState === trackViewStates.CREATION.FIRST) {
-        this.addActiveEdit()
+        this.addActiveEdit('energy')
       }
     },
 
@@ -132,15 +134,11 @@ export default {
       this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.5)
     },
 
-    async addActiveEdit () {
+    async addActiveEdit (type = 'lorem') {
       this.loadingNewPart = true
 
       // TODO - per type different classss
-      this.localModel = new EnergyPart(
-        this.debug,
-        `trackpart ${this.localModelCount}`, // TODO replace with FB UID
-        tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
-      )
+      this.createPart(type)
       await this.localModel.loadModel() // loads GLTF file
       await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
@@ -155,6 +153,22 @@ export default {
       this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
+    createPart (type) {
+      if (type === 'energy') {
+        this.localModel = new EnergyPart(
+          this.debug,
+          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
+        )
+      } else {
+        this.localModel = new BasePart(
+          this.debug,
+          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
+        )
+      }
+    },
+
     // helper function to await an foreach loop
     async asyncForEach (array, callback) {
       for (let index = 0; index < array.length; index++) {
@@ -165,9 +179,10 @@ export default {
     async addModelsFromFb () {
       // iterate through trackparts from firebase
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
-        await this.addActiveEdit()
+        console.log(trackpart.type)
+        await this.addActiveEdit(trackpart.type)
         // set saved deforms
-        this.localModel.initDeforms(trackpart.energyLevel)
+        this.localModel.updateEnergy(trackpart.energyLevel)
       })
     }
   }

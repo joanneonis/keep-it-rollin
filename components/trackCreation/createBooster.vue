@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { trackViewStates } from '~/helpers/trackHelpers'
+import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
 import booster1 from '~/assets/img/booster/booster-1.png'
 import booster2 from '~/assets/img/booster/booster-2.png'
@@ -85,7 +85,8 @@ export default {
       this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', {
         type: 'booster',
-        category: this.selectedBooster
+        category: this.selectedBooster,
+        uuid: uuidv4()
       })
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     }
