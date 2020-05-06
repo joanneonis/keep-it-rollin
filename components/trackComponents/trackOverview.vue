@@ -11,6 +11,7 @@
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
+import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates } from '~/helpers/trackHelpers'
 
 const tempRandomPositions = [
@@ -92,7 +93,7 @@ export default {
 
     async viewState (e) {
       if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
-        await this.addActiveEdit()
+        await this.addActiveEdit('task', this.activeLocalPart.uuid)
         this.baseScene.zoomTo(this.localModel.scene, true)
       }
     }
@@ -117,30 +118,23 @@ export default {
       // after everything is done enable interactivity (and visibility?)
       this.baseScene.loading = false
 
-      // and zoom to desired object
-      if (this.viewState !== trackViewStates.CREATION.FIRST) {
-        this.zoomOverview()
-      }
-
       // if first item of the day, add energyPart
       if (this.viewState === trackViewStates.CREATION.FIRST) {
-        this.addActiveEdit()
+        this.addActiveEdit('energy', this.activeLocalPart.uuid)
+      } else {
+        this.zoomOverview()
       }
     },
 
     zoomOverview () {
-      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.5)
+      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.3)
     },
 
-    async addActiveEdit () {
+    async addActiveEdit (type = 'lorem', uuid) {
       this.loadingNewPart = true
 
       // TODO - per type different classss
-      this.localModel = new EnergyPart(
-        this.debug,
-        `trackpart ${this.localModelCount}`, // TODO replace with FB UID
-        tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
-      )
+      this.createPart(type, uuid)
       await this.localModel.loadModel() // loads GLTF file
       await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
@@ -155,6 +149,24 @@ export default {
       this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
+    createPart (type, uuid) {
+      if (type === 'energy') {
+        this.localModel = new EnergyPart(
+          this.debug,
+          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+          uuid
+        )
+      } else {
+        this.localModel = new BasePart(
+          this.debug,
+          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+          uuid
+        )
+      }
+    },
+
     // helper function to await an foreach loop
     async asyncForEach (array, callback) {
       for (let index = 0; index < array.length; index++) {
@@ -165,9 +177,9 @@ export default {
     async addModelsFromFb () {
       // iterate through trackparts from firebase
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
-        await this.addActiveEdit()
+        await this.addActiveEdit(trackpart.type, trackpart.uuid)
         // set saved deforms
-        this.localModel.initDeforms(trackpart.energyLevel)
+        this.localModel.updateEnergy(trackpart.energyLevel)
       })
     }
   }

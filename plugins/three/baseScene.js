@@ -1,6 +1,4 @@
 import * as THREE from 'three'
-// import TWEEN from '@tweenjs/tween.js'
-// eslint-disable-next-line no-unused-vars
 import CameraControls from 'camera-controls'
 import * as dat from 'dat.gui'
 import Stats from 'stats.js'
@@ -129,14 +127,16 @@ export class BaseScene {
 
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
+        const trackObject = intersects[0].object
+
         // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
 
         // hopefully animate camera to target
-        this.zoomTo(intersects[0].object)
+        this.zoomTo(trackObject)
 
         // set currently clicked hex
-        this.INTERSECTED = intersects[0].object
+        this.INTERSECTED = trackObject
         this.INTERSECTED.currentHex = this.INTERSECTED.material.emissive.getHex()
         this.INTERSECTED.material.emissiveIntensity = 0.2
         this.INTERSECTED.material.emissive.setHex(0xFFFFFF)

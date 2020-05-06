@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
+import { trackViewStates, trackPartTypes, uuidv4 } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
 import energySlider from '~/components/energySlider'
 
@@ -93,7 +93,8 @@ export default {
       energyLevel: null,
       selectedCategory: null,
       taskTitle: '',
-      duration: 0
+      duration: 0,
+      uuid: null
     }
   },
 
@@ -104,7 +105,8 @@ export default {
         category: 'task',
         energyLevel: this.energyLevel,
         title: this.taskTitle,
-        duration: this.duration
+        duration: this.duration,
+        uuid: this.uuid
       }
     }
   },
@@ -119,6 +121,10 @@ export default {
     }
   },
 
+  mounted () {
+    this.uuid = uuidv4()
+  },
+
   methods: {
     getEnergyLevel ($event) {
       this.energyLevel = $event
@@ -126,13 +132,7 @@ export default {
 
     saveTrackPart () {
       this.$store.commit('track/setControls', 'overviewZoom')
-      this.$store.dispatch('track/setTrackPart', {
-        type: 'task',
-        category: this.selectedCategory,
-        energyLevel: this.energyLevel,
-        title: this.taskTitle,
-        duration: this.duration
-      })
+      this.$store.dispatch('track/setTrackPart', this.trackPart)
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     },
 

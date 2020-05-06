@@ -43,7 +43,7 @@
 <script>
 import energySlider from '~/components/energySlider'
 import inputPanel from '~/components/inputPanel'
-import { trackViewStates, trackPartTypes } from '~/helpers/trackHelpers'
+import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
 
 export default {
   components: {
@@ -53,11 +53,12 @@ export default {
 
   data () {
     return {
-      type: trackPartTypes.ENERGY,
+      type: 'energy',
       energyLevel: 50,
       note: '',
       title: 'Yes, een nieuwe dag!',
-      description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?'
+      description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?',
+      uuid: null
     }
   },
 
@@ -66,7 +67,8 @@ export default {
       return {
         type: this.type,
         energyLevel: this.energyLevel,
-        note: this.note
+        note: this.note,
+        uuid: this.uuid
       }
     }
   },
@@ -82,6 +84,8 @@ export default {
   },
 
   mounted () {
+    this.uuid = uuidv4()
+
     // setup local
     this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },

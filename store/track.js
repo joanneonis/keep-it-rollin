@@ -121,7 +121,6 @@ export const getters = {
   energyLevel: stateTrack => stateTrack.activeLocalPart.energyLevel
 }
 
-// eslint-disable-next-line no-unused-vars
 function checkTrack (ref) {
   const docRefDate = moment().format('DDMMYYYY')
   const todaysTrack = ref.collection('tracks').doc(docRefDate)
