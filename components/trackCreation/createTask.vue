@@ -93,7 +93,8 @@ export default {
       energyLevel: null,
       selectedCategory: null,
       taskTitle: '',
-      duration: 0
+      duration: 0,
+      uuid: null
     }
   },
 
@@ -105,7 +106,7 @@ export default {
         energyLevel: this.energyLevel,
         title: this.taskTitle,
         duration: this.duration,
-        uuid: uuidv4()
+        uuid: this.uuid
       }
     }
   },
@@ -118,6 +119,10 @@ export default {
         this.$store.commit('track/setActiveLocalPart', this.trackPart)
       }
     }
+  },
+
+  mounted () {
+    this.uuid = uuidv4()
   },
 
   methods: {

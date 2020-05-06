@@ -80,13 +80,17 @@ export default {
     }
   },
 
+  mounted () {
+    this.uuid = uuidv4()
+  },
+
   methods: {
     saveTrackPart () {
       this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', {
         type: 'booster',
         category: this.selectedBooster,
-        uuid: uuidv4()
+        uuid: this.uuid
       })
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     }

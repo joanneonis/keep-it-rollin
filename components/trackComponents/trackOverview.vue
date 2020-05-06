@@ -94,7 +94,7 @@ export default {
 
     async viewState (e) {
       if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
-        await this.addActiveEdit()
+        await this.addActiveEdit('task', this.activeLocalPart.uuid)
         this.baseScene.zoomTo(this.localModel.scene, true)
       }
     }
@@ -119,14 +119,11 @@ export default {
       // after everything is done enable interactivity (and visibility?)
       this.baseScene.loading = false
 
-      // and zoom to desired object
-      if (this.viewState !== trackViewStates.CREATION.FIRST) {
-        this.zoomOverview()
-      }
-
       // if first item of the day, add energyPart
       if (this.viewState === trackViewStates.CREATION.FIRST) {
-        this.addActiveEdit('energy')
+        this.addActiveEdit('energy', this.activeLocalPart.uuid)
+      } else {
+        this.zoomOverview()
       }
     },
 
@@ -134,11 +131,11 @@ export default {
       this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.5)
     },
 
-    async addActiveEdit (type = 'lorem') {
+    async addActiveEdit (type = 'lorem', uuid) {
       this.loadingNewPart = true
 
       // TODO - per type different classss
-      this.createPart(type)
+      this.createPart(type, uuid)
       await this.localModel.loadModel() // loads GLTF file
       await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
@@ -153,18 +150,20 @@ export default {
       this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
-    createPart (type) {
+    createPart (type, uuid) {
       if (type === 'energy') {
         this.localModel = new EnergyPart(
           this.debug,
           `trackpart ${this.localModelCount}`, // TODO replace with FB UID
-          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
+          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+          uuid
         )
       } else {
         this.localModel = new BasePart(
           this.debug,
           `trackpart ${this.localModelCount}`, // TODO replace with FB UID
-          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
+          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+          uuid
         )
       }
     },
@@ -179,8 +178,7 @@ export default {
     async addModelsFromFb () {
       // iterate through trackparts from firebase
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
-        console.log(trackpart.type)
-        await this.addActiveEdit(trackpart.type)
+        await this.addActiveEdit(trackpart.type, trackpart.uuid)
         // set saved deforms
         this.localModel.updateEnergy(trackpart.energyLevel)
       })

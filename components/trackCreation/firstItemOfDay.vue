@@ -57,7 +57,8 @@ export default {
       energyLevel: 50,
       note: '',
       title: 'Yes, een nieuwe dag!',
-      description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?'
+      description: 'Hoe zit je erbij? Vol goeie moed, of moet je nog even op gang komen?',
+      uuid: null
     }
   },
 
@@ -67,7 +68,7 @@ export default {
         type: this.type,
         energyLevel: this.energyLevel,
         note: this.note,
-        uuid: uuidv4()
+        uuid: this.uuid
       }
     }
   },
@@ -83,6 +84,8 @@ export default {
   },
 
   mounted () {
+    this.uuid = uuidv4()
+
     // setup local
     this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },

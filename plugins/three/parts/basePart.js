@@ -6,12 +6,12 @@ export class BasePart {
   scene
   mesh
 
-  constructor (debug, objectName, position, metadata, energyLevel = 50) {
+  constructor (debug, objectName, position, meta, energyLevel = 50) {
     this.debug = debug
     this.fileUrl = 'Start van de dag' // loremobject
     this.objectName = objectName
     this.position = position
-    this.meta = metadata
+    this.meta = meta
 
     this.energyLevel = energyLevel
 
@@ -29,6 +29,7 @@ export class BasePart {
 
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
+        node.userData.uuid = this.meta
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
       }
     })
