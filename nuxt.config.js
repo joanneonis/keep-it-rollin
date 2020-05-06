@@ -1,4 +1,7 @@
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+require('dotenv').config()
+
 export default {
   mode: 'spa',
   /*
@@ -84,5 +87,18 @@ export default {
 
   markdownit: {
     injected: true
-  }
+  },
+
+  env: {
+    BASE_URL: process.env.BASE_URL,
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    databaseURL: process.env.databaseURL,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+    clientid: process.env.clientid
+  },
 }
