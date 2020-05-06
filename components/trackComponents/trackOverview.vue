@@ -10,7 +10,6 @@
 <script>
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
-// eslint-disable-next-line no-unused-vars
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates } from '~/helpers/trackHelpers'

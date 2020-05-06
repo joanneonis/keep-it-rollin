@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 export class EnergyPart extends BasePart {

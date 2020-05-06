@@ -1,6 +1,4 @@
 import * as THREE from 'three'
-// import TWEEN from '@tweenjs/tween.js'
-// eslint-disable-next-line no-unused-vars
 import CameraControls from 'camera-controls'
 import * as dat from 'dat.gui'
 import Stats from 'stats.js'
