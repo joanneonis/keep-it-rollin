@@ -82,9 +82,6 @@ export default {
   },
 
   mounted () {
-    this.$on('action', (e) => {
-      console.log('hihi')
-    })
     // setup local
     this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },
@@ -95,12 +92,14 @@ export default {
     },
 
     setTrackpartData () {
-      // zoom out to overview
-      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+      // on save set back to overview zoom
+      this.$store.commit('track/setControls', 'overviewZoom')
+
       // to firebase
       this.$store.dispatch('track/setTrackPart', this.trackPart)
-      // empty local
-      // this.$store.commit('track/setActiveLocalPart', trackPartData)
+
+      // zoom out to overview
+      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
     },
 
     getPanelAction ($event) {

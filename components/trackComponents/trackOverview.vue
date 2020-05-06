@@ -63,6 +63,7 @@ export default {
     },
 
     controls (e) {
+      console.log(e)
       if (e === 'overviewZoom') {
         this.zoomOverview()
         this.baseScene.resetIntersected()
