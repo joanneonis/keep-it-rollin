@@ -5,9 +5,6 @@
     class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
   >
-    <div class="scene__state">
-      {{ viewState }}
-    </div>
     <transition name="scene-popup">
       <popup
         v-if="popup.visible"
@@ -167,7 +164,6 @@ export default {
         this.popup.visible = false
         return
       }
-      console.log('clicked')
 
       // get selected trackpart data
       this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
@@ -245,13 +241,6 @@ export default {
   left: 0px;
   top: 0px;
   transition: opacity .2s;
-
-  &__state {
-    position: absolute;
-    top: 100px;
-    left: 20px;
-    z-index: 200;
-  }
 
   &.is-loading {
     opacity: 0;

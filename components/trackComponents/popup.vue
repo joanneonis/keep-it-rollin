@@ -23,7 +23,7 @@
       </li>
     </ul>
 
-    <button v-if="saved" class="button-link button-link--primary button-link--has-icon">
+    <button v-if="saved && data.type !== 'energy'" class="button-link button-link--primary button-link--has-icon">
       <img class="button-link__icon" src="~/assets/img/icon-edit.svg" alt="Bewerk item">
       aanpassen
     </button>
