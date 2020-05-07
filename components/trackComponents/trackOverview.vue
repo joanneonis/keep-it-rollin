@@ -154,7 +154,6 @@ export default {
       }
       // get selected trackpart data
       this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
-      console.log(this.activeTrackParts, this.popup.data, targetMesh.userData.uuid)
       this.popup.visible = true
     },
 
