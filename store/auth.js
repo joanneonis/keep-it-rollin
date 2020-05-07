@@ -104,7 +104,6 @@ export const actions = {
     } catch (error) {
       console.log(error)
     }
-    console.log('new signin firebase UID', firebaseResponse.user.uid)
     commit('setUserId', firebaseResponse.user.uid)
 
     const userData = await getUserDocs(firebaseResponse.user)
@@ -147,10 +146,10 @@ function getUserDocs (firebaseUser) {
         let userData
 
         if (doc.exists) {
-          console.log('userdoc exists', doc.data(), doc)
+          // userdoc exists getting data
           userData = doc.data()
         } else {
-          console.log('userdoc does not exist yet, first time signin')
+          // new user, create doc
           userData = {
             displayName: firebaseUser.displayName,
             email: firebaseUser.email,

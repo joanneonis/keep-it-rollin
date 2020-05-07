@@ -7,17 +7,17 @@
         <img src="~/assets/img/popup-energy.png" alt="Energie niveau">
         {{ popupData.energy }}
       </li>
-      <li class="scene-popup__list__item">
+      <li v-if="popupData.boosterAdded" class="scene-popup__list__item">
         <img src="~/assets/img/popup-booster.png" alt="Booster toegevoegd?">
         booster toegevoegd?
       </li>
-      <li class="scene-popup__list__item">
+      <li v-if="saved" class="scene-popup__list__item">
         <img src="~/assets/img/popup-calendar.png" alt="Kalenderitem bekijken">
         Kalenderitem bekijken
       </li>
     </ul>
 
-    <button class="button-link button-link--primary button-link--has-icon">
+    <button v-if="saved" class="button-link button-link--primary button-link--has-icon">
       <img class="button-link__icon" src="~/assets/img/icon-edit.svg" alt="Bewerk item">
       aanpassen
     </button>
@@ -32,6 +32,10 @@ export default {
     data: {
       type: Object,
       required: true
+    },
+    saved: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -39,7 +43,7 @@ export default {
     // temp placeholderdata
     popupData () {
       return {
-        title: this.data.title || this.data.type || this.data.category,
+        title: this.data.title || this.data.type || 'Titel van de taak',
         description: this.data.note || this.getTypeDescription(this.data.type),
         energy: getEnergyDescription(this.data.energyLevel)
       }
@@ -55,7 +59,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .scene-popup {
   $padding: 17px;
 
@@ -107,14 +111,10 @@ export default {
     opacity: 0;
   }
 
-  .scene--first-part,
-  .scene--task,
-  .scene--booster {
-    pointer-events: none;
-
-    &{
-      right: calc(50vw + 200px); // 200px is also in the zoomTo function in baseScene
-    }
+  .scene--first-part &,
+  .scene--task &,
+  .scene--booster & {
+    right: calc(50vw + 200px); // 200px is also in the zoomTo function in baseScene
   }
 }
 

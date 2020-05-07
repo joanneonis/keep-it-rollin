@@ -9,7 +9,11 @@
       {{ viewState }}
     </div>
     <transition name="scene-popup">
-      <popup v-if="popup.visible" :data="popup.data" />
+      <popup
+        v-if="popup.visible"
+        :data="popup.data"
+        :saved="popup.saved"
+      />
     </transition>
   </div>
 </template>
@@ -36,6 +40,7 @@ export default {
       debug: false,
       popup: {
         visible: false,
+        saved: true,
         data: null
       }
     }
@@ -57,6 +62,11 @@ export default {
 
       handler (newVal, oldVal) {
         if (!this.localModel || this.loadingNewPart) { return }
+
+        // live update popup
+        this.popup.data = this.activeLocalPart
+        this.popup.visible = true
+        this.popup.saved = false
 
         // update local 3D modal with new energyValue
         this.localModel.updateEnergy(newVal.energyLevel)
@@ -82,12 +92,8 @@ export default {
       this.$store.commit('track/setAction', null)
     },
 
-    async viewState (e) {
-      if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
-        // adds local model
-        await this.addActiveEdit('task', this.activeLocalPart.uuid)
-        this.baseScene.zoomTo(this.localModel.scene, true)
-      }
+    viewState (e) {
+      this.switchView()
     }
   },
 
@@ -112,11 +118,20 @@ export default {
       this.baseScene.loading = false
 
       // if first item of the day, add energyPart
-      if (this.viewState === trackViewStates.CREATION.FIRST) {
-        this.addActiveEdit('energy', this.activeLocalPart.uuid)
-      } else {
-        // else zoom to overview
-        this.zoomOverview()
+      this.switchView()
+    },
+
+    switchView () {
+      switch (this.viewState) {
+        case trackViewStates.CREATION.FIRST:
+          this.addActiveEdit('energy', this.activeLocalPart.uuid)
+          break
+        case trackViewStates.CREATION.TASK:
+          this.addActiveEdit('task', this.activeLocalPart.uuid)
+          break
+        default:
+          this.zoomOverview()
+          break
       }
     },
 
@@ -152,9 +167,12 @@ export default {
         this.popup.visible = false
         return
       }
+      console.log('clicked')
+
       // get selected trackpart data
       this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
       this.popup.visible = true
+      this.popup.saved = true // when clicked
     },
 
     zoomOverview () {
