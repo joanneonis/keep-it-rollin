@@ -1,7 +1,7 @@
 <template>
   <div class="scene-popup">
     <strong>{{ popupData.title }}</strong>
-    <span>Beschrijving komt hier...</span>
+    <span>{{ popupData.description }}</span>
     <ul class="list-unstyled scene-popup__list">
       <li class="scene-popup__list__item">
         <img src="~/assets/img/popup-energy.png" alt="Energie niveau">
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getEnergyDescription } from '~/helpers/trackHelpers'
+import { getEnergyDescription, staticPartTexts } from '~/helpers/trackHelpers'
 
 export default {
   props: {
@@ -39,9 +39,17 @@ export default {
     // temp placeholderdata
     popupData () {
       return {
-        title: this.data.type || this.data.category,
+        title: this.data.title || this.data.type || this.data.category,
+        description: this.data.note || this.getTypeDescription(this.data.type),
         energy: getEnergyDescription(this.data.energyLevel)
       }
+    }
+  },
+
+  methods: {
+    getTypeDescription (type) {
+      if (!type) { return '' }
+      return staticPartTexts[type]
     }
   }
 }
@@ -52,7 +60,7 @@ export default {
   $padding: 17px;
 
   position: fixed;
-  width: rem(180px);
+  width: rem(220px);
   left: 0;
   right: 0;
   margin: auto;
@@ -112,6 +120,7 @@ export default {
 
 .scene-popup__list {
   margin-top: 13px;
+  max-width: rem(180px);
 
   &__item {
     display: flex;

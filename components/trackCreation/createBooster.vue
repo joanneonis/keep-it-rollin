@@ -82,6 +82,8 @@ export default {
 
   mounted () {
     this.uuid = uuidv4()
+    // init uuid in the store
+    this.$store.commit('track/setActiveLocalPart', this.trackPart)
   },
 
   methods: {

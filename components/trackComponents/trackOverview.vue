@@ -154,6 +154,7 @@ export default {
       }
       // get selected trackpart data
       this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
+      console.log(this.activeTrackParts, this.popup.data, targetMesh.userData.uuid)
       this.popup.visible = true
     },
 
@@ -189,16 +190,14 @@ export default {
       if (modelType === 'energy') {
         this.localModel = new EnergyPart(
           this.debug,
-          `trackpart ${uuid}`,
-          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
-          uuid
+          uuid,
+          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
         )
       } else {
         this.localModel = new BasePart(
           this.debug,
-          `trackpart ${uuid}`,
-          tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
-          uuid
+          uuid,
+          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
         )
       }
     },

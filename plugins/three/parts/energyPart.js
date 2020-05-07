@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 export class EnergyPart extends BasePart {
-  constructor (debug, uuid, position, metadata, energyLevel = 50) {
-    super(debug, uuid, position, metadata)
+  constructor (debug, uuid, position, energyLevel = 50) {
+    super(debug, uuid, position)
     this.energyLevel = energyLevel
     this.fileUrl = 'energy'
   }

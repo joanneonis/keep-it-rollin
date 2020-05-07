@@ -23,6 +23,12 @@ export const trackPartData = {
   note: ''
 }
 
+export const staticPartTexts = {
+  Meeting: 'Bij elke meeting blijft een deel van je brein hangen, hierdoor ben je minder scherp.',
+  'Losse taken': 'Bij een simpele taak dwaalt je brein gemakkelijk af. Zorg dat er weinig ruimte overblijft voor afleiding',
+  Werkblok: 'Tijdens een werkblok ben je een langere tijd gefocust aan het werk. Voor het krijgen van nieuwe inzichten is het belangrijk om te ‘ontfocussen’'
+}
+
 export function getEnergyDescription (energy) {
   if (energy < 25) {
     return 'Geen energie'
