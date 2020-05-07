@@ -3,6 +3,13 @@
   text-transform: uppercase;
   font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   &--primary { color: theme-color(primary); }
+
+  &__icon {
+    height: rem(10px);
+    margin-right: rem(2px);
+  }
 }

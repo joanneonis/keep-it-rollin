@@ -72,18 +72,11 @@ export class BaseScene {
     // add stats to dom
     this.container.appendChild(this.stats.dom)
 
-    // listen to mouse events
-    this.renderer.domElement.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
-
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
     this.cameraControls.maxPolarAngle = (Math.PI / 2) - 0.1
     this.cameraControls.maxDistance = 15
     this.cameraControls.minDistance = 2
-
-    this.cameraControls.addEventListener('controlstart', this.dragControls.bind(this))
-    this.cameraControls.addEventListener('control', this.dragControls.bind(this))
-    this.cameraControls.addEventListener('controlend', this.dragControls.bind(this))
 
     // temp helper
     const axis = new THREE.AxisHelper(7.5)
@@ -156,15 +149,20 @@ export class BaseScene {
     this.INTERSECTED = null
   }
 
-  zoomTo (mesh, panelActive = false, rotationV = -Math.PI * 0.4, rotationH = Math.PI * 0.4) {
-    const padding = 0.3
-    this.cameraControls.fitTo(mesh, true, {
-      paddingLeft: panelActive ? 0 : padding,
-      paddingRight: panelActive ? 3 : padding,
-      paddingBottom: panelActive ? 1 : padding,
-      paddingTop: padding
-    })
+  zoomTo (mesh, panelActive = false, rotationV = THREE.Math.degToRad(-40), rotationH = Math.PI * 0.4) {
     this.cameraControls.rotateTo(rotationV, rotationH, true)
+
+    if (panelActive) {
+      this.paddingInCssPixel(mesh, 0, (window.innerWidth / 2) + 200, 0, 0)
+    } else {
+      const padding = 0.5
+      this.cameraControls.fitTo(mesh, true, {
+        paddingLeft: padding,
+        paddingRight: panelActive ? `${(window.innerWidth / 4)}px` : padding,
+        paddingBottom: padding,
+        paddingTop: padding
+      })
+    }
   }
 
   addLights () {
@@ -216,17 +214,13 @@ export class BaseScene {
     })
   }
 
-  onDocumentMouseMove (event) {
-    event.preventDefault()
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-  }
-
   onDocumentMouseClick (event) {
     event.preventDefault()
     this.checkIntersection()
     this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
+
+    return this.INTERSECTED
   }
 
   dragControls (e) {
@@ -236,6 +230,8 @@ export class BaseScene {
       this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
       this.checkIntersection()
     }
+
+    return this.INTERSECTED
   }
 
   centerTrackParts () {
@@ -246,5 +242,40 @@ export class BaseScene {
     if (this.debug) {
       this.scene.add(new THREE.BoxHelper(this.trackParts))
     }
+  }
+
+  paddingInCssPixel (mesh, top, right, bottom, left) {
+    const fov = this.camera.fov * THREE.Math.DEG2RAD
+    const rendererHeight = this.renderer.getSize(new THREE.Vector2()).height
+
+    const boundingBox = new THREE.Box3().setFromObject(mesh)
+    const size = boundingBox.getSize(new THREE.Vector3())
+    const boundingWidth = size.x
+    const boundingHeight = size.y
+    const boundingDepth = size.z
+
+    let distanceToFit = this.cameraControls.getDistanceToFit(boundingWidth, boundingHeight, boundingDepth)
+    let paddingTop = 0
+    let paddingBottom = 0
+    let paddingLeft = 0
+    let paddingRight = 0
+
+    // loop to find almost convergence points
+    for (let i = 0; i < 10; i++) {
+      const depthAt = distanceToFit - boundingDepth * 0.5
+      const cssPixelToUnit = (2 * Math.tan(fov * 0.5) * Math.abs(depthAt)) / rendererHeight
+      paddingTop = top * cssPixelToUnit
+      paddingBottom = bottom * cssPixelToUnit
+      paddingLeft = left * cssPixelToUnit
+      paddingRight = right * cssPixelToUnit
+
+      distanceToFit = this.cameraControls.getDistanceToFit(
+        boundingWidth + paddingLeft + paddingRight,
+        boundingHeight + paddingTop + paddingBottom,
+        boundingDepth
+      )
+    }
+
+    this.cameraControls.fitTo(mesh, true, { paddingLeft, paddingRight, paddingBottom, paddingTop })
   }
 }

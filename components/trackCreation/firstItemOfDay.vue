@@ -43,7 +43,7 @@
 <script>
 import energySlider from '~/components/energySlider'
 import inputPanel from '~/components/inputPanel'
-import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
+import { trackViewStates, trackPartTypes, uuidv4 } from '~/helpers/trackHelpers'
 
 export default {
   components: {
@@ -65,6 +65,7 @@ export default {
   computed: {
     trackPart () {
       return {
+        title: trackPartTypes.ENERGY,
         type: this.type,
         energyLevel: this.energyLevel,
         note: this.note,

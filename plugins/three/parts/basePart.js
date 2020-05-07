@@ -6,12 +6,11 @@ export class BasePart {
   scene
   mesh
 
-  constructor (debug, objectName, position, meta, energyLevel = 50) {
+  constructor (debug, uuid, position, energyLevel = 50) {
     this.debug = debug
     this.fileUrl = 'Start van de dag' // loremobject
-    this.objectName = objectName
+    this.uuid = uuid
     this.position = position
-    this.meta = meta
 
     this.energyLevel = energyLevel
 
@@ -23,13 +22,13 @@ export class BasePart {
     const gltf = await loadGlb(this.fileUrl)
     this.gltf = gltf
     this.scene = gltf.scene
-    this.scene.name = `scene-${this.objectName}`
+    this.scene.name = `scene-${this.uuid}`
     this.scene.position.set(...this.position)
     this.scene.scale.multiplyScalar(1)
 
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
-        node.userData.uuid = this.meta
+        node.userData.uuid = this.uuid
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
       }
     })
@@ -48,7 +47,7 @@ export class BasePart {
       if (node instanceof THREE.Mesh) {
         const mesh = node
         mesh.castShadow = true
-        mesh.name = this.objectName
+        mesh.name = this.uuid
 
         this.mesh = mesh
         // temp set random color
@@ -56,7 +55,7 @@ export class BasePart {
 
         if (!mesh.morphTargetDictionary) { return }
         const expressions = Object.keys(mesh.morphTargetDictionary)
-        const expressionFolder = gui.addFolder(`MorphTargets - ${this.objectName}`)
+        const expressionFolder = gui.addFolder(`MorphTargets - ${this.uuid}`)
         for (let i = 0; i < expressions.length; i++) {
           expressionFolder.add(mesh.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i])
         }
@@ -67,7 +66,7 @@ export class BasePart {
   }
 
   generatePartPositionFolder (gui) {
-    const positionFolder = gui.addFolder(`${this.objectName} position`)
+    const positionFolder = gui.addFolder(`${this.uuid} position`)
     positionFolder.add(this.mesh.position, 'x', -20, 20).step(0.01)
     positionFolder.add(this.mesh.position, 'y', -20, 20).step(0.01)
     positionFolder.add(this.mesh.position, 'z', -20, 20).step(0.01)
