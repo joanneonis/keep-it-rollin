@@ -2,9 +2,17 @@
   <div
     id="scene-container"
     ref="sceneContainer"
-    class="scene-container"
+    class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
-  />
+  >
+    <div class="scene__state">
+      {{ viewState }}
+    </div>
+    <div class="scene__popup">
+      <strong>Meeting</strong>
+      <span>Bij elke meeting blijft een deel van je brein hangen, hierdoor ben  je minder scherp.</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -138,6 +146,8 @@ export default {
       await this.localModel.loadModel() // loads GLTF file
       await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
+      this.localModel.initDeforms()
+
       if (this.debug) {
         this.localModel.generateExpressionsFolder(this.baseScene.gui)
         this.localModel.generatePartPositionFolder(this.baseScene.gui)
@@ -187,15 +197,55 @@ export default {
 </script>
 
 <style lang="scss">
-.scene-container {
+.scene {
   height: 100vh;
   position: absolute;
   left: 0px;
   top: 0px;
   transition: opacity .2s;
 
+  &__state {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    z-index: 200;
+  }
+
   &.is-loading {
     opacity: 0;
+  }
+
+  &__popup {
+    $padding: 17px;
+
+    position: fixed;
+    width: rem(200px);
+    right: calc(50vw + 200px); // 200px is also in the zoomTo function in baseScene
+    bottom: 25vh;
+    background: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(25,49,83,0.05), 0 2px 24px 0 rgba(51,52,87,0.07);
+    border-radius: rem(10px);
+    padding: $padding;
+
+    font-size: rem(9px);
+
+    strong {
+      width: 100%;
+      display: inline-block;
+    }
+
+    &::before {
+      $triangle-size: 12px;
+
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: $triangle-size solid #0000;
+      border-right: $triangle-size solid #0000;
+      border-bottom: $triangle-size solid #fff;
+      margin: -($triangle-size + $padding) 0 ($triangle-size) $triangle-size / 2;
+      display: block;
+    }
   }
 }
 
