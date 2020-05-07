@@ -8,10 +8,9 @@
     <div class="scene__state">
       {{ viewState }}
     </div>
-    <div class="scene__popup">
-      <strong>Meeting</strong>
-      <span>Bij elke meeting blijft een deel van je brein hangen, hierdoor ben  je minder scherp.</span>
-    </div>
+    <transition name="scene-popup">
+      <popup v-if="popup.visible" :data="popup.data" />
+    </transition>
   </div>
 </template>
 
@@ -20,32 +19,25 @@ import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
-import { trackViewStates } from '~/helpers/trackHelpers'
-
-const tempRandomPositions = [
-  [0, 0.2, 0],
-  [1.9, 0.2, 0.6],
-  [0.8, 0.2, 1.45],
-  [1.6, 0.2, 2.75],
-  [0.58, 0.2, 4.05],
-  [-0.29, 0.2, 5.57],
-  [1.01, 0.2, 6],
-  [0.15, 0.2, 6.87],
-  [1.48, 0.2, 8.12],
-  [0.59, 0.2, 9.67],
-  [1.76, 0.2, 10.39],
-  [0.9, 0.2, 11.5],
-  [2.19, 0.2, 13.42]
-]
+import { trackViewStates, tempRandomPositions } from '~/helpers/trackHelpers'
+import popup from '~/components/trackComponents/popup'
 
 export default {
+  components: {
+    popup
+  },
+
   data () {
     return {
       baseScene: { loading: true },
       localModel: null,
       localModelCount: 0,
       loadingNewPart: true,
-      debug: false
+      debug: false,
+      popup: {
+        visible: false,
+        data: null
+      }
     }
   },
 
@@ -66,13 +58,12 @@ export default {
       handler (newVal, oldVal) {
         if (!this.localModel || this.loadingNewPart) { return }
 
-        // lala selecteer specifiek het laatste model
+        // update local 3D modal with new energyValue
         this.localModel.updateEnergy(newVal.energyLevel)
       }
     },
 
     controls (e) {
-      console.log(e)
       if (e === 'overviewZoom') {
         this.zoomOverview()
         this.baseScene.resetIntersected()
@@ -84,15 +75,7 @@ export default {
 
     action (e) {
       if (e === 'cancelled') {
-        this.localModelCount--
-        this.baseScene.trackParts.remove(this.localModel.scene)
-
-        if (this.debug) {
-          this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
-          this.baseScene.gui.removeFolder(this.localModel.positionFolder)
-        }
-
-        this.zoomOverview()
+        this.removeLocalModel()
       }
 
       // then when action is handled, empty action
@@ -101,6 +84,7 @@ export default {
 
     async viewState (e) {
       if (this.viewState === trackViewStates.CREATION.TASK) { // TODO of booster
+        // adds local model
         await this.addActiveEdit('task', this.activeLocalPart.uuid)
         this.baseScene.zoomTo(this.localModel.scene, true)
       }
@@ -116,6 +100,7 @@ export default {
     async init () {
       // create main scene
       this.baseScene = new BaseScene(this.$refs.sceneContainer, this.debug)
+      this.sceneListeners()
 
       // always load current track
       await this.addModelsFromFb()
@@ -130,22 +115,62 @@ export default {
       if (this.viewState === trackViewStates.CREATION.FIRST) {
         this.addActiveEdit('energy', this.activeLocalPart.uuid)
       } else {
+        // else zoom to overview
         this.zoomOverview()
       }
     },
 
+    removeLocalModel () {
+      this.localModelCount--
+      this.baseScene.trackParts.remove(this.localModel.scene)
+
+      if (this.debug) {
+        this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
+        this.baseScene.gui.removeFolder(this.localModel.positionFolder)
+      }
+
+      this.zoomOverview()
+    },
+
+    sceneListeners () {
+      const that = this
+      // listen to mouse events
+      this.baseScene.renderer.domElement.addEventListener('click', function (e) {
+        that.handleSceneInteractions(that.baseScene.onDocumentMouseClick(e))
+      }, false)
+
+      const listeners = ['controlstart', 'control', 'controlend']
+      listeners.forEach(evt =>
+        this.baseScene.cameraControls.addEventListener(evt, function (e) {
+          that.handleSceneInteractions(that.baseScene.dragControls(e), e.originalEvent.type)
+        })
+      )
+    },
+
+    handleSceneInteractions (targetMesh, interactionType = 'click') {
+      if (!targetMesh || !targetMesh.userData || interactionType === 'wheel') {
+        this.popup.visible = false
+        return
+      }
+      // get selected trackpart data
+      this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
+      this.popup.visible = true
+    },
+
     zoomOverview () {
+      this.popup.visible = false
       this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.3)
     },
 
-    async addActiveEdit (type = 'lorem', uuid) {
+    async addActiveEdit (modelType = 'lorem', uuid) {
       this.loadingNewPart = true
 
-      // TODO - per type different classss
-      this.createPart(type, uuid)
+      // load part by type & add to scene
+      this.createPart(modelType, uuid)
       await this.localModel.loadModel() // loads GLTF file
       await this.baseScene.trackParts.add(this.localModel.scene) // adds trackpart to an Three group
 
+      // set initial or saved deforms
       this.localModel.initDeforms()
 
       if (this.debug) {
@@ -159,18 +184,19 @@ export default {
       this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
-    createPart (type, uuid) {
-      if (type === 'energy') {
+    createPart (modelType, uuid) {
+      // TODO move to class? idk
+      if (modelType === 'energy') {
         this.localModel = new EnergyPart(
           this.debug,
-          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          `trackpart ${uuid}`,
           tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
           uuid
         )
       } else {
         this.localModel = new BasePart(
           this.debug,
-          `trackpart ${this.localModelCount}`, // TODO replace with FB UID
+          `trackpart ${uuid}`,
           tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
           uuid
         )
@@ -215,37 +241,10 @@ export default {
     opacity: 0;
   }
 
-  &__popup {
-    $padding: 17px;
-
-    position: fixed;
-    width: rem(200px);
-    right: calc(50vw + 200px); // 200px is also in the zoomTo function in baseScene
-    bottom: 25vh;
-    background: #FFFFFF;
-    box-shadow: 0 1px 2px 0 rgba(25,49,83,0.05), 0 2px 24px 0 rgba(51,52,87,0.07);
-    border-radius: rem(10px);
-    padding: $padding;
-
-    font-size: rem(9px);
-
-    strong {
-      width: 100%;
-      display: inline-block;
-    }
-
-    &::before {
-      $triangle-size: 12px;
-
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: $triangle-size solid #0000;
-      border-right: $triangle-size solid #0000;
-      border-bottom: $triangle-size solid #fff;
-      margin: -($triangle-size + $padding) 0 ($triangle-size) $triangle-size / 2;
-      display: block;
-    }
+  &--first-part,
+  &--task,
+  &--booster {
+    pointer-events: none;
   }
 }
 
@@ -262,11 +261,5 @@ export default {
       display: none;
     }
   }
-}
-
-.scene--first-part,
-.scene--task,
-.scene--booster {
-  pointer-events: none;
 }
 </style>

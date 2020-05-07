@@ -72,18 +72,11 @@ export class BaseScene {
     // add stats to dom
     this.container.appendChild(this.stats.dom)
 
-    // listen to mouse events
-    this.renderer.domElement.addEventListener('click', this.onDocumentMouseClick.bind(this), false)
-
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
     this.cameraControls.maxPolarAngle = (Math.PI / 2) - 0.1
     this.cameraControls.maxDistance = 15
     this.cameraControls.minDistance = 2
-
-    this.cameraControls.addEventListener('controlstart', this.dragControls.bind(this))
-    this.cameraControls.addEventListener('control', this.dragControls.bind(this))
-    this.cameraControls.addEventListener('controlend', this.dragControls.bind(this))
 
     // temp helper
     const axis = new THREE.AxisHelper(7.5)
@@ -221,17 +214,13 @@ export class BaseScene {
     })
   }
 
-  onDocumentMouseMove (event) {
-    event.preventDefault()
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-  }
-
   onDocumentMouseClick (event) {
     event.preventDefault()
     this.checkIntersection()
     this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1
     this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
+
+    return this.INTERSECTED
   }
 
   dragControls (e) {
@@ -241,6 +230,8 @@ export class BaseScene {
       this.mouseClick.y = -(event.clientY / window.innerHeight) * 2 + 1
       this.checkIntersection()
     }
+
+    return this.INTERSECTED
   }
 
   centerTrackParts () {
