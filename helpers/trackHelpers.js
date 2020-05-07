@@ -31,16 +31,16 @@ export const staticPartTexts = {
 
 export function getEnergyDescription (energy) {
   if (energy < 25) {
-    return 'Geen energie'
+    return { text: 'Geen energie', img: 'slecht' }
   }
   if (energy >= 25 && energy < 50) {
-    return 'Enigszins moeizaam'
+    return { text: 'Enigszins moeizaam', img: 'mwoa' }
   }
   if (energy >= 50 && energy < 75) {
-    return 'Prima'
+    return { text: 'Prima', img: 'prima' }
   }
   if (energy >= 75) {
-    return 'Vol energie!'
+    return { text: 'Vol energie!', img: 'blij' }
   }
 }
 
