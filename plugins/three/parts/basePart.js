@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import { loadGlb } from '~/plugins/three/helpers/helpers'
+import { loadGlb, rotateObject } from '~/plugins/three/helpers/helpers'
 
 export class BasePart {
   scene
@@ -25,6 +25,8 @@ export class BasePart {
     this.scene.name = `scene-${this.uuid}`
     this.scene.position.set(...this.position)
     this.scene.scale.multiplyScalar(1)
+
+    rotateObject(this.scene, 0, -45)
 
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {

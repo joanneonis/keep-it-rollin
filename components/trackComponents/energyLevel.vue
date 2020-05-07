@@ -49,11 +49,12 @@ export default {
   }
 
   &__image {
-    width: 80px;
+    width: 75px;
     background: white;
-    padding: 13px;
+    padding: 16px;
     border-radius: 50px;
     margin: 0;
+    box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
   }
 }
 </style>

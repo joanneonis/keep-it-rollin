@@ -173,7 +173,7 @@ export default {
 
     zoomOverview () {
       this.popup.visible = false
-      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.3)
+      this.baseScene.zoomTo(this.baseScene.trackParts, false, -1.7, 1)
     },
 
     async addActiveEdit (modelType = 'lorem', uuid) {
