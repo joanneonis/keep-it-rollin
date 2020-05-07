@@ -172,10 +172,11 @@ export class BaseScene {
 
     // directional light (used for shadows)
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
-    directionalLight.position.set(-5, 10, 7.5)
+    directionalLight.position.set(-10, 25, -10)
     directionalLight.intensity = 1
     directionalLight.target.position.set(0, 0, 0)
     directionalLight.castShadow = true
+
     this.scene.add(directionalLight)
   }
 

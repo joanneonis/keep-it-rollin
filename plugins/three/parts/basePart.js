@@ -31,6 +31,8 @@ export class BasePart {
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
         node.userData.uuid = this.uuid
+        // node.material.color.setHex(Math.random() * 0xFFFFFF)
+        node.castShadow = true
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
       }
     })
@@ -48,12 +50,9 @@ export class BasePart {
     this.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
         const mesh = node
-        mesh.castShadow = true
         mesh.name = this.uuid
 
         this.mesh = mesh
-        // temp set random color
-        mesh.material.color.setHex(Math.random() * 0xFFFFFF)
 
         if (!mesh.morphTargetDictionary) { return }
         const expressions = Object.keys(mesh.morphTargetDictionary)
