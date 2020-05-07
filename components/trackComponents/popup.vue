@@ -11,7 +11,7 @@
         <img src="~/assets/img/popup-booster.png" alt="Booster toegevoegd?">
         booster toegevoegd?
       </li>
-      <li v-if="saved" class="scene-popup__list__item">
+      <li v-if="saved && data.type !== 'energy'" class="scene-popup__list__item">
         <img src="~/assets/img/popup-calendar.png" alt="Kalenderitem bekijken">
         Kalenderitem bekijken
       </li>
