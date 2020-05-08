@@ -118,7 +118,15 @@ export const actions = {
 }
 
 export const getters = {
-  energyLevel: stateTrack => stateTrack.activeLocalPart.energyLevel
+  energyLevel: stateTrack => stateTrack.activeLocalPart.energyLevel,
+  avarageEnergyLevel: (stateTrack) => {
+    if (stateTrack.activeParts.length === 0) { return 50 }
+    const sumLevel = stateTrack.activeParts.reduce(function (a, b) {
+      return a + parseInt(b.energyLevel)
+    }, 0)
+
+    return sumLevel / stateTrack.activeParts.length
+  }
 }
 
 function checkTrack (ref) {

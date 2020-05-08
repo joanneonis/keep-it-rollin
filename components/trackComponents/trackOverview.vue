@@ -5,9 +5,6 @@
     class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
   >
-    <div class="scene__state">
-      {{ viewState }}
-    </div>
     <transition name="scene-popup">
       <popup
         v-if="popup.visible"
@@ -68,8 +65,10 @@ export default {
         this.popup.visible = true
         this.popup.saved = false
 
-        // update local 3D modal with new energyValue
-        this.localModel.updateEnergy(newVal.energyLevel)
+        if (this.viewState !== trackViewStates.CREATION.BOOSTER) {
+          // update local 3D modal with new energyValue
+          this.localModel.updateEnergy(newVal.energyLevel)
+        }
       }
     },
 
@@ -167,7 +166,6 @@ export default {
         this.popup.visible = false
         return
       }
-      console.log('clicked')
 
       // get selected trackpart data
       this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
@@ -177,7 +175,7 @@ export default {
 
     zoomOverview () {
       this.popup.visible = false
-      this.baseScene.zoomTo(this.baseScene.trackParts, false, -Math.PI * 0.3)
+      this.baseScene.zoomTo(this.baseScene.trackParts, false, -1.7, 1)
     },
 
     async addActiveEdit (modelType = 'lorem', uuid) {
@@ -245,13 +243,6 @@ export default {
   left: 0px;
   top: 0px;
   transition: opacity .2s;
-
-  &__state {
-    position: absolute;
-    top: 100px;
-    left: 20px;
-    z-index: 200;
-  }
 
   &.is-loading {
     opacity: 0;

@@ -2,7 +2,8 @@
   <div>
     <div class="toolbar-top container">
       <chatbot />
-      <account />
+      <!-- <account /> -->
+      <energy-level />
     </div>
     <div class="body-container">
       <div
@@ -19,12 +20,15 @@
 import intro from '~/components/intro'
 import chatbot from '~/components/chatbot'
 import account from '~/components/account'
+import energyLevel from '~/components/trackComponents/energyLevel'
 
 export default {
   components: {
     chatbot,
+    intro,
+    // eslint-disable-next-line vue/no-unused-components
     account,
-    intro
+    energyLevel
   }
 }
 </script>

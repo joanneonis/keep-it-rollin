@@ -79,8 +79,8 @@ export class BaseScene {
     this.cameraControls.minDistance = 2
 
     // temp helper
-    const axis = new THREE.AxisHelper(7.5)
-    this.scene.add(axis)
+    // const axis = new THREE.AxisHelper(7.5)
+    // this.scene.add(axis)
   }
 
   sceneSettings () {
@@ -149,8 +149,8 @@ export class BaseScene {
     this.INTERSECTED = null
   }
 
-  zoomTo (mesh, panelActive = false, rotationV = THREE.Math.degToRad(-40), rotationH = Math.PI * 0.4) {
-    this.cameraControls.rotateTo(rotationV, rotationH, true)
+  zoomTo (mesh, panelActive = false, azimuthAngle = THREE.Math.degToRad(-60), polarAngle = Math.PI * 0.4) {
+    this.cameraControls.rotateTo(azimuthAngle, polarAngle, true)
 
     if (panelActive) {
       this.paddingInCssPixel(mesh, 0, (window.innerWidth / 2) + 200, 0, 0)
@@ -168,14 +168,16 @@ export class BaseScene {
   addLights () {
     // lights (lights up whole scene)
     const ambientLight = new THREE.AmbientLight(0x404040) // soft white light
+    ambientLight.intensity = 0.5
     this.scene.add(ambientLight)
 
     // directional light (used for shadows)
-    const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
-    directionalLight.position.set(5, 10, 7.5)
+    const directionalLight = new THREE.DirectionalLight(new THREE.Color('#F7FAFC'))
+    directionalLight.position.set(-10, 25, -10)
     directionalLight.intensity = 1
     directionalLight.target.position.set(0, 0, 0)
     directionalLight.castShadow = true
+
     this.scene.add(directionalLight)
   }
 
@@ -224,6 +226,8 @@ export class BaseScene {
   }
 
   dragControls (e) {
+    // console.log(this.cameraControls.azimuthAngle, this.cameraControls.polarAngle)
+
     const event = e.originalEvent
     if (event.type === 'mousedown') {
       this.mouseClick.x = (event.clientX / window.innerWidth) * 2 - 1

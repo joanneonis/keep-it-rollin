@@ -4,20 +4,26 @@
     <span>{{ popupData.description }}</span>
     <ul class="list-unstyled scene-popup__list">
       <li class="scene-popup__list__item">
-        <img src="~/assets/img/popup-energy.png" alt="Energie niveau">
-        {{ popupData.energy }}
+        <figure class="scene-popup__list__img">
+          <img :src="require(`~/assets/img/emoji/${popupData.energy.img}.svg`)" alt="Energie niveau">
+        </figure>
+        {{ popupData.energy.text }}
       </li>
       <li v-if="popupData.boosterAdded" class="scene-popup__list__item">
-        <img src="~/assets/img/popup-booster.png" alt="Booster toegevoegd?">
+        <figure class="scene-popup__list__img">
+          <img src="~/assets/img/popup-booster.png" alt="Booster toegevoegd?">
+        </figure>
         booster toegevoegd?
       </li>
       <li v-if="saved && data.type !== 'energy'" class="scene-popup__list__item">
-        <img src="~/assets/img/popup-calendar.png" alt="Kalenderitem bekijken">
+        <figure class="scene-popup__list__img">
+          <img src="~/assets/img/popup-calendar.png" alt="Kalenderitem bekijken">
+        </figure>
         Kalenderitem bekijken
       </li>
     </ul>
 
-    <button v-if="saved" class="button-link button-link--primary button-link--has-icon">
+    <button v-if="saved && data.type !== 'energy'" class="button-link button-link--primary button-link--has-icon">
       <img class="button-link__icon" src="~/assets/img/icon-edit.svg" alt="Bewerk item">
       aanpassen
     </button>
@@ -128,10 +134,14 @@ export default {
     margin-bottom: rem(4px);
     font-weight: 700;
     color: #213464;
+  }
+
+  &__img {
+    width: 27px;
+    margin: 0 11px 0 0;
 
     img {
-      width: 27px;
-      margin-right: 11px;
+      width: 100%;
     }
   }
 }
