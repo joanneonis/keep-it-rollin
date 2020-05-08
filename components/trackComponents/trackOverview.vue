@@ -65,8 +65,10 @@ export default {
         this.popup.visible = true
         this.popup.saved = false
 
-        // update local 3D modal with new energyValue
-        this.localModel.updateEnergy(newVal.energyLevel)
+        if (this.viewState !== trackViewStates.CREATION.BOOSTER) {
+          // update local 3D modal with new energyValue
+          this.localModel.updateEnergy(newVal.energyLevel)
+        }
       }
     },
 

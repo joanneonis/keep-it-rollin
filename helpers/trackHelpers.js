@@ -34,7 +34,7 @@ export function getEnergyDescription (energy) {
     return { text: 'Geen energie', img: 'slecht' }
   }
   if (energy >= 25 && energy < 50) {
-    return { text: 'Enigszins moeizaam', img: 'mwoa' }
+    return { text: 'Enigszins moeizaam', img: 'matig' }
   }
   if (energy >= 50 && energy < 75) {
     return { text: 'Prima', img: 'prima' }

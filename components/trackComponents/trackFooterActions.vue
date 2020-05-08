@@ -9,9 +9,9 @@
       </button>
     </div>
     <div>
-      <!-- @click="addBooster()" -->
       <a
         class="button button--secondary"
+        @click="addBooster()"
       >
         Booster toevoegen
       </a>

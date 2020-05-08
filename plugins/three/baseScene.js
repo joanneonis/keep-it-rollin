@@ -168,10 +168,11 @@ export class BaseScene {
   addLights () {
     // lights (lights up whole scene)
     const ambientLight = new THREE.AmbientLight(0x404040) // soft white light
+    ambientLight.intensity = 0.5
     this.scene.add(ambientLight)
 
     // directional light (used for shadows)
-    const directionalLight = new THREE.DirectionalLight(0xFFFFFF)
+    const directionalLight = new THREE.DirectionalLight(new THREE.Color('#F7FAFC'))
     directionalLight.position.set(-10, 25, -10)
     directionalLight.intensity = 1
     directionalLight.target.position.set(0, 0, 0)

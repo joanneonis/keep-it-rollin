@@ -8,7 +8,7 @@
         {{ getEnergyInfo.text }}
       </span>
     </div>
-    <figure class="energy-status__image">
+    <figure class="energy-status__image" :class="`energy-status__image--${getEnergyInfo.img}`">
       <img :src="require(`~/assets/img/emoji/${getEnergyInfo.img}.svg`)" alt="Energie niveau">
     </figure>
   </div>
@@ -55,6 +55,19 @@ export default {
     border-radius: 50px;
     margin: 0;
     box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
+
+    // &--blij {
+    //   background: #FFF2BA;
+    // }
+    // &--prima {
+    //   background: #E7FBB8;
+    // }
+    // &--matig {
+    //   background: #D0E0FC;
+    // }
+    // &--slecht {
+    //   background: #FFDBCB;
+    // }
   }
 }
 </style>
