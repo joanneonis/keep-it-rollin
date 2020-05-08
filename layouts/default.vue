@@ -2,8 +2,8 @@
   <div>
     <div class="toolbar-top container">
       <chatbot />
-      <!-- <account /> -->
-      <energy-level />
+      <account v-if="!$store.getters['auth/signedInState']" />
+      <energy-level v-if="$store.getters['auth/signedInState'] && $store.state.track.viewState !== trackViewStates.CREATION.FIRST" />
     </div>
     <div class="body-container">
       <div
@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import { trackViewStates } from '~/helpers/trackHelpers'
 import intro from '~/components/intro'
 import chatbot from '~/components/chatbot'
 import account from '~/components/account'
@@ -29,6 +30,12 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     account,
     energyLevel
+  },
+
+  data () {
+    return {
+      trackViewStates
+    }
   }
 }
 </script>

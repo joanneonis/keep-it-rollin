@@ -19,9 +19,9 @@
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
-import { MeetingPart } from '~/plugins/three/parts/MeetingPart'
-import { SmallTasksPart } from '~/plugins/three/parts/SmallTasksPart'
-import { WorkPart } from '~/plugins/three/parts/WorkPart'
+import { MeetingPart } from '~/plugins/three/parts/meetingPart'
+import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
+import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates, tempRandomPositions } from '~/helpers/trackHelpers'
 import popup from '~/components/trackComponents/popup'
@@ -277,6 +277,7 @@ export default {
 
 // fix GUI list styles
 .dg.ac {
+  display: none; // dayoff hide fps meter
   color: white;
   z-index: 20;
   // right: 30vw;
@@ -288,5 +289,10 @@ export default {
       display: none;
     }
   }
+}
+
+// dayoff hide fps meter
+div#scene-container div:nth-child(2) {
+    display: none;
 }
 </style>
