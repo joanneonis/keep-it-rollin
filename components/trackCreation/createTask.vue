@@ -118,6 +118,10 @@ export default {
       handler () {
         this.$store.commit('track/setActiveLocalPart', this.trackPart)
       }
+    },
+    selectedCategory (e) {
+      // update model
+      this.$store.commit('track/setAction', e)
     }
   },
 
