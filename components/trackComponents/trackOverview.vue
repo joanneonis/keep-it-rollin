@@ -19,6 +19,9 @@
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
+import { MeetingPart } from '~/plugins/three/parts/meetingPart'
+import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
+import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates, tempRandomPositions } from '~/helpers/trackHelpers'
 import popup from '~/components/trackComponents/popup'
@@ -85,6 +88,15 @@ export default {
     action (e) {
       if (e === 'cancelled') {
         this.removeLocalModel()
+        this.zoomOverview()
+      }
+
+      const types = ['Meeting', 'Losse taken', 'Werkblok']
+      if (types.includes(e)) {
+        // remove old model
+        this.removeLocalModel()
+        // set new model
+        this.addActiveEdit(e, this.activeLocalPart.uuid)
       }
 
       // then when action is handled, empty action
@@ -142,8 +154,6 @@ export default {
         this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
         this.baseScene.gui.removeFolder(this.localModel.positionFolder)
       }
-
-      this.zoomOverview()
     },
 
     sceneListeners () {
@@ -201,19 +211,29 @@ export default {
     },
 
     createPart (modelType, uuid) {
-      // TODO move to class? idk
-      if (modelType === 'energy') {
-        this.localModel = new EnergyPart(
-          this.debug,
-          uuid,
-          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
-        )
-      } else {
-        this.localModel = new BasePart(
-          this.debug,
-          uuid,
-          tempRandomPositions[this.localModelCount] // TODO calculate position based on previous endpoint ball
-        )
+      const baseData = [
+        this.debug,
+        uuid,
+        tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+        this.activeLocalPart.energyLevel
+      ]
+
+      switch (modelType) {
+        case 'energy':
+          this.localModel = new EnergyPart(...baseData)
+          break
+        case 'Meeting':
+          this.localModel = new MeetingPart(...baseData)
+          break
+        case 'Losse taken':
+          this.localModel = new SmallTasksPart(...baseData)
+          break
+        case 'Werkblok':
+          this.localModel = new WorkPart(...baseData)
+          break
+        default:
+          this.localModel = new BasePart(...baseData)
+          break
       }
     },
 
@@ -257,6 +277,7 @@ export default {
 
 // fix GUI list styles
 .dg.ac {
+  display: none; // dayoff hide fps meter
   color: white;
   z-index: 20;
   // right: 30vw;
@@ -268,5 +289,10 @@ export default {
       display: none;
     }
   }
+}
+
+// dayoff hide fps meter
+div#scene-container div:nth-child(2) {
+    display: none;
 }
 </style>
