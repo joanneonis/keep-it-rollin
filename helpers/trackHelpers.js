@@ -26,7 +26,13 @@ export const trackPartData = {
 export const staticPartTexts = {
   Meeting: 'Bij elke meeting blijft een deel van je brein hangen, hierdoor ben je minder scherp.',
   'Losse taken': 'Bij een simpele taak dwaalt je brein gemakkelijk af. Zorg dat er weinig ruimte overblijft voor afleiding',
-  Werkblok: 'Tijdens een werkblok ben je een langere tijd gefocust aan het werk. Voor het krijgen van nieuwe inzichten is het belangrijk om te ‘ontfocussen’'
+  Werkblok: 'Tijdens een werkblok ben je een langere tijd gefocust aan het werk. Voor het krijgen van nieuwe inzichten is het belangrijk om te ‘ontfocussen’',
+  Beweging: 'Even bewegen...',
+  Creatief: 'Een creatieve pauze...',
+  Energiek: 'Een energieke pauze...',
+  Ontspanning: 'Een ontspannende pauze...',
+  'Even eruit': 'Even er tussenuit...',
+  Tussendoortje: 'Een snelle pauze'
 }
 
 export function getEnergyDescription (energy) {

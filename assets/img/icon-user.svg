@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Bitmap</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="8.5" cy="8.5" r="8.5"></circle>
+    </defs>
+    <g id="Wireframes-v2-+-vorm" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Baandeel-toevoegen---booster-Copy-4" transform="translate(-779.000000, -345.000000)">
+            <g id="Bitmap" transform="translate(779.000000, 345.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <g id="avatar" mask="url(#mask-2)" fill="#05046A" fill-rule="nonzero">
+                    <g transform="translate(2.808527, 4.000000)" id="Path">
+                        <path d="M7.98436822,0.951091085 C9.25247287,2.21919574 9.25247287,4.27521124 7.98436822,5.54331589 C6.71626357,6.81142054 4.66024806,6.81142054 3.39214341,5.54331589 C2.12403876,4.27521124 2.12403876,2.21919574 3.39214341,0.951091085 C4.66024806,-0.31703876 6.71626357,-0.31703876 7.98436822,0.951091085"></path>
+                        <path d="M10.6692209,8.83468411 C7.709,6.83452326 3.66743605,6.83452326 0.707215116,8.83468411 C0.268011628,9.13118992 0.00561821705,9.63221899 0.00561821705,10.1752713 L0.00561821705,12.988814 L11.3708178,12.988814 L11.3708178,10.1752713 C11.3708178,9.63221899 11.1083992,9.13118992 10.6692209,8.83468411 L10.6692209,8.83468411 Z"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

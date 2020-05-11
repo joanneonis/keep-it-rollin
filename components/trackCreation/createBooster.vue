@@ -2,32 +2,41 @@
   <input-panel
     :title="title"
     :description="description"
+    @action="getPanelAction"
   >
-    <div
-      slot="body"
-      class="input-panel__large"
-    >
-      <ul class="list-unstyled booster-list">
-        <li
-          v-for="(category, i) in boosterCategories"
-          :key="i"
-          class="booster-item"
-          @click="selectedBooster = category.title"
-        >
-          <figure class="booster-item__image">
-            <img :src="category.image" :alt="category.title">
-          </figure>
-          <h5 class="booster-item__title">
-            {{ category.title }}
-          </h5>
-        </li>
-      </ul>
+    <div slot="body">
+      <div class="form-fields">
+        <div class="form-field">
+          <div class="form-field__label">
+            Kies type booster
+          </div>
+          <div class="form-field__checkboxes">
+            <label
+              v-for="(checkbox, i) in boosterCategories"
+              :key="i"
+              class="checkbox"
+            >{{ checkbox }}
+              <input
+                type="radio"
+                :checked="selectedBooster === checkbox"
+                :value="checkbox"
+                name="radio"
+                @input="selectedBooster = $event.target.value"
+              >
+            </label>
+          </div>
+        </div>
+      </div>
+      <idea-list
+        class="boosters"
+        :category="selectedBooster"
+        @chosen="hanldeIdea"
+      />
     </div>
     <div slot="footer">
       <button
-        v-if="selectedBooster"
-        @click="saveTrackPart()"
         class="button button--primary"
+        @click="saveTrackPart()"
       >
         Opslaan
       </button>
@@ -38,45 +47,56 @@
 <script>
 import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
-import booster1 from '~/assets/img/booster/booster-1.png'
-import booster2 from '~/assets/img/booster/booster-2.png'
+import ideaList from '~/components/trackCreation/ideaList'
 
 export default {
   components: {
-    inputPanel
+    inputPanel,
+    ideaList
   },
 
   data () {
     return {
       title: 'Booster toevoegen',
-      description: 'Door een booster toe te passen win je snelheid!',
-      selectedBooster: null,
+      description: 'Pas op, je kan snelheid verliezen! Pas een booster toe om dit op te lossen.',
+      selectedIdea: null,
       boosterCategories: [
-        {
-          title: 'Creatief',
-          image: booster1
-        },
-        {
-          title: 'Beweging',
-          image: booster2
-        },
-        {
-          title: 'Creatief',
-          image: booster1
-        },
-        {
-          title: 'Beweging',
-          image: booster2
-        },
-        {
-          title: 'Creatief',
-          image: booster1
-        },
-        {
-          title: 'Beweging',
-          image: booster2
-        }
-      ]
+        'Ontspanning',
+        'Creatief',
+        'Beweging'
+      ],
+      selectedBooster: 'Ontspanning',
+      uuid: null
+    }
+  },
+
+  computed: {
+    trackPart () {
+      return {
+        category: this.selectedBooster,
+        idea: this.selectedIdea,
+        type: 'booster',
+        uuid: this.uuid
+      }
+    }
+  },
+
+  watch: {
+    trackPart: {
+      deep: true,
+
+      handler () {
+        this.$store.commit('track/setActiveLocalPart', this.trackPart)
+      }
+    },
+    selectedCategory (e) {
+      // update model
+      this.$store.commit('track/setAction', e)
+    },
+
+    selectedBooster () {
+      this.selectedIdea = null
+      this.$store.commit('track/setActiveLocalPart', this.trackPart)
     }
   },
 
@@ -89,43 +109,41 @@ export default {
   methods: {
     saveTrackPart () {
       this.$store.commit('track/setControls', 'overviewZoom')
-      this.$store.dispatch('track/setTrackPart', {
-        type: 'booster',
-        category: this.selectedBooster,
-        uuid: this.uuid
-      })
+      this.$store.dispatch('track/setTrackPart', this.trackPart)
       this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+    },
+
+    getPanelAction ($event) {
+      this.$store.commit('track/setAction', $event)
+    },
+
+    hanldeIdea ($event) {
+      this.selectedIdea = $event
     }
   }
 }
 </script>
 
 <style lang="scss">
-.booster-list {
+.form-fields {
   display: flex;
-  flex-wrap: wrap;
-  max-width: 570px;
-  margin-bottom: rem(20px);
+  flex-flow: column;
+  padding: 0 40px 10px 40px;
+  align-items: flex-start;
 }
-.booster-item {
-  width: calc(100% / 3 - 4px);
-  padding-top: 150px;
-  background-color: gray-color(150);
-  margin: 2px;
-  border-radius: 7px;
-  position: relative;
 
-  &__image {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-  }
+.form-field__checkboxes {
+  display: flex;
+}
 
-  &__title {
-    position: relative;
-    text-align: center;
+.boosters {
+  background: gray-color(150);
+  padding: 20px 0;
+  border-radius: rem(5px);
+  margin: 0 -20px 10px -20px;
+
+  h4 {
+    padding-left: 40px;
   }
 }
 </style>
