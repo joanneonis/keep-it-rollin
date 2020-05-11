@@ -14,8 +14,8 @@
         :key="item"
         class="idea-list__item"
         @click="choose(item)"
-        @mouseover="hover = item"
-        @mouseleave="hover = null"
+        @mouseover="handleHover(true, item)"
+        @mouseleave="handleHover(false, item)"
       >
         <div>
           <span class="idea-list__title">
@@ -39,10 +39,10 @@
           <button v-if="chosen !== item" class="button button--primary button--sm">
             toevoegen
           </button>
-          <button v-if="chosen === item && hover !== item" class="button button--secondary button--sm">
+          <button v-if="hover === switching || (chosen === item && hover !== item)" class="button button--secondary button--sm">
             toegevoegd
           </button>
-          <button v-if="chosen === item && hover === item" class="button button--danger button--sm">
+          <button v-if="hover !== switching && (chosen === item && hover === item)" class="button button--danger button--sm">
             verwijderen
           </button>
         </div>
@@ -80,7 +80,8 @@ export default {
         ]
       },
       chosen: null,
-      hover: null
+      hover: null,
+      switching: null
     }
   },
 
@@ -89,19 +90,33 @@ export default {
       // if category is changed, empty chosen val
       if (val) {
         this.chosen = null
+        this.switching = null
       }
     }
   },
 
   methods: {
     choose (item) {
+      this.switching = item
+      this.hover = item
+
       if (this.chosen === item) {
         this.chosen = null
+        this.switching = null
       } else {
         this.chosen = item
       }
 
       this.$emit('chosen', this.chosen)
+    },
+
+    handleHover (over, item) {
+      if (over && this.switching !== item) {
+        this.hover = item
+      } else {
+        this.switching = null
+        this.hover = null
+      }
     }
   }
 }
@@ -121,7 +136,10 @@ export default {
       &:last-child { border: none; }
 
       &:hover {
+        background-color: rgba(white, .3);
+
         .idea-list__action {
+          transition: all .2s;
           opacity: 1;
           transform: translate(0px, 0);
         }
@@ -130,9 +148,10 @@ export default {
 
   &__action {
     padding-right: rem(10px);
-    transition: all .2s;
     opacity: 0;
     transform: translate(10px, 0);
+    max-width: 150px;
+    display: flex;
 
     &.is-chosen {
       opacity: 1;
