@@ -84,19 +84,19 @@ export default {
     }
   },
 
-  // watch: {
-  //   category (val) {
-  //     // if category is changed, empty chosen val
-  //     if (val) {
-  //       this.chosen = null
-  //     }
-  //   }
-  // },
+  watch: {
+    category (val) {
+      // if category is changed, empty chosen val
+      if (val) {
+        this.chosen = null
+      }
+    }
+  },
 
   methods: {
     choose (item) {
       if (this.chosen === item) {
-        this.chosen = ''
+        this.chosen = null
       } else {
         this.chosen = item
       }
