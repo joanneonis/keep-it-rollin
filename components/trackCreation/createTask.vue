@@ -61,8 +61,8 @@
     </div>
     <div slot="footer">
       <button
-        @click="saveTrackPart()"
         class="button button--primary"
+        @click="saveTrackPart()"
       >
         Opslaan
       </button>
@@ -150,6 +150,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-fields {
+  display: flex;
+  flex-flow: column;
+  padding: 30px 40px;
+  align-items: flex-start;
+}
+
 .form-field__checkboxes {
   display: flex;
 }

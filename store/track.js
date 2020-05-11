@@ -121,11 +121,16 @@ export const getters = {
   energyLevel: stateTrack => stateTrack.activeLocalPart.energyLevel,
   avarageEnergyLevel: (stateTrack) => {
     if (stateTrack.activeParts.length === 0) { return 50 }
-    const sumLevel = stateTrack.activeParts.reduce(function (a, b) {
+
+    // filter out parts which don't have an energy value
+    const filteredParts = stateTrack.activeParts.filter(el => el.energyLevel)
+    if (!filteredParts) { return 50 }
+
+    const sumLevel = filteredParts.reduce(function (a, b) {
       return a + parseInt(b.energyLevel)
     }, 0)
 
-    return sumLevel / stateTrack.activeParts.length
+    return sumLevel / filteredParts.length
   }
 }
 

@@ -140,6 +140,9 @@ export default {
         case trackViewStates.CREATION.TASK:
           this.addActiveEdit('task', this.activeLocalPart.uuid)
           break
+        case trackViewStates.CREATION.BOOSTER:
+          this.addActiveEdit('booster', this.activeLocalPart.uuid)
+          break
         default:
           this.zoomOverview()
           break
@@ -231,6 +234,9 @@ export default {
         case 'Werkblok':
           this.localModel = new WorkPart(...baseData)
           break
+        case 'booster':
+          this.localModel = new BasePart(...baseData)
+          break
         default:
           this.localModel = new BasePart(...baseData)
           break
@@ -248,8 +254,11 @@ export default {
       // iterate through trackparts from firebase
       await this.asyncForEach(this.activeTrackParts, async (trackpart, i) => {
         await this.addActiveEdit(trackpart.type, trackpart.uuid)
-        // set saved deforms
-        this.localModel.updateEnergy(trackpart.energyLevel)
+
+        if (trackpart.energyLevel) {
+          // set saved deforms
+          this.localModel.updateEnergy(trackpart.energyLevel)
+        }
       })
     }
   }

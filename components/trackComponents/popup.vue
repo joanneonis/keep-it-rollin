@@ -3,7 +3,7 @@
     <strong>{{ popupData.title }}</strong>
     <span>{{ popupData.description }}</span>
     <ul class="list-unstyled scene-popup__list">
-      <li class="scene-popup__list__item">
+      <li v-if="popupData.energy" class="scene-popup__list__item">
         <figure class="scene-popup__list__img">
           <img :src="require(`~/assets/img/emoji/${popupData.energy.img}.svg`)" alt="Energie niveau">
         </figure>
@@ -14,6 +14,12 @@
           <img src="~/assets/img/popup-booster.png" alt="Booster toegevoegd?">
         </figure>
         booster toegevoegd?
+      </li>
+      <li v-if="data.idea" class="scene-popup__list__item">
+        <figure class="scene-popup__list__img">
+          <img :src="require(`~/assets/img/icon-${data.category}.svg`)" :alt="data.idea">
+        </figure>
+        {{ data.idea }}
       </li>
       <li v-if="saved && data.type !== 'energy'" class="scene-popup__list__item">
         <figure class="scene-popup__list__img">
@@ -50,8 +56,8 @@ export default {
     popupData () {
       return {
         title: this.data.title || this.data.type || 'Titel van de taak',
-        description: this.data.note || this.getTypeDescription(this.data.type),
-        energy: getEnergyDescription(this.data.energyLevel)
+        description: this.data.note || this.getTypeDescription(this.data.category) || this.getTypeDescription(this.data.type),
+        energy: this.data.type !== 'booster' ? getEnergyDescription(this.data.energyLevel) : null
       }
     }
   },
