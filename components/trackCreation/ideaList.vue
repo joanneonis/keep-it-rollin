@@ -14,6 +14,8 @@
         :key="item"
         class="idea-list__item"
         @click="choose(item)"
+        @mouseover="hover = item"
+        @mouseleave="hover = null"
       >
         <div>
           <span class="idea-list__title">
@@ -30,12 +32,18 @@
             </span>
           </div>
         </div>
-        <div class="idea-list__action" :class="{ 'is-chosen' : chosen === item }">
+        <div
+          class="idea-list__action"
+          :class="{ 'is-chosen' : chosen === item }"
+        >
           <button v-if="chosen !== item" class="button button--primary button--sm">
             toevoegen
           </button>
-          <button v-if="chosen === item" class="button button--secondary button--sm">
+          <button v-if="chosen === item && hover !== item" class="button button--secondary button--sm">
             toegevoegd
+          </button>
+          <button v-if="chosen === item && hover === item" class="button button--danger button--sm">
+            verwijderen
           </button>
         </div>
       </li>
@@ -71,7 +79,8 @@ export default {
           'Online Solitaire'
         ]
       },
-      chosen: null
+      chosen: null,
+      hover: null
     }
   },
 
