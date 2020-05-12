@@ -10,21 +10,20 @@
         </template>
       </div>
       <track-overview v-if="$store.state.track.trackInited && $store.getters['auth/signedInState']" />
-      <div class="app-footer">
+      <div v-if="!dayDone" class="app-footer">
         <div class="container">
           <track-footer-actions v-if="$store.state.track.viewState === trackViewStates.OVERVIEW && $store.getters['auth/signedInState']" />
         </div>
       </div>
     </template>
     <balloons v-if="dayoffModal" />
-    <modal :open="dayoffModal">
+    <modal :open="dayoffModal" @action="handleModalAction()">
       <dayoff-content />
     </modal>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { trackViewStates } from '~/helpers/trackHelpers'
 import intro from '~/components/intro'
 import firstItemOfDay from '~/components/trackCreation/firstItemOfDay' // TODO dynamic import with inputcards
@@ -53,6 +52,7 @@ export default {
     next((vm) => {
       if (to.query.dayoff) {
         vm.dayoffModal = true
+        vm.dayDone = true
       }
     })
   },
@@ -60,26 +60,14 @@ export default {
   data () {
     return {
       trackViewStates,
-      trackIsDone: false,
       dayoffModal: false,
+      dayDone: false,
       welcomeMessage: {
         storyId: 3,
         messages: null,
         actions: [],
         timer: 2000
       }
-    }
-  },
-
-  computed: {
-    ...mapState({
-      dayisFinished: state => state.track.dayisFinished
-    })
-  },
-
-  watch: {
-    dayisFinished (val) {
-      this.trackIsDone = val
     }
   },
 
@@ -90,8 +78,6 @@ export default {
   },
 
   mounted () {
-    this.trackIsDone = this.dayisFinished
-
     if (this.$store.getters['auth/signedInState'] && this.$store.state.auth.authInited) {
       this.welcomeMessage.messages = [
         `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.userData.displayName)}`
@@ -108,6 +94,12 @@ export default {
     capitalizeFirstLetter (string) {
       if (!string) { return '' }
       return string.charAt(0).toUpperCase() + string.slice(1)
+    },
+
+    handleModalAction ($event) {
+      if ($event === 'closed') {
+        this.dayoffModal = false
+      }
     }
   }
 }

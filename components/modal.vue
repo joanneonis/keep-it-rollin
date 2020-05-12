@@ -48,6 +48,7 @@ export default {
     close () {
       this.$store.commit('track/setCheckedDayFinishedModal') // todo move to handler outside modal
       this.localOpen = false
+      this.$emit('action', 'closed')
     }
   }
 }
