@@ -36,3 +36,7 @@ small,
   font-size: $small-font-size;
   font-weight: $font-weight-normal;
 }
+
+.type--highlight {
+  color: theme-color(primary);
+}

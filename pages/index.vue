@@ -16,6 +16,10 @@
         </div>
       </div>
     </template>
+    <balloons v-if="dayoffModal" />
+    <modal :open="dayoffModal">
+      <dayoff-content />
+    </modal>
   </div>
 </template>
 
@@ -28,6 +32,9 @@ import trackOverview from '~/components/trackComponents/trackOverview'
 import trackFooterActions from '~/components/trackComponents/trackFooterActions'
 import createTask from '~/components/trackCreation/createTask'
 import createBooster from '~/components/trackCreation/createBooster'
+import balloons from '~/components/balloons'
+import modal from '~/components/modal'
+import dayoffContent from '~/components/dayoffContent'
 
 export default {
   components: {
@@ -36,19 +43,25 @@ export default {
     firstItemOfDay,
     trackFooterActions,
     createTask,
-    createBooster
+    createBooster,
+    dayoffContent,
+    balloons,
+    modal
   },
 
-  // beforeRouteEnter (to, from, next) {
-  //   next((vm) => {
-  //     console.log(to, from, next, vm)
-  //     // access to component instance via `vm`
-  //   })
-  // },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      if (to.query.dayoff) {
+        vm.dayoffModal = true
+      }
+    })
+  },
 
   data () {
     return {
       trackViewStates,
+      trackIsDone: false,
+      dayoffModal: false,
       welcomeMessage: {
         storyId: 3,
         messages: null,
@@ -60,17 +73,13 @@ export default {
 
   computed: {
     ...mapState({
-      authedState (state) {
-        return state.auth.authed
-      }
+      dayisFinished: state => state.track.dayisFinished
     })
   },
 
   watch: {
-    authedState (newValue, oldValue) {
-      if (newValue !== oldValue && newValue) {
-        this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
-      }
+    dayisFinished (val) {
+      this.trackIsDone = val
     }
   },
 
@@ -81,6 +90,8 @@ export default {
   },
 
   mounted () {
+    this.trackIsDone = this.dayisFinished
+
     if (this.$store.getters['auth/signedInState'] && this.$store.state.auth.authInited) {
       this.welcomeMessage.messages = [
         `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.userData.displayName)}`

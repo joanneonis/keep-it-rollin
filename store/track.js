@@ -62,9 +62,7 @@ export const mutations = {
 
   // gets trackparts form trackdoc
   setTrack (stateMutation, trackDoc) {
-    const sm = stateMutation
-
-    sm.activeParts = trackDoc.trackParts
+    stateMutation.activeParts = trackDoc.trackParts
 
     const reducedTrackData = Object.keys(trackDoc)
       .reduce((obj, key) => {
@@ -74,13 +72,15 @@ export const mutations = {
         return obj
       }, {})
 
-    sm.trackData = reducedTrackData
+    stateMutation.trackData = reducedTrackData
   },
 
   addTrackPart (stateMutation, trackPart) {
-    const sm = stateMutation
+    stateMutation.activeParts.push(trackPart)
+  },
 
-    sm.activeParts.push(trackPart)
+  setCheckedDayFinishedModal (stateMutation) {
+    stateMutation.checkedDayFinishedModal = true
   }
 }
 
@@ -89,7 +89,6 @@ export const actions = {
     // if user is not signed in, do not try to fetch
     if (!rootState.auth.userUid) { return }
     const track = await checkTrack(db.collection('users').doc(rootState.auth.userUid))
-    console.log(track)
 
     if (!track.trackParts || track.trackParts.length === 0) {
       commit('setViewState', trackViewStates.CREATION.FIRST)
