@@ -10,17 +10,20 @@
         </template>
       </div>
       <track-overview v-if="$store.state.track.trackInited && $store.getters['auth/signedInState']" />
-      <div class="app-footer">
+      <div v-if="!dayDone" class="app-footer">
         <div class="container">
           <track-footer-actions v-if="$store.state.track.viewState === trackViewStates.OVERVIEW && $store.getters['auth/signedInState']" />
         </div>
       </div>
     </template>
+    <balloons v-if="dayoffModal" />
+    <modal :open="dayoffModal" @action="handleModalAction()">
+      <dayoff-content />
+    </modal>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { trackViewStates } from '~/helpers/trackHelpers'
 import intro from '~/components/intro'
 import firstItemOfDay from '~/components/trackCreation/firstItemOfDay' // TODO dynamic import with inputcards
@@ -28,6 +31,9 @@ import trackOverview from '~/components/trackComponents/trackOverview'
 import trackFooterActions from '~/components/trackComponents/trackFooterActions'
 import createTask from '~/components/trackCreation/createTask'
 import createBooster from '~/components/trackCreation/createBooster'
+import balloons from '~/components/balloons'
+import modal from '~/components/modal'
+import dayoffContent from '~/components/dayoffContent'
 
 export default {
   components: {
@@ -36,40 +42,31 @@ export default {
     firstItemOfDay,
     trackFooterActions,
     createTask,
-    createBooster
+    createBooster,
+    dayoffContent,
+    balloons,
+    modal
   },
 
-  // beforeRouteEnter (to, from, next) {
-  //   next((vm) => {
-  //     console.log(to, from, next, vm)
-  //     // access to component instance via `vm`
-  //   })
-  // },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      if (to.query.dayoff) {
+        vm.dayoffModal = true
+        vm.dayDone = true
+      }
+    })
+  },
 
   data () {
     return {
       trackViewStates,
+      dayoffModal: false,
+      dayDone: false,
       welcomeMessage: {
         storyId: 3,
         messages: null,
         actions: [],
         timer: 2000
-      }
-    }
-  },
-
-  computed: {
-    ...mapState({
-      authedState (state) {
-        return state.auth.authed
-      }
-    })
-  },
-
-  watch: {
-    authedState (newValue, oldValue) {
-      if (newValue !== oldValue && newValue) {
-        this.$store.commit('chatbot/setActiveMessages', this.welcomeMessage)
       }
     }
   },
@@ -97,6 +94,12 @@ export default {
     capitalizeFirstLetter (string) {
       if (!string) { return '' }
       return string.charAt(0).toUpperCase() + string.slice(1)
+    },
+
+    handleModalAction ($event) {
+      if ($event === 'closed') {
+        this.dayoffModal = false
+      }
     }
   }
 }

@@ -40,25 +40,8 @@ $font-baseline-offset: 5px;
     border-radius: rem($button-size / 2);
   }
 
-  &-select {
-    padding: 0;
-
-    &__select {
-      padding-right: rem($button-padding-x);
-      padding-left: rem($button-padding-x);
-      color: inherit;
-      text-transform: uppercase;
-
-      * { color: theme-color(dark); } // windows bug fix
-    }
-
-    .icon {
-      pointer-events: none;
-    }
-  }
-
-  > span {
-    height: rem($button-size);
-    line-height: rem($button-size + $font-baseline-offset);
+  .icon {
+    height: rem(12px);
+    margin: 0 rem(5px) 0 rem(-5px);
   }
 }

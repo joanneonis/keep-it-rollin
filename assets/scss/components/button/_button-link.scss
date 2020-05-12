@@ -3,7 +3,7 @@
   text-transform: uppercase;
   font-weight: bold;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 
   &--primary { color: theme-color(primary); }
@@ -11,5 +11,10 @@
   &__icon {
     height: rem(10px);
     margin-right: rem(2px);
+  }
+
+  .icon {
+    height: rem(12px);
+    margin: 0 rem(5px) 0 rem(-5px);
   }
 }

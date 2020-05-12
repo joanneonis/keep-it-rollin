@@ -46,17 +46,30 @@
           name="title"
         >
       </div>
-      <div class="form-field">
-        <label for="note">
-          Hoe lang ga je ermee bezig? <small>(In minuten)</small>
-        </label>
-        <input
-          id="title"
-          v-model="duration"
-          placeholder="90 min"
-          type="number"
-          name="title"
-        >
+      <div class="form-field form-field__split">
+        <div class="form-field__split__small">
+          <label for="note">
+            Hoe lang ga je ermee bezig? <br><small>(In minuten)</small>
+          </label>
+          <input
+            id="title"
+            v-model="duration"
+            placeholder="90 min"
+            type="number"
+            name="title"
+          >
+        </div>
+        <div>
+          <label>
+            Is dit je laatste taak van de dag?
+          </label>
+          <div class="input-switch">
+            <input v-model="isLastItem" type="checkbox" id="switch" />
+            <label for="switch">
+              Toggle
+            </label>
+          </div>
+        </div>
       </div>
     </div>
     <div slot="footer">
@@ -94,7 +107,8 @@ export default {
       selectedCategory: null,
       taskTitle: '',
       duration: 0,
-      uuid: null
+      uuid: null,
+      isLastItem: false
     }
   },
 
@@ -106,7 +120,8 @@ export default {
         energyLevel: this.energyLevel,
         title: this.taskTitle,
         duration: this.duration,
-        uuid: this.uuid
+        uuid: this.uuid,
+        isLastItem: this.isLastItem
       }
     }
   },
@@ -159,5 +174,14 @@ export default {
 
 .form-field__checkboxes {
   display: flex;
+}
+
+.form-field__split {
+  display: flex;
+
+  &__small {
+    width: 49%;
+    padding-right: 20px;
+  }
 }
 </style>

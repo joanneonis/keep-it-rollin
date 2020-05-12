@@ -1,0 +1,49 @@
+// code inspired from https://codepen.io/mburnette/pen/LxNxNg
+
+$input-switch-size: 30px;
+$input-switch-spacing: 3px;
+
+.input-switch {
+  input[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    display: contents;
+  }
+
+  label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: $input-switch-size * 2;
+    height: $input-switch-size + ($input-switch-spacing * 2);
+    background: gray-color(200);
+    display: block;
+    border-radius: 100px;
+    position: relative;
+  }
+
+  label:after {
+    content: '';
+    position: absolute;
+    top: $input-switch-spacing;
+    left: $input-switch-spacing;
+    width: $input-switch-size;
+    height: $input-switch-size;
+    background: #fff;
+    border-radius: $input-switch-size;
+    transition: 0.3s;
+  }
+
+  input:checked+label {
+    background: color(green);
+  }
+
+  input:checked+label:after {
+    left: calc(100% - #{$input-switch-spacing});
+    transform: translateX(-100%);
+  }
+
+  label:active:after {
+    width: $input-switch-size + $input-switch-spacing;
+  }
+}
