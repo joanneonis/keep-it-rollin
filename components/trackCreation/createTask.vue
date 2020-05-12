@@ -139,7 +139,7 @@ export default {
     saveTrackPart () {
       this.$store.commit('track/setControls', 'overviewZoom')
       this.$store.dispatch('track/setTrackPart', this.trackPart)
-      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+      this.$store.commit('track/setViewState', trackViewStates.OVERVIEW)
     },
 
     getPanelAction ($event) {

@@ -13,8 +13,8 @@
     <template
       v-if="$store.getters['auth/signedInState']"
     >
-      <button @click="signOut()">
-        Uitloggen <!-- Instellingen -->
+      <button class="button button--primary" @click="signOut()">
+        Uitloggen
       </button>
     </template>
   </div>

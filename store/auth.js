@@ -59,27 +59,26 @@ export const mutations = {
 }
 
 export const actions = {
-  async checkLogin ({ commit }) {
+  async checkLogin ({ commit, dispatch }) {
     // checks if user is signed in through gapi
     auth2Instance = await loadAuth2WithProps(credentials)
     const isAuthed = auth2Instance.isSignedIn.get()
 
     // double check also in fb auth
     firebase.auth().onAuthStateChanged(async function (user) {
+      // User is signed in.
       if (user && isAuthed) {
-        commit('setAuthState', isAuthed)
-        commit('setUserId', user.uid)
-
         await getUserDocs(user.providerData[0])
-        commit('setUserData', user.providerData[0])
-        // User is signed in.
+
+        dispatch('setSignedIn', {
+          userdata: user.providerData[0],
+          userId: user.uid
+        })
       } else {
         // No user is signed in.
         commit('setUserData', {})
+        commit('setInitState', true)
       }
-
-      // sets loading state
-      commit('setInitState', true)
     })
   },
 
@@ -104,14 +103,23 @@ export const actions = {
     } catch (error) {
       console.log(error)
     }
-    commit('setUserId', firebaseResponse.user.uid)
 
     const userData = await getUserDocs(firebaseResponse.user)
-    commit('setUserData', userData)
 
+    dispatch('setSignedIn', {
+      userdata: userData,
+      userId: firebaseResponse.user.uid
+    })
+  },
+
+  async setSignedIn ({ commit, dispatch }, params) {
+    const { userId, userdata } = params
+
+    commit('setUserId', userId)
+    commit('setUserData', userdata)
     commit('setAuthState', true)
-
-    dispatch('track/getTrack', null, { root: true })
+    await dispatch('track/getTrack', null, { root: true })
+    commit('setInitState', true)
   },
 
   handleSignout ({ commit }) {

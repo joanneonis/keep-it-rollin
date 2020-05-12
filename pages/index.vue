@@ -1,17 +1,21 @@
 <template>
   <div>
-    <div class="app-container container">
-      <intro v-if="!$store.getters['auth/signedInState']" />
-      <first-item-of-day v-if="!$store.state.track.activeParts || $store.state.track.activeParts.length === 0" />
-      <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
-      <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
-    </div>
-    <track-overview v-if="$store.state.track.trackInited" />
-    <div class="app-footer">
-      <div class="container">
-        <track-footer-actions v-if="$store.state.track.viewState === trackViewStates.OVERVIEW" />
+    <template v-if="$store.state.auth.authInited">
+      <div class="app-container container">
+        <intro v-if="!$store.getters['auth/signedInState']" />
+        <template v-if="$store.getters['auth/signedInState']">
+          <first-item-of-day v-if="$store.state.track.viewState === trackViewStates.CREATION.FIRST" />
+          <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
+          <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
+        </template>
       </div>
-    </div>
+      <track-overview v-if="$store.state.track.trackInited && $store.getters['auth/signedInState']" />
+      <div class="app-footer">
+        <div class="container">
+          <track-footer-actions v-if="$store.state.track.viewState === trackViewStates.OVERVIEW && $store.getters['auth/signedInState']" />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -34,6 +38,13 @@ export default {
     createTask,
     createBooster
   },
+
+  // beforeRouteEnter (to, from, next) {
+  //   next((vm) => {
+  //     console.log(to, from, next, vm)
+  //     // access to component instance via `vm`
+  //   })
+  // },
 
   data () {
     return {
@@ -70,7 +81,7 @@ export default {
   },
 
   mounted () {
-    if (this.$store.getters['auth/signedInState']) {
+    if (this.$store.getters['auth/signedInState'] && this.$store.state.auth.authInited) {
       this.welcomeMessage.messages = [
         `Hallo ${this.capitalizeFirstLetter(this.$store.state.auth.userData.displayName)}`
       ]
