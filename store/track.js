@@ -37,7 +37,7 @@ export const mutations = {
     sm.controls = control
   },
 
-  viewState (stateMutation, state) {
+  setViewState (stateMutation, state) {
     const sm = stateMutation
 
     sm.viewState = state
@@ -89,8 +89,12 @@ export const actions = {
     // if user is not signed in, do not try to fetch
     if (!rootState.auth.userUid) { return }
     const track = await checkTrack(db.collection('users').doc(rootState.auth.userUid))
+    console.log(track)
+
     if (!track.trackParts || track.trackParts.length === 0) {
-      commit('viewState', trackViewStates.CREATION.FIRST)
+      commit('setViewState', trackViewStates.CREATION.FIRST)
+    } else {
+      commit('setViewState', trackViewStates.OVERVIEW)
     }
 
     commit('setTrack', track)

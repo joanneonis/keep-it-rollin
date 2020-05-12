@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.auth.authInited">
     <div class="toolbar-top container">
       <chatbot />
       <account v-if="!$store.getters['auth/signedInState']" />
@@ -27,7 +27,6 @@ export default {
   components: {
     chatbot,
     intro,
-    // eslint-disable-next-line vue/no-unused-components
     account,
     energyLevel
   },

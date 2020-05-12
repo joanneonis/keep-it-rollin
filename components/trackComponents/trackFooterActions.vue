@@ -31,11 +31,11 @@ import { trackViewStates } from '~/helpers/trackHelpers'
 export default {
   methods: {
     addBooster () {
-      this.$store.commit('track/viewState', trackViewStates.CREATION.BOOSTER)
+      this.$store.commit('track/setViewState', trackViewStates.CREATION.BOOSTER)
     },
 
     addTask () {
-      this.$store.commit('track/viewState', trackViewStates.CREATION.TASK)
+      this.$store.commit('track/setViewState', trackViewStates.CREATION.TASK)
     }
   }
 }

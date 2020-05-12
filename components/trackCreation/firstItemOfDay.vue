@@ -104,7 +104,7 @@ export default {
       this.$store.dispatch('track/setTrackPart', this.trackPart)
 
       // zoom out to overview
-      this.$store.commit('track/viewState', trackViewStates.OVERVIEW)
+      this.$store.commit('track/setViewState', trackViewStates.OVERVIEW)
     },
 
     getPanelAction ($event) {
