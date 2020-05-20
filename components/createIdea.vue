@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import { db } from '~/plugins/firebase'
 import { staticPartTexts, uuidv4 } from '~/helpers/trackHelpers'
 
@@ -101,6 +102,7 @@ export default {
         categories: this.selectedCategories,
         userName: this.$store.state.auth.userData.displayName,
         userId: this.$store.state.auth.userUid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         type: 'user'
       }
     }
@@ -115,6 +117,22 @@ export default {
       if (this.title) {
         // TODO save to firebase
         await db.collection('activities').add(this.ideaItem)
+        await db.collection('users').doc(this.$store.state.auth.userUid).collection('ideas').add(this.ideaItem)
+
+        const userStatsRef = db.collection('users').doc(this.$store.state.auth.userUid).collection('stats')
+        await userStatsRef.doc('ideas').get().then(
+          (doc) => {
+            if (doc.exists) {
+              doc.update({ ideasAdded: firebase.firestore.FieldValue.increment(1) })
+            } else {
+              userStatsRef.doc('ideas').set({
+                ideasAdded: 1,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              })
+            }
+          }
+        )
+
         this.$store.dispatch('modal/closeModal')
       } else {
         alert('titel is verplicht')
