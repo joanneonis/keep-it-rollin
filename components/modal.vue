@@ -1,5 +1,8 @@
 <template>
-  <div class="modal-container" :class="{ 'is-open' : localOpen }">
+  <div
+    class="modal-container"
+    :class="{ 'is-open' : localOpen, 'has-delay': $store.state.modal.type === 'dayOff' }"
+  >
     <div v-if="localOpen" class="modal-background" @click="close()" />
     <transition name="modal-up">
       <div v-if="localOpen" class="modal">
@@ -32,7 +35,7 @@ export default {
 
   watch: {
     open (val) {
-      this.localOpen = this.open
+      this.localOpen = val
     }
   },
 
@@ -47,6 +50,7 @@ export default {
   methods: {
     close () {
       this.$store.commit('track/setCheckedDayFinishedModal') // todo move to handler outside modal
+      this.$store.dispatch('modal/closeModal')
       this.localOpen = false
       this.$emit('action', 'closed')
     }
@@ -75,9 +79,14 @@ export default {
   opacity: 0;
   background: gray-color(100);
   z-index: 998;
-  animation: backgroundBlur 1s .5s;
+  animation: backgroundBlur 1s;
   animation-fill-mode: forwards;
   pointer-events: none;
+
+  .has-delay & {
+    animation: backgroundBlur 1s .5s;
+    animation-fill-mode: forwards;
+  }
 }
 
 .modal {
@@ -91,6 +100,7 @@ export default {
   padding: rem(60px) rem(20px) rem(50px);
   max-width: rem(650px);
   text-align: center;
+  border-radius: rem(10px);
 
   &__close {
     position: absolute;
@@ -111,7 +121,7 @@ export default {
   opacity: 0;
 }
 
-.modal-up-enter-active {
+.has-delay .modal-up-enter-active {
   transition-delay: 2.5s;
 }
 </style>

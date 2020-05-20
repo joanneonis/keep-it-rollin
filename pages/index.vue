@@ -16,14 +16,16 @@
         </div>
       </div>
     </template>
-    <balloons v-if="dayoffModal" />
-    <modal :open="dayoffModal" @action="handleModalAction()">
-      <dayoff-content />
+    <balloons v-if="modalType === 'dayOff'" />
+    <modal :open="modalActive" @action="handleModalAction()">
+      <dayoff-content v-if="modalType === 'dayOff'" />
+      <create-idea v-if="modalType === 'createIdea'" />
     </modal>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { trackViewStates } from '~/helpers/trackHelpers'
 import intro from '~/components/intro'
 import firstItemOfDay from '~/components/trackCreation/firstItemOfDay' // TODO dynamic import with inputcards
@@ -34,6 +36,7 @@ import createBooster from '~/components/trackCreation/createBooster'
 import balloons from '~/components/balloons'
 import modal from '~/components/modal'
 import dayoffContent from '~/components/dayoffContent'
+import createIdea from '~/components/createIdea'
 
 export default {
   components: {
@@ -45,22 +48,34 @@ export default {
     createBooster,
     dayoffContent,
     balloons,
-    modal
+    modal,
+    createIdea
   },
 
   beforeRouteEnter (to, from, next) {
     next((vm) => {
       if (to.query.dayoff) {
-        vm.dayoffModal = true
+        vm.$store.dispatch('modal/setActiveModal', 'dayOff')
         vm.dayDone = true
       }
+    })
+  },
+
+  // watch: {
+  //   modalActive (val) {
+  //   }
+  // },
+
+  computed: {
+    ...mapState({
+      modalType: state => state.modal.type,
+      modalActive: state => state.modal.isActive
     })
   },
 
   data () {
     return {
       trackViewStates,
-      dayoffModal: false,
       dayDone: false,
       welcomeMessage: {
         storyId: 3,

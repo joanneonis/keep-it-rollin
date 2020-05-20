@@ -1,10 +1,10 @@
 /* track
-* viewState { ENUM } as overview or playing etc.
+* viewState { ENUM } overview or playing etc.
 * activeParts { trackPart } what trackparts are placed
 * date { Timestamp } what day is active (usually today)
 * trackData { Object } metadata about the track (like creationtime etc.)
-* action { String } save, update, cancel etc. // TODO ENUM
-* controls { String } three camera controls (like zoom to.. etc) // TODO ENUM
+* action { String } save, update, cancel etc.
+* controls { String } three camera controls (like zoom to.. etc)
 */
 
 import moment from 'moment'
@@ -20,8 +20,7 @@ export const state = () => ({
   trackInited: false,
   viewState: trackViewStates.OVERVIEW,
   action: null,
-  controls: null,
-  trackPartTransforms: 0
+  controls: null
 })
 
 export const mutations = {
@@ -52,12 +51,6 @@ export const mutations = {
     const sm = stateMutation
 
     sm.trackInited = boolean
-  },
-
-  setDeforms (stateMutation, deform) {
-    const sm = stateMutation
-
-    sm.trackPartTransforms = deform
   },
 
   // gets trackparts form trackdoc
