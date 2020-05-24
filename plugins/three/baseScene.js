@@ -248,6 +248,7 @@ export class BaseScene {
     }
   }
 
+  // source: github.com/yomotsu/camera-controls/blob/dev/examples/fit-and-padding.html
   paddingInCssPixel (mesh, top, right, bottom, left) {
     const fov = this.camera.fov * THREE.Math.DEG2RAD
     const rendererHeight = this.renderer.getSize(new THREE.Vector2()).height
