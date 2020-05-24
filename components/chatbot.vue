@@ -111,11 +111,6 @@ export default {
       return messagesLength + 0.5
     },
 
-    nextScene () {
-      this.activeItems.messages = this.connectCalendarMessages
-      this.activeItems.actions = this.connectCalendarActions
-    },
-
     bindScope (inputAction) {
       this.$store.commit('chatbot/setAction', inputAction.action)
     },

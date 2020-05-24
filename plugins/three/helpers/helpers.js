@@ -17,6 +17,7 @@ export function loadGlb (fileName) {
   })
 }
 
+// source: https://discourse.threejs.org/t/functions-to-calculate-the-visible-width-height-at-a-given-z-depth-from-a-perspective-camera/269
 export const visibleHeightAtZDepth = (depth, camera) => {
   // compensate for cameras not positioned at z=0
   const cameraOffset = camera.position.z

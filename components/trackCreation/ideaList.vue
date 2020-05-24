@@ -1,6 +1,9 @@
 <template>
   <div class="idea-list-container">
-    <button class="button-link button-link--primary add-own">
+    <button
+      class="button-link button-link--primary add-own"
+      @click="triggerModal()"
+    >
       + idee toevoegen
     </button>
     <h4>Ideeen voor {{ category }}</h4>
@@ -117,6 +120,10 @@ export default {
         this.switching = null
         this.hover = null
       }
+    },
+
+    triggerModal () {
+      this.$store.dispatch('modal/setActiveModal', 'createIdea')
     }
   }
 }

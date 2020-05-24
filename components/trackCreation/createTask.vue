@@ -66,7 +66,7 @@
           <div class="input-switch">
             <input v-model="isLastItem" type="checkbox" id="switch" />
             <label for="switch">
-              Toggle
+              <span>{{ isLastItem ? 'ja' : 'nee' }}</span>
             </label>
           </div>
         </div>
