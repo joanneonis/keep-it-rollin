@@ -37,6 +37,7 @@ export default {
         this.$store.dispatch('auth/handleAuth')
       }
       if (action === 'later') {
+        this.$store.dispatch('auth/handleFreePlay')
         this.done()
       }
     },
