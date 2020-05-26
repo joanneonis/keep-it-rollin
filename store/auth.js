@@ -11,7 +11,9 @@
 
 import { gapi, loadAuth2WithProps } from 'gapi-script'
 import firebase from 'firebase'
+import moment from 'moment'
 import { db } from '~/plugins/firebase'
+import { uuidv4 } from '~/helpers/trackHelpers'
 
 let auth2Instance
 const credentials = {
@@ -27,8 +29,9 @@ export const state = () => ({
   authed: false,
   authInited: false,
   userUid: null,
-  userData: null
-  // errorDetected: false
+  userData: null,
+  freePlay: false
+  // errorDetected: false,
 })
 
 export const mutations = {
@@ -60,6 +63,20 @@ export const mutations = {
 
 export const actions = {
   async checkLogin ({ commit, dispatch }) {
+    const freeplay = localStorage.getItem('freeplayToken')
+    const lastFreeSession = localStorage.getItem('freeplaySession')
+
+    console.log('lastFreeSession', lastFreeSession, moment().format('DDMMYYYY'))
+
+    if (freeplay && lastFreeSession === moment().format('DDMMYYYY')) {
+      dispatch('setSignedIn', {
+        userdata: { displayName: 'player' },
+        userId: freeplay
+      })
+
+      return
+    }
+
     // checks if user is signed in through gapi
     auth2Instance = await loadAuth2WithProps(credentials)
     const isAuthed = auth2Instance.isSignedIn.get()
@@ -126,12 +143,26 @@ export const actions = {
     const auth2 = apiInstance.auth2.getAuthInstance()
     firebase.auth().signOut()
 
+    // also remove freeplay things
+    localStorage.clear()
+    localStorage.removeItem('freeplayToken')
+
     auth2.signOut().then(() => {
       commit('setUserState', '')
       commit('setUserData', {})
       commit('setAuthState', false)
     }).catch((error) => {
       console.log(error)
+    })
+  },
+
+  handleFreePlay ({ commit, dispatch }) {
+    localStorage.setItem('freeplayToken', uuidv4())
+    localStorage.setItem('freeplaySession', moment().format('DDMMYYYY'))
+
+    dispatch('setSignedIn', {
+      userdata: { displayName: 'speler' },
+      userId: uuidv4()
     })
   }
 }
