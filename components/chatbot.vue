@@ -12,6 +12,7 @@
       <transition-group
         key="messageList"
         :name="'slide-fade'"
+        mode="out-in"
         tag="ul"
         :style="{'--item-count': messages.length }"
         class="list-unstyled chatbot-messages__list"
@@ -25,8 +26,8 @@
           v-html="$md.render(message)"
         />
         <li
-          v-if="actions"
-          :key="'actions'"
+          v-if="actions && actions[0]"
+          :key="actions[0].text || 'none'"
           class="chatbot-messages__list__item chatbot-actions"
           :style="{'--item-index': messages.length + 1, '--item-delay': actionDelay(messages.length) }"
         >
@@ -58,7 +59,6 @@ export default {
 
   computed: {
     ...mapState({
-      storyId: state => state.chatbot.storyId,
       messages: state => state.chatbot.activeMessages,
       actions: state => state.chatbot.activeActions,
       timer: state => state.chatbot.timer
@@ -69,20 +69,6 @@ export default {
     timer (newValue) {
       if (newValue > 0) {
         this.setTimer(newValue)
-      }
-    },
-
-    storyId () {
-      this.animating = false
-      const element = document.querySelector('.chatbot-messages')
-
-      if (element) {
-        element.classList.remove('is--animating')
-        // trick to force reflow and trigger animation on same element
-        // eslint-disable-next-line no-void
-        void element.offsetWidth
-        element.classList.add('is--animating')
-        this.animating = true
       }
     }
   },
@@ -214,17 +200,32 @@ $temp-duration: .25s;
 .slide-fade-enter-active {
   transition: all $temp-duration ease;
   transition-delay: calc(1s * var(--item-delay));
+
+  + .chatbot-actions {
+    transition: opacity $temp-duration ease;
+    transition-delay: calc(1s * var(--item-delay));
+  }
 }
 .slide-fade-leave-active {
   // position: absolute;
   transition: all $temp-duration ease;
+  display: none;
 }
 .slide-fade-enter {
   transform: translateX(10px);
   opacity: 0;
+
+  + .chatbot-actions {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 }
 
 .slide-fade-leave-to {
   opacity: 0;
+
+  + .chatbot-actions {
+    opacity: 0;
+  }
 }
 </style>
