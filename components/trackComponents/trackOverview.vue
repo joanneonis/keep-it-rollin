@@ -97,7 +97,7 @@ export default {
             'Ik heb je baandeel geplaatst! &#128516;'
           ],
           actions: [],
-          timer: 4000
+          timer: 5000
         }
 
         if (this.checkPersonalState()) {
