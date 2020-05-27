@@ -236,13 +236,13 @@ export default {
 
     createPart (modelType, uuid) {
       const baseData = [
-        modelType,
+        this.activeLocalPart.type || modelType,
         uuid,
         tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
         this.activeLocalPart.energyLevel
       ]
 
-      switch (modelType) {
+      switch (baseData[0]) {
         case 'energy':
           this.localModel = new EnergyPart(...baseData)
           break

@@ -104,7 +104,7 @@ export default {
         trackPartTypes.SMALLTASKS
       ],
       energyLevel: null,
-      selectedCategory: null,
+      selectedCategory: trackPartTypes.WORKBLOCK,
       taskTitle: '',
       duration: 0,
       uuid: null,
