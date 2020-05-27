@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import CameraControls from 'camera-controls'
 import * as dat from 'dat.gui'
 import Stats from 'stats.js'
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 
 // TODO delete stuff on destroy
 
@@ -54,6 +55,13 @@ export class BaseScene {
     // renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.rendererSettings()
+    this.container.appendChild(this.renderer.domElement)
+
+    // 2D renderer for labels
+    this.labelRenderer = new CSS2DRenderer()
+    this.labelRenderer.setSize(window.innerWidth, window.innerHeight)
+    this.labelRenderer.domElement.classList.add('labelrenderer')
+    this.container.appendChild(this.labelRenderer.domElement)
 
     // lights
     this.addLights()
@@ -65,9 +73,6 @@ export class BaseScene {
     this.renderer.setAnimationLoop(() => {
       this.render()
     })
-
-    // add renderer to dom
-    this.container.appendChild(this.renderer.domElement)
 
     // add stats to dom
     this.container.appendChild(this.stats.dom)
@@ -108,6 +113,7 @@ export class BaseScene {
     this.raycaster.setFromCamera(this.mouseClick, this.camera)
 
     this.renderer.render(this.scene, this.camera)
+    this.labelRenderer.render(this.scene, this.camera)
     this.stats.update()
   }
 

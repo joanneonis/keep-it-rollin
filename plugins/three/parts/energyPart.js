@@ -1,5 +1,7 @@
 import * as THREE from 'three'
+import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { BasePart } from '~/plugins/three/parts/basePart'
+
 export class EnergyPart extends BasePart {
   constructor (debug, uuid, position, energyLevel = 50) {
     super(debug, uuid, position)
@@ -25,5 +27,17 @@ export class EnergyPart extends BasePart {
     const timeSpan = endTime - startTime
 
     this.mixer.setTime(startTime + (timeSpan / 100) * energy)
+  }
+
+  addTime () {
+    const moonDiv = document.createElement('div')
+    moonDiv.className = 'label'
+    moonDiv.textContent = 'Start'
+    moonDiv.style.marginTop = '0'
+    moonDiv.style.fontSize = '100px'
+    const moonLabel = new CSS2DObject(moonDiv)
+    moonLabel.position.set(...this.position)
+    this.mesh.add(moonLabel)
+    console.log('moonlabel', this.mesh, this.position)
   }
 }

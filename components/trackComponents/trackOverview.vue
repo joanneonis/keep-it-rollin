@@ -210,6 +210,11 @@ export default {
       this.loadingNewPart = false
       this.localModelCount += 1 // TODO temp code for creating UID and selecting temp position at the same time
 
+      if (modelType === 'energy') {
+        console.log('init?')
+        this.localModel.addTime() // TODO testing labelsss
+      }
+
       this.baseScene.zoomTo(this.localModel.mesh, true)
     },
 
@@ -259,6 +264,11 @@ export default {
           // set saved deforms
           this.localModel.updateEnergy(trackpart.energyLevel)
         }
+
+        if (trackpart.type === 'energy') {
+          console.log('init?')
+          this.localModel.addTime() // TODO testing labelsss
+        }
       })
     }
   }
@@ -303,5 +313,17 @@ export default {
 // dayoff hide fps meter
 div#scene-container div:nth-child(2) {
     display: none;
+}
+
+.label {
+  font-weight: bolder;
+  color: #1b34f1;
+}
+
+.labelrenderer {
+  display: block!important;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
 }
 </style>
