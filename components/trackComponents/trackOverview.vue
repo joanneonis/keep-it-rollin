@@ -24,7 +24,7 @@ import { MeetingPart } from '~/plugins/three/parts/meetingPart'
 import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
-import { trackViewStates, tempRandomPositions } from '~/helpers/trackHelpers'
+import { trackViewStates, tempRandomPositions, uuidv4 } from '~/helpers/trackHelpers'
 import popup from '~/components/trackComponents/popup'
 
 export default {
@@ -90,6 +90,21 @@ export default {
       if (e === 'save') {
         const label = this.activeLocalPart.type === 'energy' ? 'Start' : moment(this.activeLocalPart.createdAt.toDate()).format('h:mm')
         this.localModel.addTime(label)
+
+        const completionMessage = {
+          storyId: uuidv4(),
+          messages: [
+            'Ik heb je baandeel geplaatst! &#128516;'
+          ],
+          actions: [],
+          timer: 4000
+        }
+
+        if (this.checkPersonalState()) {
+          completionMessage.messages.push(this.checkPersonalState())
+        }
+
+        this.$store.commit('chatbot/setActiveMessages', completionMessage)
       }
 
       if (e === 'cancelled') {
@@ -221,7 +236,7 @@ export default {
 
     createPart (modelType, uuid) {
       const baseData = [
-        this.debug,
+        modelType,
         uuid,
         tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
         this.activeLocalPart.energyLevel
@@ -269,6 +284,19 @@ export default {
         const label = trackpart.type === 'energy' ? 'Start' : moment(trackpart.createdAt.toDate()).format('h:mm')
         this.localModel.addTime(label)
       })
+    },
+
+    checkPersonalState () {
+      const energyLevel = Math.round(this.$store.getters['track/avarageEnergyLevel'])
+
+      if (this.localModel.type === 'booster') {
+        return 'Je hebt snelheid gewonnen! Goed bezig'
+      }
+      if (this.localModel.type !== 'booster' && energyLevel < 60) {
+        return 'Probeer zo nog eens een booster, je energie is aan de lage kant...'
+      }
+      // console.log(this.activeTrackParts, `energylevel: ${Math.round(this.$store.getters['track/avarageEnergyLevel'])}`, this.localModel)
+      return false
     }
   }
 }

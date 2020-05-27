@@ -12,8 +12,8 @@ export class BasePart {
     z: -0.2
   }
 
-  constructor (debug, uuid, position, energyLevel = 50) {
-    this.debug = debug
+  constructor (type, uuid, position, energyLevel = 50) {
+    this.type = type
     this.fileUrl = 'Start van de dag' // loremobject
     this.uuid = uuid
     this.position = position
@@ -42,10 +42,6 @@ export class BasePart {
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
       }
     })
-
-    if (this.debug) {
-      this.scene.add(new THREE.BoxHelper(this.mesh))
-    }
 
     // To make sure that the matrixWorld is up to date for the boxhelpers
     this.scene.updateMatrixWorld(true)
