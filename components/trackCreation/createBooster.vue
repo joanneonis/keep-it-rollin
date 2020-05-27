@@ -76,7 +76,8 @@ export default {
         category: this.selectedBooster,
         idea: this.selectedIdea,
         type: 'booster',
-        uuid: this.uuid
+        uuid: this.uuid,
+        energyLevel: 100
       }
     }
   },
