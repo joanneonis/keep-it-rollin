@@ -5,7 +5,7 @@ export class WorkPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'lorem-object-2'
+    this.fileUrl = '/old/lorem-object-2'
 
     this.labelSettings = {
       initText: 'Item',

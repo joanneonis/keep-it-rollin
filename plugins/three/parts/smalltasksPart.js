@@ -1,11 +1,11 @@
-import * as THREE from 'three'
+// import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 
 export class SmallTasksPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'Start van de dag'
+    this.fileUrl = 'kleinetaken'
   }
 
   initDeforms () {
@@ -13,14 +13,13 @@ export class SmallTasksPart extends BasePart {
   }
 
   updateEnergy (energy) {
-    this.scene.traverse((node) => {
-      if (node instanceof THREE.Mesh) {
-        if (!node.morphTargetInfluences) {
-          console.log('no morphtargets found!')
-          return
-        }
+    const part = 100 * 2 / 6
 
-        node.morphTargetInfluences[1] = energy / 100
+    this.scene.children.forEach((block, i) => {
+      if (i * part >= energy) {
+        block.visible = true
+      } else {
+        block.visible = false
       }
     })
   }

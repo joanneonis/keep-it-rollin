@@ -14,7 +14,7 @@ export class BasePart {
 
   constructor (type, uuid, position, energyLevel = 50) {
     this.type = type
-    this.fileUrl = 'Start van de dag' // loremobject
+    this.fileUrl = '/old/Start van de dag' // loremobject
     this.uuid = uuid
     this.position = position
 

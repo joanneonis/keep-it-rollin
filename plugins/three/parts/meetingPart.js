@@ -5,7 +5,7 @@ export class MeetingPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'lorem-object-1'
+    this.fileUrl = 'meeting2'
 
     this.labelSettings = {
       initText: 'Item',
