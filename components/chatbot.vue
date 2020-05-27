@@ -98,6 +98,10 @@ export default {
     },
 
     bindScope (inputAction) {
+      if (inputAction.action === 'moreInfo') {
+        this.$router.push('/info')
+      }
+
       this.$store.commit('chatbot/setAction', inputAction.action)
     },
 
