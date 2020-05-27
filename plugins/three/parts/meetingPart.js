@@ -21,6 +21,6 @@ export class MeetingPart extends BasePart {
 
   updateEnergy (energy) {
     const morphingPart = this.scene.children[1]
-    morphingPart.morphTargetInfluences[0] = energy / 100
+    morphingPart.morphTargetInfluences[0] = 1 - (energy / 100)
   }
 }
