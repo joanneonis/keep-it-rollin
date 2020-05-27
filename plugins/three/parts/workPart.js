@@ -5,7 +5,7 @@ export class WorkPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = '/old/lorem-object-2'
+    this.fileUrl = 'werkblok2'
 
     this.labelSettings = {
       initText: 'Item',
@@ -21,6 +21,6 @@ export class WorkPart extends BasePart {
 
   updateEnergy (energy) {
     const morphingPart = this.scene.children[0]
-    morphingPart.morphTargetInfluences[0] = energy / 100
+    morphingPart.morphTargetInfluences[0] = (100 - energy) / 100
   }
 }
