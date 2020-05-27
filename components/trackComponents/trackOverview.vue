@@ -87,6 +87,11 @@ export default {
     },
 
     action (e) {
+      if (e === 'save') {
+        const label = this.activeLocalPart.type === 'energy' ? 'Start' : moment(this.activeLocalPart.createdAt.toDate()).format('h:mm')
+        this.localModel.addTime(label)
+      }
+
       if (e === 'cancelled') {
         this.removeLocalModel()
         this.zoomOverview()

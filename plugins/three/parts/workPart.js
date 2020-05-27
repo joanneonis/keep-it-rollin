@@ -6,6 +6,13 @@ export class WorkPart extends BasePart {
     super(debug, uuid, position)
     this.energyLevel = energyLevel
     this.fileUrl = 'lorem-object-2'
+
+    this.labelSettings = {
+      initText: 'Item',
+      x: 0,
+      y: 0.12,
+      z: -0.2
+    }
   }
 
   initDeforms () {

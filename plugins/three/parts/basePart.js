@@ -8,8 +8,8 @@ export class BasePart {
   labelSettings = {
     initText: 'Item',
     x: 0,
-    y: 0,
-    z: 0
+    y: 0.25,
+    z: -0.2
   }
 
   constructor (debug, uuid, position, energyLevel = 50) {
@@ -107,21 +107,9 @@ export class BasePart {
   }
 
   addTime (text = this.labelSettings.text) {
-    // const center = this.computeGroupCenter(this.mesh)
-    // console.log(center)
-    const spritey = makeTextSprite(text, 65)
-    spritey.position.set(0, 0.1, -0.2)
+    const spritey = makeTextSprite(text, 45)
+    spritey.position.set(this.labelSettings.x, this.labelSettings.y, this.labelSettings.z)
+    spritey.scale.set(0.7, 0.7, 0.7)
     this.mesh.add(spritey)
-  }
-
-  computeGroupCenter (group) {
-    const center = new THREE.Vector3()
-    const children = group.children
-    const count = children.length
-    for (let i = 0; i < count; i++) {
-      center.add(children[i].position)
-    }
-    center.divideScalar(count)
-    return center
   }
 }

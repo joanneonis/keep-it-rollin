@@ -107,6 +107,7 @@ export const actions = {
       console.log(error)
     })
 
+    commit('setAction', 'save')
     commit('addTrackPart', trackPartData)
     // get newly added item from fb
     dispatch('getTrack')
