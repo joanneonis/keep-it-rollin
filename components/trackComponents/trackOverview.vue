@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
@@ -259,6 +260,9 @@ export default {
           // set saved deforms
           this.localModel.updateEnergy(trackpart.energyLevel)
         }
+
+        const label = trackpart.type === 'energy' ? 'Start' : moment(trackpart.createdAt.toDate()).format('h:mm')
+        this.localModel.addTime(label)
       })
     }
   }
@@ -298,10 +302,5 @@ export default {
       display: none;
     }
   }
-}
-
-// dayoff hide fps meter
-div#scene-container div:nth-child(2) {
-    display: none;
 }
 </style>

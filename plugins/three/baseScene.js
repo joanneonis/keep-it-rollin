@@ -94,8 +94,9 @@ export class BaseScene {
   rendererSettings () {
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
-    this.renderer.shadowMapEnabled = true
-    this.renderer.shadowMapSoft = true
+    this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.soft = true
+    this.renderer.shadowMap.type = THREE.PCFShadowMap
 
     this.renderer.gammaOutput = true
     this.renderer.gammaFactor = 2.2
@@ -121,6 +122,7 @@ export class BaseScene {
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         const trackObject = intersects[0].object
+        if (trackObject.name === 'sprite') { return }
 
         // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }
@@ -184,10 +186,13 @@ export class BaseScene {
   // floorPlane
   addFloorPlane () {
     const geometry = new THREE.PlaneGeometry(300, 300)
-    const material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color('#F7FAFC')
+    // const material = new THREE.MeshLambertMaterial({
+    //   color: new THREE.Color('#F7FAFC')
+    // })
+    const shadowMaterial = new THREE.ShadowMaterial({
+      color: new THREE.Color('#94BCD7'), transparent: true, opacity: 0.5
     })
-    const plane = new THREE.Mesh(geometry, material)
+    const plane = new THREE.Mesh(geometry, shadowMaterial)
 
     plane.rotation.x = THREE.Math.degToRad(-90)
     plane.position.y = 0.061

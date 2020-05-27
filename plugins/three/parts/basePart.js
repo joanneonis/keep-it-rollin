@@ -1,10 +1,16 @@
 import * as THREE from 'three'
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import { loadGlb, rotateObject } from '~/plugins/three/helpers/helpers'
+import { loadGlb, rotateObject, makeTextSprite } from '~/plugins/three/helpers/helpers'
 
 export class BasePart {
   scene
   mesh
+  labelSettings = {
+    initText: 'Item',
+    x: 2.1,
+    y: 0.15,
+    z: 0.9
+  }
 
   constructor (debug, uuid, position, energyLevel = 50) {
     this.debug = debug
@@ -98,5 +104,16 @@ export class BasePart {
 
   delete () {
     // unbinds and deletes everything
+  }
+
+  addTime (text = this.labelSettings.text) {
+    const spritey = makeTextSprite(text, 65)
+    spritey.position.set(...this.position)
+    spritey.position.x -= this.labelSettings.x
+    spritey.position.y -= this.labelSettings.y
+    spritey.position.z -= this.labelSettings.z
+    this.mesh.add(spritey)
+
+    console.log(this.mesh, spritey)
   }
 }

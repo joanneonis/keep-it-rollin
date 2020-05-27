@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
@@ -37,4 +38,40 @@ export const visibleHeightAtZDepth = (depth, camera) => {
 export const visibleWidthAtZDepth = (depth, camera) => {
   const height = visibleHeightAtZDepth(depth, camera)
   return height * camera.aspect
+}
+
+export function makeTextSprite (message, fontsize) {
+  let ctx
+  let texture
+  let sprite
+  let spriteMaterial
+
+  const fontSettings = `800 ${fontsize}px Montserrat`
+
+  const canvas = document.createElement('canvas')
+  // eslint-disable-next-line prefer-const
+  ctx = canvas.getContext('2d')
+  ctx.font = fontSettings
+
+  // setting canvas width/height before ctx draw, else canvas is empty
+  canvas.width = ctx.measureText(message).width
+  canvas.height = fontsize * 2.6
+
+  // after setting the canvas width/height we have to re-set font to apply!?! looks like ctx reset
+  ctx.font = fontSettings
+  ctx.fillStyle = '#05046A'
+  ctx.fillText(message, 0, fontsize)
+
+  // eslint-disable-next-line prefer-const
+  texture = new THREE.Texture(canvas)
+  texture.minFilter = THREE.LinearFilter // NearestFilter;
+  texture.needsUpdate = true
+
+  // eslint-disable-next-line prefer-const
+  spriteMaterial = new THREE.SpriteMaterial({ map: texture })
+  spriteMaterial.opacity = 0.08
+  // eslint-disable-next-line prefer-const
+  sprite = new THREE.Sprite(spriteMaterial)
+  sprite.name = 'sprite'
+  return sprite
 }
