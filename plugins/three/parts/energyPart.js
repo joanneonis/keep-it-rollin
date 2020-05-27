@@ -6,12 +6,12 @@ export class EnergyPart extends BasePart {
     super(debug, uuid, position)
     this.energyLevel = energyLevel
     this.fileUrl = 'energy'
-    this.labelSettings = {
-      initText: 'Start',
-      x: 0.2,
-      y: 0.15,
-      z: 0.2
-    }
+    // this.labelSettings = {
+    //   initText: 'Start',
+    //   x: 0.2,
+    //   y: 0.15,
+    //   z: 0.2
+    // }
   }
 
   initDeforms () {
