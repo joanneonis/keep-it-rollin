@@ -20,7 +20,8 @@ export const state = () => ({
   trackInited: false,
   viewState: trackViewStates.OVERVIEW,
   action: null,
-  controls: null
+  controls: null,
+  itemFocused: null
 })
 
 export const mutations = {
@@ -28,6 +29,12 @@ export const mutations = {
     const sm = stateMutation
 
     sm.action = action
+  },
+
+  setItemFocused (stateMutation, stats) {
+    const sm = stateMutation
+
+    sm.itemFocused = stats
   },
 
   setControls (stateMutation, control) {

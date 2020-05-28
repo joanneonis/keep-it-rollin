@@ -77,9 +77,22 @@ export default {
     },
 
     controls (e) {
+      if (e === null) {
+        return
+      }
+
       if (e === 'overviewZoom') {
         this.zoomOverview()
         this.baseScene.resetIntersected()
+      }
+
+      // zoom to item index
+      if (e <= this.activeTrackParts.length) {
+        const trackPartModels = this.baseScene.scene.children[0].children
+        const mesh = trackPartModels[e].children.find(element => element.isMesh)
+        this.baseScene.zoomTo(mesh, false, -1.7, 1)
+
+        this.$store.commit('track/setItemFocused', { length: this.activeTrackParts.length, index: e })
       }
 
       // then when control is handled, empty action
@@ -198,18 +211,23 @@ export default {
     handleSceneInteractions (targetMesh, interactionType = 'click') {
       if (!targetMesh || !targetMesh.userData || interactionType === 'wheel') {
         this.popup.visible = false
+        this.$store.commit('track/setItemFocused', false)
         return
       }
 
       // get selected trackpart data
-      this.popup.data = this.activeTrackParts.find(part => part.uuid === targetMesh.userData.uuid)
+      const activeItemIndex = this.activeTrackParts.findIndex(part => part.uuid === targetMesh.userData.uuid)
+      this.popup.data = this.activeTrackParts[activeItemIndex]
       this.popup.visible = true
       this.popup.saved = true // when clicked
+
+      this.$store.commit('track/setItemFocused', { length: this.activeTrackParts.length, index: activeItemIndex })
     },
 
     zoomOverview () {
       this.popup.visible = false
       this.baseScene.zoomTo(this.baseScene.trackParts, false, -1.7, 1)
+      this.$store.commit('track/setItemFocused', null)
     },
 
     async addActiveEdit (modelType = 'lorem', uuid) {
@@ -292,7 +310,7 @@ export default {
       if (this.localModel.type === 'booster') {
         return 'Je hebt snelheid gewonnen! Goed bezig'
       }
-      if (this.localModel.type !== 'booster' && energyLevel < 60) {
+      if (this.localModel.type !== 'booster' && energyLevel < 50) {
         return 'Probeer zo nog eens een booster, je energie is aan de lage kant...'
       }
       // console.log(this.activeTrackParts, `energylevel: ${Math.round(this.$store.getters['track/avarageEnergyLevel'])}`, this.localModel)
