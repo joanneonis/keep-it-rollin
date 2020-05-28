@@ -93,6 +93,10 @@ export default {
         this.baseScene.zoomTo(mesh, false, -1.7, 1)
 
         this.$store.commit('track/setItemFocused', { length: this.activeTrackParts.length, index: e })
+
+        this.popup.data = this.activeTrackParts[e]
+        this.popup.visible = true
+        this.popup.saved = true // when clicked
       }
 
       // then when control is handled, empty action
