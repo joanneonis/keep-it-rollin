@@ -21,9 +21,9 @@
         </div>
         <div class="modal__actions">
           <button
-            class="button button--primary"
             v-for="(item, key) in $store.state.modal.actions"
             :key="key"
+            class="button button--primary"
             @click="$store.commit('modal/setAction', item.action)"
           >
             {{ item.text }}
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: {
     open: {
@@ -45,11 +47,24 @@ export default {
 
   data () {
     return {
-      localOpen: false
+      localOpen: false,
+      listener: null
     }
   },
 
+  computed: {
+    ...mapState({
+      modalAction: state => state.modal.action
+    })
+  },
+
   watch: {
+    modalAction (val) {
+      if (val === 'close') {
+        this.$store.dispatch('modal/closeModal')
+      }
+    },
+
     open (val) {
       this.localOpen = val
     }
@@ -63,12 +78,28 @@ export default {
     }
   },
 
+  mounted () {
+    // const ctx = this
+    document.addEventListener('keyup', this.handleEscape, true)
+  },
+
+  beforeDestroy () {
+    // const ctx = this
+    document.removeEventListener('keyup', this.handleEscape, true)
+  },
+
   methods: {
     close () {
       this.$store.commit('track/setCheckedDayFinishedModal') // todo move to handler outside modal
       this.$store.dispatch('modal/closeModal')
       this.localOpen = false
       this.$emit('action', 'closed')
+    },
+
+    handleEscape ($event) {
+      if ($event.key === 'Escape') {
+        this.close()
+      }
     }
   }
 }
@@ -113,7 +144,7 @@ export default {
   margin: auto;
   background: white;
   z-index: 1000;
-  padding: rem(30px) 0 rem(20px) 0;
+  padding: rem(30px) 0 0 0;
   max-width: rem(650px);
   text-align: left;
   border-radius: rem(10px);
@@ -132,6 +163,11 @@ export default {
 
   &__header {
     padding: 0 rem(30px);
+  }
+
+  &__actions {
+    padding: rem(20px) rem(30px);
+    text-align: right;
   }
 }
 

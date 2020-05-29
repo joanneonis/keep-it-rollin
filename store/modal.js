@@ -46,5 +46,7 @@ export const actions = {
 
   closeModal ({ commit }) {
     commit('setActive', false)
+    commit('setAction', null)
+    commit('setHeader', [])
   }
 }
