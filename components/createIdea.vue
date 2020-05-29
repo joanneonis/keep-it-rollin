@@ -1,8 +1,5 @@
 <template>
   <div>
-    <h3>idee toevoegen</h3>
-    <p>Leuk je hebt een idee!</p>
-
     <div class="form-fields">
       <div class="form-field">
         <div class="form-field__label">
@@ -110,6 +107,7 @@ export default {
 
   mounted () {
     this.uuid = uuidv4()
+    this.$store.commit('modal/setHeader', { title: 'Idee toevoegen', description: 'Leuk je hebt een idee!' })
   },
 
   methods: {
@@ -156,12 +154,6 @@ export default {
 .form-field {
   width: 100%;
   max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.form-field__checkboxes {
-  justify-content: center;
 }
 
 .category-help {

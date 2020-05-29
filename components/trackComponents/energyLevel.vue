@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-status">
+  <div class="energy-status" @click="$store.dispatch('modal/setActiveModal', 'energyStats')">
     <div class="energy-status__info">
       <span class="">
         jouw energie vandaag

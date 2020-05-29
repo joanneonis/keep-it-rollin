@@ -20,6 +20,8 @@
     <modal :open="modalActive" @action="handleModalAction()">
       <dayoff-content v-if="modalType === 'dayOff'" />
       <create-idea v-if="modalType === 'createIdea'" />
+      <energy-stats v-if="modalType === 'energyStats'" />
+      <bot-modal v-if="modalType === 'botModal'" />
     </modal>
   </div>
 </template>
@@ -37,6 +39,8 @@ import balloons from '~/components/balloons'
 import modal from '~/components/modal'
 import dayoffContent from '~/components/dayoffContent'
 import createIdea from '~/components/createIdea'
+import energyStats from '~/components/energyStats'
+import botModal from '~/components/botModal'
 
 export default {
   components: {
@@ -49,7 +53,9 @@ export default {
     dayoffContent,
     balloons,
     modal,
-    createIdea
+    createIdea,
+    energyStats,
+    botModal
   },
 
   beforeRouteEnter (to, from, next) {

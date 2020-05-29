@@ -5,7 +5,11 @@
 
 export const state = () => ({
   isActive: false,
-  type: ''
+  type: '',
+  title: '',
+  description: '',
+  actions: [],
+  action: null
 })
 
 export const mutations = {
@@ -17,6 +21,20 @@ export const mutations = {
   setType (stateMutation, type) {
     const sm = stateMutation
     sm.type = type
+  },
+
+  setHeader (stateMutation, data) {
+    const { title, description } = data
+    stateMutation.title = title
+    stateMutation.description = description
+  },
+
+  setActions (stateMutation, data) {
+    stateMutation.actions = data
+  },
+
+  setAction (stateMutation, action) {
+    stateMutation.action = action
   }
 }
 

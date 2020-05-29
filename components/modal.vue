@@ -12,7 +12,23 @@
           alt="sluiten"
           @click="close()"
         >
-        <slot />
+        <div class="modal__header">
+          <h3>{{ $store.state.modal.title }}</h3>
+          <p>{{ $store.state.modal.description }}</p>
+        </div>
+        <div class="model__content">
+          <slot />
+        </div>
+        <div class="modal__actions">
+          <button
+            class="button button--primary"
+            v-for="(item, key) in $store.state.modal.actions"
+            :key="key"
+            @click="$store.commit('modal/setAction', item.action)"
+          >
+            {{ item.text }}
+          </button>
+        </div>
       </div>
     </transition>
   </div>
@@ -97,10 +113,14 @@ export default {
   margin: auto;
   background: white;
   z-index: 1000;
-  padding: rem(60px) rem(20px) rem(50px);
+  padding: rem(30px) 0 rem(20px) 0;
   max-width: rem(650px);
-  text-align: center;
+  text-align: left;
   border-radius: rem(10px);
+  max-height: calc(100vh - 10rem);
+  display: flex;
+  width: 100%;
+  flex-flow: column;
 
   &__close {
     position: absolute;
@@ -108,6 +128,10 @@ export default {
     right: 30px;
     max-width: 22px;
     cursor: pointer;
+  }
+
+  &__header {
+    padding: 0 rem(30px);
   }
 }
 
@@ -123,5 +147,10 @@ export default {
 
 .has-delay .modal-up-enter-active {
   transition-delay: 2.5s;
+}
+
+.model__content {
+  width: 100%;
+  overflow-y: auto;
 }
 </style>

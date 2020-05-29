@@ -1,6 +1,6 @@
 <template>
   <div class="chatbot">
-    <figure class="chatbot-icon">
+    <figure class="chatbot-icon" @click="openModal()">
       <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
     </figure>
     <div
@@ -111,6 +111,10 @@ export default {
       setTimeout(function () {
         that.$store.commit('chatbot/setToIdle')
       }, time)
+    },
+
+    openModal () {
+      this.$store.dispatch('modal/setActiveModal', 'botModal')
     }
   }
 }
