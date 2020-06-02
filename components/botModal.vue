@@ -9,10 +9,18 @@
 
       <trackpart-slider />
 
-      <h4>Boosters</h4>
-      <p>Opzoek naar een booster? Of zelf een goed idee?</p>
+      <div>
+        <a
+          class="button button--secondary button--sm add-idea"
+          @click="$store.dispatch('modal/setActiveModal', 'createIdea')"
+        >
+          Idee toevoegen
+        </a>
+        <h4>Boosters</h4>
+        <p>Opzoek naar een booster? Of zelf een goed idee?</p>
 
-      <booster-list class="boosters" />
+        <booster-list class="boosters" />
+      </div>
     </div>
   </div>
 </template>
@@ -81,5 +89,9 @@ export default {
 .boosters {
   margin: 0 rem(-50px);
   width: calc(100% + 140px)
+}
+
+.add-idea {
+  float: right;
 }
 </style>

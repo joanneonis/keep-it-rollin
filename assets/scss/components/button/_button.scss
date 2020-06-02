@@ -9,7 +9,7 @@ $font-baseline-offset: 5px;
   align-items: center;
   padding-right: rem($button-padding-x);
   padding-left: rem($button-padding-x);
-  overflow: hidden;
+  // overflow: hidden;
   font-family: $headings-font-family;
   font-weight: bold;
   line-height: 1; // rem($button-size + $font-baseline-offset)
