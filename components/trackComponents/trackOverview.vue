@@ -21,6 +21,7 @@ import { mapState } from 'vuex'
 import { BaseScene } from '~/plugins/three/baseScene'
 import { EnergyPart } from '~/plugins/three/parts/energyPart'
 import { MeetingPart } from '~/plugins/three/parts/meetingPart'
+import { BoosterPart } from '~/plugins/three/parts/boosterPart'
 import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
@@ -278,7 +279,7 @@ export default {
           this.localModel = new WorkPart(...baseData)
           break
         case 'booster':
-          this.localModel = new BasePart(...baseData)
+          this.localModel = new BoosterPart(...baseData)
           break
         default:
           this.localModel = new BasePart(...baseData)
