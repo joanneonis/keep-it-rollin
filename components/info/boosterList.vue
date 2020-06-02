@@ -1,8 +1,22 @@
 <template>
   <div class="booster-list">
-    hoi
+    <idea-list
+      class="boosters"
+      category="all"
+      type="list"
+    />
   </div>
 </template>
+
+<script>
+import ideaList from '~/components/trackCreation/ideaList'
+
+export default {
+  components: {
+    ideaList
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 .booster-list {

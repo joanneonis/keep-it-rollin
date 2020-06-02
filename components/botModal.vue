@@ -19,7 +19,7 @@
         <h4>Boosters</h4>
         <p>Opzoek naar een booster? Of zelf een goed idee?</p>
 
-        <booster-list class="boosters" />
+        <booster-list class="panel-booster" />
       </div>
     </div>
   </div>
@@ -86,9 +86,11 @@ export default {
   padding: 0 rem(60px);
 }
 
-.boosters {
+.panel-booster {
   margin: 0 rem(-50px);
-  width: calc(100% + 140px)
+  width: calc(100% + 140px);
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .add-idea {
