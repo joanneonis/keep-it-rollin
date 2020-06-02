@@ -28,7 +28,7 @@
         </div>
       </div>
       <idea-list
-        class="boosters"
+        class="boosters-listed"
         :category="selectedBooster"
         @chosen="hanldeIdea"
       />
@@ -138,7 +138,7 @@ export default {
   display: flex;
 }
 
-.boosters {
+.boosters-listed {
   background: gray-color(150);
   padding: 20px 0;
   border-radius: rem(5px);

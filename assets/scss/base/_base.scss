@@ -68,3 +68,13 @@ hr {
     max-width: map-get($container-max-widths, xl);
   }
 }
+
+.is-muted {
+  opacity: .2;
+  pointer-events: none;
+}
+
+.meta {
+  color: #828282;
+  font-weight: 600;
+}

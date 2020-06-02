@@ -32,6 +32,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.115.0",
     "vue-gapi": "^0.2.2",
+    "vue-slick-carousel": "^1.0.5",
     "vuefire": "^2.2.2",
     "vuexfire": "^3.2.2"
   },

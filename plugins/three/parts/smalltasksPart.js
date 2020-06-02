@@ -5,7 +5,7 @@ export class SmallTasksPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'kleinetaken'
+    this.fileUrl = 'lossetaak_kleur'
   }
 
   initDeforms () {

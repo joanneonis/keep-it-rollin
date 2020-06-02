@@ -101,9 +101,4 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
-.button-link.is-muted {
-  opacity: .2;
-  pointer-events: none;
-}
 </style>

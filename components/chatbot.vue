@@ -127,6 +127,7 @@ $chatbot-icon-size: 60px;
 .chatbot-icon {
   border-radius: 100px;
   box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
+  cursor: pointer;
 
   img {
     width: rem($chatbot-icon-size);

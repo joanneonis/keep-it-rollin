@@ -14,7 +14,7 @@ ul {
     vertical-align: middle;
     content: '';
     background-color: theme-color(primary);
-    border-radius: $bullet-indent / 2;
+    border-radius: $bullet-size * 5;
   }
 }
 
