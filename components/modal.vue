@@ -161,6 +161,11 @@ export default {
     cursor: pointer;
   }
 
+  &__content {
+    width: 100%;
+    display: flex;
+  }
+
   &__header {
     padding: 0 rem(30px);
   }
@@ -183,10 +188,5 @@ export default {
 
 .has-delay .modal-up-enter-active {
   transition-delay: 2.5s;
-}
-
-.model__content {
-  width: 100%;
-  overflow-y: auto;
 }
 </style>

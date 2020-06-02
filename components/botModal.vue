@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <img style="width: 100%" src="~/assets/img/temp/bot.png" alt="">
+  <div class="wrapper">
+    <div class="form-field">
+      <input placeholder="Heb je een vraag voor me? Of ben je opzoek naar een booster? " type="text" name="search" id="search">
+    </div>
+    <div>
+      <h4>Uitleg baandelen</h4>
+      <p>Alle baandelen nog eens op een rijtje.</p>
+    </div>
   </div>
 </template>
 
@@ -25,7 +31,7 @@ export default {
   },
 
   mounted () {
-    this.$store.commit('modal/setHeader', { title: 'Tijdelijk plaatje', description: '' })
+    this.$store.commit('modal/setHeader', { title: 'Kan ik je helpen?', description: 'Ben je ergens naar opzoek? Vraag het hier, en ik zoek het voor je op 👌' })
     this.$store.commit('modal/setActions', [
       {
         action: 'close',
