@@ -16,7 +16,7 @@
           <h3>{{ $store.state.modal.title }}</h3>
           <p>{{ $store.state.modal.description }}</p>
         </div>
-        <div class="model__content">
+        <div class="modal__content">
           <slot />
         </div>
         <div class="modal__actions">
@@ -138,7 +138,7 @@ export default {
 
 .modal {
   position: fixed;
-  top: 10vh;
+  top: 7vh;
   left: 0;
   right: 0;
   margin: auto;
@@ -148,10 +148,11 @@ export default {
   max-width: rem(650px);
   text-align: left;
   border-radius: rem(10px);
-  max-height: calc(100vh - 10rem);
+  max-height: calc(100vh - 7rem);
   display: flex;
   width: 100%;
   flex-flow: column;
+  height: 100%;
 
   &__close {
     position: absolute;
@@ -164,6 +165,8 @@ export default {
   &__content {
     width: 100%;
     display: flex;
+    position: relative;
+    height: 100%;
   }
 
   &__header {

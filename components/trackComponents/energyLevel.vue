@@ -34,6 +34,7 @@ export default {
   display: flex;
   z-index: 200;
   margin-top: 20px;
+  cursor: pointer;
 
   &__info {
     display: flex;
