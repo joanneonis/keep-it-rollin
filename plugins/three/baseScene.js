@@ -181,6 +181,9 @@ export class BaseScene {
     directionalLight.castShadow = true
 
     this.scene.add(directionalLight)
+
+    const light = new THREE.HemisphereLight(0xFFFFBB, 0x080820, 1)
+    this.scene.add(light)
   }
 
   // floorPlane

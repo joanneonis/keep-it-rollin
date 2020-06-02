@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 
@@ -5,7 +6,7 @@ export class EnergyPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'energy'
+    this.fileUrl = 'start_kleur'
     this.labelSettings = {
       initText: 'Item',
       x: 0,
@@ -19,7 +20,7 @@ export class EnergyPart extends BasePart {
   }
 
   updateEnergy (energy) {
-    const spring = this.scene.children[6]
+    const spring = this.scene.children[4]
 
     spring.morphTargetInfluences[0] = energy / 100
 
