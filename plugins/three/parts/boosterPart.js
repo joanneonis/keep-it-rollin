@@ -1,11 +1,11 @@
 // import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 
-export class MeetingPart extends BasePart {
+export class BoosterPart extends BasePart {
   constructor (type, uuid, position, energyLevel = 50) {
     super(type, uuid, position)
     this.energyLevel = energyLevel
-    this.fileUrl = 'meeting_kleur'
+    this.fileUrl = 'booster_kleur'
 
     this.labelSettings = {
       initText: 'Item',
@@ -16,11 +16,11 @@ export class MeetingPart extends BasePart {
   }
 
   initDeforms () {
-    this.updateEnergy(this.energyLevel)
+    // this.updateEnergy(this.energyLevel)
   }
 
   updateEnergy (energy) {
-    const morphingPart = this.scene.children[1]
-    morphingPart.morphTargetInfluences[0] = 1.2 - (energy / 100)
+    // const morphingPart = this.scene.children[1]
+    // morphingPart.morphTargetInfluences[0] = 1.2 - (energy / 100)
   }
 }

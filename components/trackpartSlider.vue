@@ -8,13 +8,10 @@
       >
         <div class="trackpart__content">
           <h4>{{ part.title }}</h4>
-          <p>
-            Na elke meeting blijft een deel van je brein hangen. Je balletje rolt dan door ‘gedachtensmurrie’. <br><br>
-            Zorg dat je je balletje wel weer schoon maakt om verdere vertraging te voorkomen!
-          </p>
+          <div v-html="$md.render(part.description)" />
         </div>
         <div class="trackpart__figure">
-          <img src="~/assets/img/temp/gedachtensmurrie.png" alt="">
+          <img :src="require(`~/assets/img/temp/info/${part.img}.png`)" alt="">
         </div>
       </div>
     </VueSlickCarousel>
@@ -47,19 +44,29 @@ export default {
     return {
       trackparts: [
         {
-          title: 'Meeting'
+          title: 'Start van de dag',
+          description: 'Er zijn veel factoren die invloed hebben op je productiviteit. Gun jezelf een eerlijke start en geef aan met hoeveel energie je de dag ingaat. De baan houdt er rekening mee als de dag even niet zo lekker begint.',
+          img: 'start'
         },
         {
-          title: 'Werkblok'
+          title: 'Meeting',
+          description: 'Na elke meeting blijft een deel van je brein hangen. Je balletje rolt dan door ‘gedachtensmurrie’. \n\nZorg dat je je balletje wel weer schoon maakt om verdere vertraging te voorkomen!',
+          img: 'meeting'
         },
         {
-          title: 'Losse taken'
+          title: 'Werkblok',
+          description: 'Tijdens een werkblok ben je een langere tijd gefocust aan het werk. In de baan belandt je bal daarom letterlijk in een ‘blok’, waar hij pas uit komt als je klaar bent. ',
+          img: 'werkblok'
         },
         {
-          title: 'Start van de dag'
+          title: 'Losse taken',
+          description: 'Simpele losse taken geven je brein veel ruimte voor afleiding. In de baan botst je balletje ondertussen tegen allerlei ‘afleidingsblokken’ aan. ',
+          img: 'los'
         },
         {
-          title: 'Booster'
+          title: 'Booster',
+          description: 'Als je naar de tips van Bobby luistert, krijg je een booster in je baan. Boosters geven je balletje net dat extra zetje, waardoor je met gemak naar het einde van de dag rolt.',
+          img: 'booster'
         }
       ],
       settings: {

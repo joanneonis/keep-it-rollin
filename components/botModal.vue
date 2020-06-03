@@ -1,15 +1,17 @@
 <template>
-  <div class="wrapper">
+  <div class="bot-modal">
     <div class="form-field">
       <input placeholder="Heb je een vraag voor me? Of ben je opzoek naar een booster? " type="text" name="search" id="search">
     </div>
     <div class="modal-scrollcontainer">
-      <h4>Uitleg baandelen</h4>
-      <p>Alle baandelen nog eens op een rijtje.</p>
+      <div class="bot-modal__section">
+        <h4>Uitleg baandelen</h4>
+        <p>Alle baandelen nog eens op een rijtje.</p>
 
-      <trackpart-slider />
+        <trackpart-slider />
+      </div>
 
-      <div>
+      <div class="bot-modal__section">
         <a
           class="button button--secondary button--sm add-idea"
           @click="$store.dispatch('modal/setActiveModal', 'createIdea')"
@@ -19,7 +21,13 @@
         <h4>Boosters</h4>
         <p>Opzoek naar een booster? Of zelf een goed idee?</p>
 
-        <booster-list class="panel-booster" />
+        <div class="panel-booster">
+          <idea-list
+            class="boosters"
+            category="Beweging"
+            type="list"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -27,13 +35,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import trackpartSlider from '~/components/info/trackpartSlider'
-import boosterList from '~/components/info/boosterList'
+import trackpartSlider from '~/components/trackpartSlider'
+import ideaList from '~/components/trackCreation/ideaList'
 
 export default {
   components: {
     trackpartSlider,
-    boosterList
+    ideaList
   },
 
   computed: {
@@ -65,19 +73,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: rem(-30px);
-  right: rem(-30px);
+.bot-modal {
+  margin: 0 rem(-30px);
+  width: calc(100% + 80px);
+
+  &__section {
+    margin-bottom: rem(40px);
+  }
 }
 
 .modal-scrollcontainer {
-  height: calc(100% - 45px); // minus height search
-  display: flex;
-  flex-flow: column;
-  overflow: auto;
   padding: 0 rem(60px);
 }
 
@@ -90,7 +95,7 @@ export default {
   margin: 0 rem(-50px);
   width: calc(100% + 140px);
   border-radius: 15px;
-  overflow: hidden;
+  background: gray-color(150);
 }
 
 .add-idea {
