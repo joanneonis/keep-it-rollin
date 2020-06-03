@@ -3,10 +3,10 @@ import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 
 export class EnergyPart extends BasePart {
-  constructor (type, uuid, position, energyLevel = 50) {
-    super(type, uuid, position)
+  constructor (type, uuid, position, rotation, energyLevel = 50) {
+    super(type, uuid, position, rotation)
     this.energyLevel = energyLevel
-    this.fileUrl = 'start_kleur'
+    this.fileUrl = 'startenergie'
     this.labelSettings = {
       initText: 'Item',
       x: 0,
@@ -20,7 +20,7 @@ export class EnergyPart extends BasePart {
   }
 
   updateEnergy (energy) {
-    const spring = this.scene.children[4]
+    const spring = this.scene.children[0].children[4]
 
     spring.morphTargetInfluences[0] = energy / 100
 

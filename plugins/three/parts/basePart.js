@@ -12,12 +12,12 @@ export class BasePart {
     z: -0.2
   }
 
-  constructor (type, uuid, position, energyLevel = 50) {
+  constructor (type, uuid, position, rotation, energyLevel = 50) {
     this.type = type
     this.fileUrl = '/old/Start van de dag' // loremobject
     this.uuid = uuid
     this.position = position
-
+    this.rotation = rotation
     this.energyLevel = energyLevel
 
     // temp random colors
@@ -32,7 +32,7 @@ export class BasePart {
     this.scene.position.set(...this.position)
     this.scene.scale.multiplyScalar(1)
 
-    rotateObject(this.scene, 0, -45)
+    rotateObject(this.scene, 0, this.rotation)
 
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
