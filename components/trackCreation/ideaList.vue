@@ -10,8 +10,8 @@
     <h4 v-if="type === 'use'">
       Ideeen voor {{ category }}
     </h4>
-    <div class="filter-bar">
-      <h4 v-if="type !== 'use'">
+    <div v-if="type !== 'use'" class="filter-bar">
+      <h4>
         Boosters
       </h4>
       <ul

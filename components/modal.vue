@@ -112,6 +112,13 @@ export default {
 }
 
 .modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  bottom: 0;
+  overflow: scroll;
   pointer-events: none;
 
   &.is-open { pointer-events: auto; }
@@ -137,7 +144,7 @@ export default {
 }
 
 .modal {
-  position: fixed;
+  position: relative;
   top: 7vh;
   left: 0;
   right: 0;
@@ -148,11 +155,10 @@ export default {
   max-width: rem(650px);
   text-align: left;
   border-radius: rem(10px);
-  max-height: calc(100vh - 7rem);
+  // max-height: calc(100vh - 7rem);
   display: flex;
   width: 100%;
   flex-flow: column;
-  height: 100%;
 
   &__close {
     position: absolute;
@@ -166,7 +172,6 @@ export default {
     width: 100%;
     display: flex;
     position: relative;
-    height: 100%;
   }
 
   &__header {
