@@ -25,7 +25,7 @@ import { BoosterPart } from '~/plugins/three/parts/boosterPart'
 import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
-import { trackViewStates, tempRandomPositions, uuidv4 } from '~/helpers/trackHelpers'
+import { trackViewStates, uuidv4, getPosAndRotation } from '~/helpers/trackHelpers'
 import popup from '~/components/trackComponents/popup'
 
 export default {
@@ -258,10 +258,14 @@ export default {
     },
 
     createPart (modelType, uuid) {
+      const pos = getPosAndRotation(this.localModelCount)[0]
+      const rot = getPosAndRotation(this.localModelCount)[1]
+
       const baseData = [
         this.activeLocalPart.type || modelType,
         uuid,
-        tempRandomPositions[this.localModelCount], // TODO calculate position based on previous endpoint ball
+        pos,
+        rot,
         this.activeLocalPart.energyLevel
       ]
 

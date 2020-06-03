@@ -58,18 +58,23 @@ export function uuidv4 () {
 }
 
 const basePosY = 0.08
-export const tempRandomPositions = [
-  [0, basePosY, 0],
-  [1.9, basePosY, 0.6],
-  [0.8, basePosY, 1.45],
-  [1.6, basePosY, 2.75],
-  [0.58, basePosY, 4.05],
-  [-0.2, basePosY, 5.57],
-  [1.01, basePosY, 6],
-  [0.15, basePosY, 6.87],
-  [1.48, basePosY, 8.12],
-  [0.59, basePosY, 9.67],
-  [1.76, basePosY, 10.39],
-  [0.9, basePosY, 11.5],
-  [2.19, basePosY, 13.42]
-]
+const baseXshift = 2
+const rotationStrength = 33
+
+export function getPosAndRotation (index) {
+  if (index === 0) {
+    return [[0.5, basePosY, 0], rotationStrength + 10]
+  } else {
+    const caseMod = (index % 4)
+    switch (caseMod) {
+      case 0:
+        return [[0, basePosY, index * 1.5], 0]
+      case 1:
+        return [[baseXshift / 1.5, basePosY, index * 1.5], rotationStrength]
+      case 2:
+        return [[baseXshift, basePosY, index * 1.5], 0]
+      case 3:
+        return [[baseXshift / 1.5, basePosY, index * 1.5], -rotationStrength]
+    }
+  }
+}

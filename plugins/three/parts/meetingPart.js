@@ -2,8 +2,8 @@
 import { BasePart } from '~/plugins/three/parts/basePart'
 
 export class MeetingPart extends BasePart {
-  constructor (type, uuid, position, energyLevel = 50) {
-    super(type, uuid, position)
+  constructor (type, uuid, position, rotation, energyLevel = 50) {
+    super(type, uuid, position, rotation)
     this.energyLevel = energyLevel
     this.fileUrl = 'meeting_kleur'
 
