@@ -9,6 +9,14 @@
         <span>Overzicht</span>
       </button>
       <button
+        class="button-link button-link--primary"
+        @click="$store.commit('track/setControls', 'play')"
+      >
+        <img src="~/assets/img/icon-play-blue.svg" class="icon" alt="">
+        <span>Preview baan</span>
+      </button>
+
+      <button
         v-if="localItemFocused"
         class="button-link button-link--primary"
         :class="{ 'is-muted' : !hasPrev }"

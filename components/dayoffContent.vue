@@ -26,7 +26,7 @@
       </li>
     </ul>
 
-    <button class="button button--primary">
+    <button class="button button--primary" @click="playTrack()">
       <img src="~/assets/img/icon-play.svg" alt="" class="icon">
       <span>bekijk jouw baan</span>
     </button>
@@ -37,8 +37,22 @@
   </div>
 </template>
 
+<script>
+export default {
+  methods: {
+    playTrack () {
+      this.$store.commit('track/setControls', 'play')
+      this.$store.dispatch('modal/closeModal')
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 .modal-dayoff {
+  text-align: center;
+  margin: auto;
+
   &__intro {
     max-width: rem(280px);
     margin: auto;

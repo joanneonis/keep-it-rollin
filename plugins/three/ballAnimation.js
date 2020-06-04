@@ -112,6 +112,8 @@ export class BallAnimation {
       if (this.ballPosIndex > this.speed) {
         this.ballPosIndex = 0
         this.isPlaying = false
+
+        return false
       }
 
       const camPos = this.spline.getPoint(this.ballPosIndex / this.speed)
@@ -124,6 +126,10 @@ export class BallAnimation {
       this.animateThisSphere.rotation.x = camRot.x
       this.animateThisSphere.rotation.y = camRot.y
       this.animateThisSphere.rotation.z = camRot.z
+
+      return true
     }
+
+    return false
   }
 }

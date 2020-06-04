@@ -5,9 +5,7 @@
     class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
   >
-    <div class="testPlay">
-      <button @click="playBall()" class="button button--primary button-temp">Play ball!!!</button>
-    </div>
+    <h2>ballplaying: {{ ballIsPlaying }}</h2>
     <transition name="scene-popup">
       <popup
         v-if="popup.visible"
@@ -29,7 +27,7 @@ import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates, uuidv4, getPosAndRotation } from '~/helpers/trackHelpers'
-import { BallAnimation } from '~/plugins/three/BallAnimation'
+import { BallAnimation } from '~/plugins/three/ballAnimation'
 import popup from '~/components/trackComponents/popup'
 
 export default {
@@ -49,7 +47,8 @@ export default {
         saved: true,
         data: null
       },
-      ball: null
+      ball: null,
+      ballIsPlaying: false
     }
   },
 
@@ -85,6 +84,10 @@ export default {
     controls (e) {
       if (e === null) {
         return
+      }
+
+      if (e === 'play') {
+        this.playBall()
       }
 
       if (e === 'overviewZoom') {
@@ -161,7 +164,8 @@ export default {
     render () {
       this.baseScene.update()
       if (this.ball) {
-        this.ball.update()
+        const ballIsPlaying = this.ball.update()
+        if (ballIsPlaying !== this.ballIsPlaying) { this.ballIsPlaying = ballIsPlaying }
       }
     },
 
@@ -284,15 +288,6 @@ export default {
           this.ball.addPoint(point)
         })
       }
-      // if (modelType === 'energy') {
-      //   this.ball = new Ball(this.localModel.ballTrackPoint)
-      //   this.baseScene.scene.add(this.ball.initBall())
-      //   this.ball.initBallTrack(this.baseScene.scene)
-      //   // this.ball.addPoint(this.localModel.ballTrackPoint)
-      // } else {
-      //   console.log(this.localModel.ballTrackPoint)
-      //   this.ball.addPoint(this.localModel.ballTrackPoint)
-      // }
     },
 
     createPart (modelType, uuid) {
@@ -404,14 +399,5 @@ export default {
       display: none;
     }
   }
-}
-
-.testPlay {
-  position: fixed;
-  z-index: 10000;
-  left: 0;
-  right: 0;
-  margin: auto;
-  width: 100px;
 }
 </style>
