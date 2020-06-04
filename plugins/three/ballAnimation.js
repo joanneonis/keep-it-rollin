@@ -45,9 +45,9 @@ export class BallAnimation {
   }
 
   addBall () {
-    const sphereSize = 0.08
+    const sphereSize = 0.06
     const geometry = new THREE.SphereGeometry(sphereSize, 32, 32)
-    const material = new THREE.MeshBasicMaterial({ color: 0xFFFF00 })
+    const material = new THREE.MeshStandardMaterial({ color: 0x204DED })
     this.animateThisSphere = new THREE.Mesh(geometry, material)
     this.scene.add(this.animateThisSphere)
   }
