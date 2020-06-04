@@ -5,7 +5,6 @@
     class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
   >
-    <h2>ballplaying: {{ ballIsPlaying }}</h2>
     <transition name="scene-popup">
       <popup
         v-if="popup.visible"
