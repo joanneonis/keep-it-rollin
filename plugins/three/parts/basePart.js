@@ -12,6 +12,8 @@ export class BasePart {
     z: -0.2
   }
 
+  ballTrackPoint
+
   constructor (type, uuid, position, rotation, energyLevel = 50) {
     this.type = type
     this.fileUrl = '/old/Start van de dag' // loremobject
@@ -46,6 +48,20 @@ export class BasePart {
     // To make sure that the matrixWorld is up to date for the boxhelpers
     this.scene.updateMatrixWorld(true)
     this.mesh = this.scene
+
+    this.initSpherePos()
+  }
+
+  initSpherePos () {
+    const sphereSize = 0.05
+    const geometry = new THREE.SphereGeometry(sphereSize, 32, 32)
+    const material = new THREE.MeshBasicMaterial({ color: 0xFFFF00 })
+    const animateThisSphere = new THREE.Mesh(geometry, material)
+    // animateThisSphere.position.set(...this.position)
+    this.scene.add(animateThisSphere)
+
+    animateThisSphere.updateMatrixWorld(true)
+    this.ballTrackPoint = animateThisSphere.getWorldPosition()
   }
 
   generateExpressionsFolder (gui) {

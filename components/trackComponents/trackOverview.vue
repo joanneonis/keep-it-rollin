@@ -5,6 +5,9 @@
     class="scene"
     :class="[{ 'is-loading': baseScene.loading }, `scene--${viewState}`]"
   >
+    <div class="testPlay">
+      <button @click="playBall()" class="button button--primary button-temp">Play ball!!!</button>
+    </div>
     <transition name="scene-popup">
       <popup
         v-if="popup.visible"
@@ -26,6 +29,7 @@ import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates, uuidv4, getPosAndRotation } from '~/helpers/trackHelpers'
+import { BallAnimation } from '~/plugins/three/BallAnimation'
 import popup from '~/components/trackComponents/popup'
 
 export default {
@@ -44,7 +48,8 @@ export default {
         visible: false,
         saved: true,
         data: null
-      }
+      },
+      ball: null
     }
   },
 
@@ -153,9 +158,20 @@ export default {
   },
 
   methods: {
+    render () {
+      this.baseScene.update()
+      if (this.ball) {
+        this.ball.update()
+      }
+    },
+
     async init () {
       // create main scene
-      this.baseScene = new BaseScene(this.$refs.sceneContainer, this.debug)
+      this.baseScene = await new BaseScene(this.$refs.sceneContainer, this.debug)
+      // create renderloop
+      this.baseScene.renderer.setAnimationLoop(() => {
+        this.render()
+      })
       this.sceneListeners()
 
       // always load current track
@@ -255,6 +271,25 @@ export default {
       this.localModelCount += 1 // TODO temp code for creating UID and selecting temp position at the same time
 
       this.baseScene.zoomTo(this.localModel.mesh, true)
+
+      // add ball track
+      if (modelType === 'energy') {
+        // console.log(this.baseScene.ballAnimation, this.localModel.ballTrackPoint)
+        this.ball = new BallAnimation(this.localModel.ballTrackPoint)
+        this.ball.init(this.baseScene.ballAnimation)
+        this.baseScene.ballAnimation.add(this.ball.scene)
+      } else {
+        this.ball.addPoint(this.localModel.ballTrackPoint)
+      }
+      // if (modelType === 'energy') {
+      //   this.ball = new Ball(this.localModel.ballTrackPoint)
+      //   this.baseScene.scene.add(this.ball.initBall())
+      //   this.ball.initBallTrack(this.baseScene.scene)
+      //   // this.ball.addPoint(this.localModel.ballTrackPoint)
+      // } else {
+      //   console.log(this.localModel.ballTrackPoint)
+      //   this.ball.addPoint(this.localModel.ballTrackPoint)
+      // }
     },
 
     createPart (modelType, uuid) {
@@ -324,6 +359,10 @@ export default {
       }
       // console.log(this.activeTrackParts, `energylevel: ${Math.round(this.$store.getters['track/avarageEnergyLevel'])}`, this.localModel)
       return false
+    },
+
+    playBall () {
+      this.ball.playBall()
     }
   }
 }
@@ -362,5 +401,14 @@ export default {
       display: none;
     }
   }
+}
+
+.testPlay {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 100px;
 }
 </style>
