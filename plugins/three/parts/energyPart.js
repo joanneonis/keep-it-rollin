@@ -15,17 +15,15 @@ export class EnergyPart extends BasePart {
     }
   }
 
-  // initSpherePos () {
-  //   const sphereSize = 0.05
-  //   const geometry = new THREE.SphereGeometry(sphereSize, 32, 32)
-  //   const material = new THREE.MeshBasicMaterial({ color: 0xFFFF00 })
-  //   const animateThisSphere = new THREE.Mesh(geometry, material)
-  //   animateThisSphere.position.y += 0.2
-  //   animateThisSphere.position.z += 0.3
-  //   this.scene.add(animateThisSphere)
+  initSpherePos () {
+    const basePoint = this.initBaseBallPos()
+    this.scene.add(basePoint) // todo remove later.. only for testing
 
-  //   this.ballTrackPoint = animateThisSphere.getWorldPosition()
-  // }
+    basePoint.position.y += 0.2
+    basePoint.position.z += 0.3
+
+    this.ballTrackPoints.push(basePoint.getWorldPosition())
+  }
 
   initDeforms () {
     this.updateEnergy(this.energyLevel)

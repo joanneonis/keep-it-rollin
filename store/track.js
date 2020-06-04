@@ -146,7 +146,6 @@ function checkTrack (ref) {
     .get().then(
       (doc) => {
         if (doc.exists) {
-          console.log('track exists', doc.data(), doc.data().createdAt.toDate())
           return doc.data()
         } else {
           console.log('track does not exist yet, first trackpart')

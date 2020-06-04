@@ -207,6 +207,7 @@ export default {
     removeLocalModel () {
       this.localModelCount--
       this.baseScene.trackParts.remove(this.localModel.scene)
+      this.ball.removePoint()
 
       if (this.debug) {
         this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
@@ -275,11 +276,13 @@ export default {
       // add ball track
       if (modelType === 'energy') {
         // console.log(this.baseScene.ballAnimation, this.localModel.ballTrackPoint)
-        this.ball = new BallAnimation(this.localModel.ballTrackPoint)
+        this.ball = new BallAnimation(this.localModel.ballTrackPoints[0])
         this.ball.init(this.baseScene.ballAnimation)
         this.baseScene.ballAnimation.add(this.ball.scene)
       } else {
-        this.ball.addPoint(this.localModel.ballTrackPoint)
+        this.localModel.ballTrackPoints.forEach((point) => {
+          this.ball.addPoint(point)
+        })
       }
       // if (modelType === 'energy') {
       //   this.ball = new Ball(this.localModel.ballTrackPoint)

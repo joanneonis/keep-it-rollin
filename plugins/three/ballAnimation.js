@@ -10,7 +10,7 @@ export class BallAnimation {
   spline
   animateThisSphere;
   ballPosIndex = 0;
-  speed = 100
+  speed = 500
   isPlaying = false
 
   // get startpoint
@@ -32,9 +32,9 @@ export class BallAnimation {
     curve = new THREE.CatmullRomCurve3(this.ballPathPositions)
     curve.curveType = 'centripetal'
     curve.mesh = new THREE.Line(geometry.clone(), new THREE.LineBasicMaterial({
-      color: 0x00FF00,
-      opacity: 0.35
+      color: 0x00FF00
     }))
+    curve.mesh.visible = false
     this.spline = curve
 
     this.scene.add(this.spline.mesh)
@@ -111,6 +111,7 @@ export class BallAnimation {
 
       if (this.ballPosIndex > this.speed) {
         this.ballPosIndex = 0
+        this.isPlaying = false
       }
 
       const camPos = this.spline.getPoint(this.ballPosIndex / this.speed)
