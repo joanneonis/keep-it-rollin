@@ -62,6 +62,21 @@ export default {
   },
 
   watch: {
+    ballIsPlaying (e) {
+      console.log('ballplaying state changed', e)
+      if (e) {
+        // const ball = this.ball.animateThisSphere
+        // // this.baseScene.cameraControls.moveTo(ball.position.x - 3, ball.position.y + 1, ball.position.z)
+        // this.baseScene.cameraControls.fitTo(ball, true, {
+        //   paddingLeft: padding,
+        //   paddingRight: padding,
+        //   paddingBottom: padding,
+        //   paddingTop: padding
+        // })
+      } else {
+        this.zoomOverview()
+      }
+    },
     activeLocalPart: { // todo change to a getter for only energy? (depends on other model properties)
       deep: true,
 
@@ -165,6 +180,17 @@ export default {
       if (this.ball) {
         const ballIsPlaying = this.ball.update()
         if (ballIsPlaying !== this.ballIsPlaying) { this.ballIsPlaying = ballIsPlaying }
+        if (this.ballIsPlaying) {
+          const ball = this.ball.animateThisSphere
+          const padding = 0.2
+          // this.baseScene.cameraControls.moveTo(ball.position.x - 3, ball.position.y + 1, ball.position.z)
+          this.baseScene.cameraControls.fitTo(ball, true, {
+            paddingLeft: padding,
+            paddingRight: padding,
+            paddingBottom: padding,
+            paddingTop: padding
+          })
+        }
       }
     },
 
