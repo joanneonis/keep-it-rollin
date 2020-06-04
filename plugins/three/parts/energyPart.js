@@ -15,6 +15,16 @@ export class EnergyPart extends BasePart {
     }
   }
 
+  initSpherePos () {
+    const basePoint = this.initBaseBallPos()
+    this.scene.add(basePoint) // todo remove later.. only for testing
+
+    basePoint.position.y += 0.2
+    basePoint.position.z += 0.3
+
+    this.ballTrackPoints.push(basePoint.getWorldPosition())
+  }
+
   initDeforms () {
     this.updateEnergy(this.energyLevel)
   }

@@ -15,6 +15,23 @@ export class MeetingPart extends BasePart {
     }
   }
 
+  initSpherePos () {
+    const basePoint = this.initBaseBallPos()
+    this.scene.add(basePoint) // todo remove later.. only for testing
+
+    basePoint.position.y += 0.01
+
+    const point2 = basePoint.clone()
+
+    basePoint.position.z -= 0.65
+    point2.position.z += 0.55
+
+    this.scene.add(point2)
+
+    this.ballTrackPoints.push(basePoint.getWorldPosition())
+    this.ballTrackPoints.push(point2.getWorldPosition())
+  }
+
   initDeforms () {
     this.updateEnergy(this.energyLevel)
   }

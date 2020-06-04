@@ -23,6 +23,7 @@ export class BaseScene {
   cameraControls
 
   trackParts = new THREE.Group()
+  ballAnimation = new THREE.Group()
 
   loading = true
 
@@ -46,6 +47,10 @@ export class BaseScene {
     this.trackParts.name = 'trackparts'
     this.scene.add(this.trackParts)
 
+    // add ball animation container
+    this.ballAnimation.name = 'ballanimation'
+    this.scene.add(this.ballAnimation)
+
     // camera
     this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100)
     this.cameraSettings()
@@ -60,11 +65,6 @@ export class BaseScene {
 
     // floorplane (for shadows to projected on)
     this.addFloorPlane()
-
-    // create renderloop
-    this.renderer.setAnimationLoop(() => {
-      this.render()
-    })
 
     // add renderer to dom
     this.container.appendChild(this.renderer.domElement)
@@ -102,7 +102,7 @@ export class BaseScene {
     this.renderer.gammaFactor = 2.2
   }
 
-  render () {
+  update () {
     this.delta = this.clock.getDelta()
     this.cameraControls.update(this.delta)
 
@@ -247,13 +247,13 @@ export class BaseScene {
   }
 
   centerTrackParts () {
-    this.trackParts.updateMatrixWorld(true)
-    new THREE.Box3().setFromObject(this.trackParts).getCenter(this.trackParts.position).multiplyScalar(-1)
-    this.trackParts.position.y = 0 // do not center y
+    // this.trackParts.updateMatrixWorld(true)
+    // new THREE.Box3().setFromObject(this.trackParts).getCenter(this.trackParts.position).multiplyScalar(-1)
+    // this.trackParts.position.y = 0 // do not center y
 
-    if (this.debug) {
-      this.scene.add(new THREE.BoxHelper(this.trackParts))
-    }
+    // if (this.debug) {
+    //   this.scene.add(new THREE.BoxHelper(this.trackParts))
+    // }
   }
 
   // source: github.com/yomotsu/camera-controls/blob/dev/examples/fit-and-padding.html

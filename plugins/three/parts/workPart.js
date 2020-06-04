@@ -1,4 +1,3 @@
-// import * as THREE from 'three'
 import { BasePart } from '~/plugins/three/parts/basePart'
 
 export class WorkPart extends BasePart {
@@ -13,6 +12,23 @@ export class WorkPart extends BasePart {
       y: 0.12,
       z: -0.2
     }
+  }
+
+  initSpherePos () {
+    const basePoint = this.initBaseBallPos()
+    this.scene.add(basePoint) // todo remove later.. only for testing
+
+    basePoint.position.y += 0.01
+
+    const point2 = basePoint.clone()
+
+    basePoint.position.z -= 0.3
+    point2.position.z += 0.3
+
+    this.scene.add(point2)
+
+    this.ballTrackPoints.push(basePoint.getWorldPosition())
+    this.ballTrackPoints.push(point2.getWorldPosition())
   }
 
   initDeforms () {

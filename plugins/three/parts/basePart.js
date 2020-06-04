@@ -12,6 +12,8 @@ export class BasePart {
     z: -0.2
   }
 
+  ballTrackPoints = []
+
   constructor (type, uuid, position, rotation, energyLevel = 50) {
     this.type = type
     this.fileUrl = '/old/Start van de dag' // loremobject
@@ -37,6 +39,7 @@ export class BasePart {
     gltf.scene.traverse((node) => {
       if (node instanceof THREE.Mesh) {
         node.userData.uuid = this.uuid
+        node.userData.type = this.type
         // node.material.color.setHex(Math.random() * 0xFFFFFF)
         node.castShadow = true
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs
@@ -46,6 +49,25 @@ export class BasePart {
     // To make sure that the matrixWorld is up to date for the boxhelpers
     this.scene.updateMatrixWorld(true)
     this.mesh = this.scene
+
+    this.initSpherePos()
+  }
+
+  initSpherePos () {
+    const basePoint = this.initBaseBallPos()
+    this.scene.add(basePoint) // todo remove later.. only for testing
+    this.ballTrackPoints.push(basePoint.getWorldPosition())
+  }
+
+  initBaseBallPos () {
+    const sphereSize = 0.05
+    const geometry = new THREE.SphereGeometry(sphereSize, 32, 32)
+    const material = new THREE.MeshBasicMaterial({ color: 0xFFFF00 })
+    const point = new THREE.Mesh(geometry, material)
+    point.visible = false
+    point.position.y += 0.06
+
+    return point
   }
 
   generateExpressionsFolder (gui) {

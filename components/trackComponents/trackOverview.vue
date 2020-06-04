@@ -26,6 +26,7 @@ import { SmallTasksPart } from '~/plugins/three/parts/smalltasksPart'
 import { WorkPart } from '~/plugins/three/parts/workPart'
 import { BasePart } from '~/plugins/three/parts/basePart'
 import { trackViewStates, uuidv4, getPosAndRotation } from '~/helpers/trackHelpers'
+import { BallAnimation } from '~/plugins/three/ballAnimation'
 import popup from '~/components/trackComponents/popup'
 
 export default {
@@ -44,7 +45,9 @@ export default {
         visible: false,
         saved: true,
         data: null
-      }
+      },
+      ball: null,
+      ballIsPlaying: false
     }
   },
 
@@ -59,6 +62,21 @@ export default {
   },
 
   watch: {
+    ballIsPlaying (e) {
+      console.log('ballplaying state changed', e)
+      if (e) {
+        // const ball = this.ball.animateThisSphere
+        // // this.baseScene.cameraControls.moveTo(ball.position.x - 3, ball.position.y + 1, ball.position.z)
+        // this.baseScene.cameraControls.fitTo(ball, true, {
+        //   paddingLeft: padding,
+        //   paddingRight: padding,
+        //   paddingBottom: padding,
+        //   paddingTop: padding
+        // })
+      } else {
+        this.zoomOverview()
+      }
+    },
     activeLocalPart: { // todo change to a getter for only energy? (depends on other model properties)
       deep: true,
 
@@ -80,6 +98,10 @@ export default {
     controls (e) {
       if (e === null) {
         return
+      }
+
+      if (e === 'play') {
+        this.playBall()
       }
 
       if (e === 'overviewZoom') {
@@ -153,9 +175,32 @@ export default {
   },
 
   methods: {
+    render () {
+      this.baseScene.update()
+      if (this.ball) {
+        const ballIsPlaying = this.ball.update()
+        if (ballIsPlaying !== this.ballIsPlaying) { this.ballIsPlaying = ballIsPlaying }
+        if (this.ballIsPlaying) {
+          const ball = this.ball.animateThisSphere
+          const padding = 0.2
+          // this.baseScene.cameraControls.moveTo(ball.position.x - 3, ball.position.y + 1, ball.position.z)
+          this.baseScene.cameraControls.fitTo(ball, true, {
+            paddingLeft: padding,
+            paddingRight: padding,
+            paddingBottom: padding,
+            paddingTop: padding
+          })
+        }
+      }
+    },
+
     async init () {
       // create main scene
-      this.baseScene = new BaseScene(this.$refs.sceneContainer, this.debug)
+      this.baseScene = await new BaseScene(this.$refs.sceneContainer, this.debug)
+      // create renderloop
+      this.baseScene.renderer.setAnimationLoop(() => {
+        this.render()
+      })
       this.sceneListeners()
 
       // always load current track
@@ -191,6 +236,7 @@ export default {
     removeLocalModel () {
       this.localModelCount--
       this.baseScene.trackParts.remove(this.localModel.scene)
+      this.ball.removePoint()
 
       if (this.debug) {
         this.baseScene.gui.removeFolder(this.localModel.expressionFolder)
@@ -255,6 +301,18 @@ export default {
       this.localModelCount += 1 // TODO temp code for creating UID and selecting temp position at the same time
 
       this.baseScene.zoomTo(this.localModel.mesh, true)
+
+      // add ball track
+      if (modelType === 'energy') {
+        // console.log(this.baseScene.ballAnimation, this.localModel.ballTrackPoint)
+        this.ball = new BallAnimation(this.localModel.ballTrackPoints[0])
+        this.ball.init(this.baseScene.ballAnimation)
+        this.baseScene.ballAnimation.add(this.ball.scene)
+      } else {
+        this.localModel.ballTrackPoints.forEach((point) => {
+          this.ball.addPoint(point)
+        })
+      }
     },
 
     createPart (modelType, uuid) {
@@ -324,6 +382,10 @@ export default {
       }
       // console.log(this.activeTrackParts, `energylevel: ${Math.round(this.$store.getters['track/avarageEnergyLevel'])}`, this.localModel)
       return false
+    },
+
+    playBall () {
+      this.ball.playBall()
     }
   }
 }
