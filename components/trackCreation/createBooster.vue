@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import moment from 'moment/min/moment-with-locales'
 import { trackViewStates, uuidv4 } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
 import ideaList from '~/components/trackCreation/ideaList'
@@ -77,7 +78,8 @@ export default {
         idea: this.selectedIdea,
         type: 'booster',
         uuid: this.uuid,
-        energyLevel: 100
+        energyLevel: 100,
+        startTime: moment().format('LT')
       }
     }
   },
@@ -99,6 +101,10 @@ export default {
       this.selectedIdea = null
       this.$store.commit('track/setActiveLocalPart', this.trackPart)
     }
+  },
+
+  beforeCreate () {
+    moment.locale('nl')
   },
 
   mounted () {

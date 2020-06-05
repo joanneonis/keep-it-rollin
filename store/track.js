@@ -139,6 +139,9 @@ export const getters = {
     }, 0)
 
     return sumLevel / filteredParts.length
+  },
+  energyParts: (stateTrack) => {
+    return stateTrack.activeParts
   }
 }
 
