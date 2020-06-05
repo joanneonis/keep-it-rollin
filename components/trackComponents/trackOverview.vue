@@ -118,7 +118,8 @@ export default {
 
     action (e) {
       if (e === 'save') {
-        const label = this.activeLocalPart.type === 'energy' ? 'Start' : moment(this.activeLocalPart.createdAt.toDate()).format('h:mm')
+        const startTime = this.activeLocalPart.startTime ? moment(this.activeLocalPart.startTime, 'LT').format('h:mm') : moment(this.activeLocalPart.createdAt.toDate()).format('h:mm')
+        const label = this.activeLocalPart.type === 'energy' ? 'Start' : startTime
         this.localModel.addTime(label)
 
         const completionMessage = {
@@ -358,7 +359,8 @@ export default {
           this.localModel.updateEnergy(trackpart.energyLevel)
         }
 
-        const label = trackpart.type === 'energy' ? 'Start' : moment(trackpart.createdAt.toDate()).format('h:mm')
+        const startTime = trackpart.startTime ? moment(trackpart.startTime, 'LT').format('h:mm') : moment(trackpart.createdAt.toDate()).format('h:mm')
+        const label = trackpart.type === 'energy' ? 'Start' : startTime
         this.localModel.addTime(label)
       })
     },

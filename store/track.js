@@ -105,7 +105,11 @@ export const actions = {
     const todaysTrack = db.collection('users').doc(rootState.auth.userUid).collection('tracks').doc(docRefDate)
 
     // before push to fb, add creation time
-    trackPartData.createdAt = firebase.firestore.Timestamp.now()
+    trackPartData.createdAt = firebase.firestore.Timestamp.now() // keep for older version
+    // trackPartData.startTime = firebase.firestore.Timestamp.fromDate(trackPartData.startTime)
+    // trackPartData.endTime = firebase.firestore.Timestamp.fromDate(trackPartData.endTime)
+
+    console.log(trackPartData)
 
     // adds item to field array
     todaysTrack.update({

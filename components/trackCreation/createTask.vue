@@ -49,26 +49,66 @@
       <div class="form-field form-field__split">
         <div class="form-field__split__small">
           <label for="note">
-            Hoe lang ga je ermee bezig? <br><small>(In minuten)</small>
+            StartTijd
           </label>
           <input
             id="title"
-            v-model="duration"
+            v-model="startTime"
             placeholder="90 min"
-            type="number"
+            type="time"
             name="title"
+            :min="now"
+            :max="today"
           >
         </div>
-        <div>
-          <label>
-            Is dit je laatste taak van de dag?
+        <div class="form-field__split__small">
+          <label for="note">
+            Eindtijd
           </label>
-          <div class="input-switch">
-            <input v-model="isLastItem" type="checkbox" id="switch" />
+          <input
+            id="title"
+            v-model="endTime"
+            placeholder="90 min"
+            type="time"
+            name="title"
+            :min="startTime"
+            :max="today"
+          >
+        </div>
+        <div class="form-field">
+          <strong class="label">Duratie</strong> <br>
+          <div class="calculation">
+            <span v-if="duration.dur > 0">
+              <template v-if="duration.hrs > 0">{{ duration.hrs }} u</template>
+              <template v-if="duration.hrs > 0 && duration.mins !== 0"> en </template>
+              <template v-if="duration.hrs === 0 || duration.hrs > 0 && duration.mins !== 0">{{ duration.mins }} min</template>
+            </span>
+            <span v-else>
+              0  min
+            </span>
+            <div>
+              <button :class="{ 'is-muted' : duration.dur <= 0 }" class="button button--primary button--sm" @click="changeTime(-15)">
+                - 15 min
+              </button>
+              <button class="button button--primary button--sm" @click="changeTime(+15)">
+                + 15 min
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>
+          Is dit je laatste taak van de dag?
+        </label>
+        <div class="input-switch">
+          <div>
+            <input id="switch" v-model="isLastItem" type="checkbox">
             <label for="switch">
               <span>{{ isLastItem ? 'ja' : 'nee' }}</span>
             </label>
           </div>
+          <span class="input-switch__value">{{ isLastItem ? 'ja' : 'nee' }}</span>
         </div>
       </div>
     </div>
@@ -84,11 +124,13 @@
 </template>
 
 <script>
+import moment from 'moment/min/moment-with-locales'
 import { trackViewStates, trackPartTypes, uuidv4 } from '~/helpers/trackHelpers'
 import inputPanel from '~/components/inputPanel'
 import energySlider from '~/components/energySlider'
 
 export default {
+
   components: {
     inputPanel,
     energySlider
@@ -106,23 +148,39 @@ export default {
       energyLevel: null,
       selectedCategory: trackPartTypes.WORKBLOCK,
       taskTitle: '',
-      duration: 0,
+      startTime: moment().format('LT'),
+      endTime: moment().add(30, 'minutes').format('LT'),
       uuid: null,
-      isLastItem: false
+      isLastItem: false,
+      now: moment().startOf('day').format('LT'),
+      today: moment().endOf('day').format('LT')
     }
   },
 
   computed: {
     trackPart () {
       return {
-        type: this.selectedCategory,
         category: 'task',
+        type: this.selectedCategory,
         energyLevel: this.energyLevel,
         title: this.taskTitle,
-        duration: this.duration,
+        duration: this.duration.inmin,
+        startTime: this.startTime,
+        endTime: this.endTime,
         uuid: this.uuid,
         isLastItem: this.isLastItem
       }
+    },
+
+    duration () {
+      const start = moment(this.startTime, 'LT')
+      const end = moment(this.endTime, 'LT')
+      const diffTime = moment(end).diff(start)
+      const duration = moment.duration(diffTime)
+      const hrs = duration.hours()
+      const mins = duration.minutes()
+
+      return { hrs, mins, dur: duration, inmin: duration.minutes() }
     }
   },
 
@@ -138,6 +196,9 @@ export default {
       // update model
       this.$store.commit('track/setAction', e)
     }
+  },
+  beforeCreate () {
+    moment.locale('nl')
   },
 
   mounted () {
@@ -160,6 +221,10 @@ export default {
 
     getPanelAction ($event) {
       this.$store.commit('track/setAction', $event)
+    },
+
+    changeTime (minutes) {
+      this.endTime = moment(this.endTime, 'LT').add(minutes, 'minutes').format('LT')
     }
   }
 }
@@ -171,6 +236,7 @@ export default {
   flex-flow: column;
   padding: 30px 40px;
   align-items: flex-start;
+  padding-bottom: 0;
 }
 
 .form-field__checkboxes {
@@ -181,8 +247,29 @@ export default {
   display: flex;
 
   &__small {
-    width: 49%;
+    width: 28%;
     padding-right: 20px;
+  }
+}
+
+.calculation {
+  display: flex;
+  align-items: center;
+
+  span {
+    display: flex;
+    height: 46px;
+    align-items: center;
+    white-space: nowrap;
+    width: 120px;
+  }
+
+  .button {
+    margin-left: 13px;
+    padding: 3px 10px;
+    height: auto;
+
+    &:first-child { margin-bottom: 2px; }
   }
 }
 </style>
