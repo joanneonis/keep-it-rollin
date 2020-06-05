@@ -3,13 +3,13 @@ import * as THREE from 'three'
 
 export class BallAnimation {
   scene
-  splinePointsLength = 1;
-  ballPathPositions = [];
-  point = new THREE.Vector3();
+  splinePointsLength = 1
+  ballPathPositions = []
+  point = new THREE.Vector3()
   ARC_SEGMENTS = 200;
   spline
-  animateThisSphere;
-  ballPosIndex = 0;
+  animateThisSphere
+  ballPosIndex = 0
   speed = 500
   isPlaying = false
 

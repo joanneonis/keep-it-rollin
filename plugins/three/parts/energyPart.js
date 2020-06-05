@@ -19,8 +19,8 @@ export class EnergyPart extends BasePart {
     const basePoint = this.initBaseBallPos()
     this.scene.add(basePoint) // todo remove later.. only for testing
 
-    basePoint.position.y += 0.2
-    basePoint.position.z += 0.3
+    basePoint.position.y += 0.14
+    basePoint.position.z += 0.2
 
     this.ballTrackPoints.push(basePoint.getWorldPosition())
   }

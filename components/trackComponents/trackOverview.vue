@@ -63,17 +63,7 @@ export default {
 
   watch: {
     ballIsPlaying (e) {
-      console.log('ballplaying state changed', e)
-      if (e) {
-        // const ball = this.ball.animateThisSphere
-        // // this.baseScene.cameraControls.moveTo(ball.position.x - 3, ball.position.y + 1, ball.position.z)
-        // this.baseScene.cameraControls.fitTo(ball, true, {
-        //   paddingLeft: padding,
-        //   paddingRight: padding,
-        //   paddingBottom: padding,
-        //   paddingTop: padding
-        // })
-      } else {
+      if (!e) {
         this.zoomOverview()
       }
     },
@@ -313,6 +303,8 @@ export default {
           this.ball.addPoint(point)
         })
       }
+
+      this.ball.speed = this.activeTrackParts.length * 100
     },
 
     createPart (modelType, uuid) {
