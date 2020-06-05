@@ -304,7 +304,7 @@ export default {
         })
       }
 
-      this.ball.speed = this.activeTrackParts.length * 100
+      this.ball.speed = this.activeTrackParts.length * 80
     },
 
     createPart (modelType, uuid) {
