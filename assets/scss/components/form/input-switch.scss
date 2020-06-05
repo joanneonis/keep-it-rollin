@@ -4,6 +4,15 @@ $input-switch-size: 30px;
 $input-switch-spacing: 3px;
 
 .input-switch {
+  display: flex;
+  align-items: center;
+
+  &__value {
+    margin-left: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
   input[type=checkbox] {
     height: 0;
     width: 0;
@@ -20,6 +29,7 @@ $input-switch-spacing: 3px;
     display: block;
     border-radius: 100px;
     position: relative;
+    margin-bottom: 0;
   }
 
   label:after {
