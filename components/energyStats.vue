@@ -3,7 +3,7 @@
     <energy-level class="energy-level--big" />
     <div class="energy-chart--container">
       <strong>Dag verloop</strong>
-      <canvas ref="chart" class="energy-chart" />
+      <canvas ref="chart" class="energy-chart" height="250" />
     </div>
   </div>
 </template>
@@ -81,9 +81,9 @@ export default {
                 return description
               }
             },
-            backgroundColor: '#FFF',
+            backgroundColor: '#E9ECF3',
             titleFontSize: 16,
-            titleFontColor: '#0066ff',
+            titleFontColor: '#1B34F1',
             bodyFontColor: '#000',
             bodyFontStyle: 'bold',
             footerFontStyle: 'regular',
@@ -111,7 +111,7 @@ export default {
 }
 .energy-chart {
   width: 100%;
-  height: 500px;
+  height: 300px;
   margin-top: 10px;
 
   &--container {

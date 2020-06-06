@@ -9,6 +9,7 @@
         <span>Overzicht</span>
       </button>
       <button
+        v-if="!localItemFocused"
         class="button-link button-link--primary"
         @click="$store.commit('track/setControls', 'play')"
       >
