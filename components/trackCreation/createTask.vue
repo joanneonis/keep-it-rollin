@@ -197,6 +197,7 @@ export default {
       this.$store.commit('track/setAction', e)
     }
   },
+
   beforeCreate () {
     moment.locale('nl')
   },

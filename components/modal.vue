@@ -176,6 +176,7 @@ export default {
 
   &__header {
     padding: 0 rem(30px);
+    max-width: 480px;
   }
 
   &__actions {
