@@ -122,7 +122,7 @@ export class BaseScene {
       // if its not same as previous target
       if (this.INTERSECTED !== intersects[0].object) {
         const trackObject = intersects[0].object
-        if (trackObject.name === 'sprite') { return }
+        if (!trackObject.userData.isTrackpart) { return }
 
         // reset hex previous clicked
         if (this.INTERSECTED) { this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.currentHex) }

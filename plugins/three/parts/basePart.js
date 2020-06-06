@@ -40,6 +40,7 @@ export class BasePart {
       if (node instanceof THREE.Mesh) {
         node.userData.uuid = this.uuid
         node.userData.type = this.type
+        node.userData.isTrackpart = true
         // node.material.color.setHex(Math.random() * 0xFFFFFF)
         node.castShadow = true
         BufferGeometryUtils.computeTangents(node.geometry) // generates bad data due to degenerate UVs

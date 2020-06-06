@@ -37,7 +37,6 @@ export class BallAnimation {
     curve.mesh.visible = false
     this.spline = curve
 
-    this.spline.mesh.name = 'sprite'
     this.scene.add(this.spline.mesh)
 
     // this.load(this.startPoint)
@@ -50,7 +49,6 @@ export class BallAnimation {
     const geometry = new THREE.SphereGeometry(sphereSize, 32, 32)
     const material = new THREE.MeshStandardMaterial({ color: 0x204DED })
     this.animateThisSphere = new THREE.Mesh(geometry, material)
-    this.animateThisSphere.name = 'sprite'
     this.scene.add(this.animateThisSphere)
   }
 
