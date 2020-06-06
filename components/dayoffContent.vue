@@ -8,20 +8,20 @@
     <ul class="list-unstyled day-highlights">
       <li class="day-highlights__item">
         <figure class="day-highlights__image">
-          <img src="~/assets/img/dayoff/dayoff-energie.png" alt="Energie highlight">
+          <img :src="require(`~/assets/img/types/${bestTasks[0].type}.png`)" alt="Energie highlight">
         </figure>
         <div class="day-highlights__title">
           <strong class="type--highlight">Meeste energie</strong>
-          <span>Start van de dag</span>
+          <span>{{ bestTasks[0].title || bestTasks[0].type }}</span>
         </div>
       </li>
       <li class="day-highlights__item">
         <figure class="day-highlights__image">
-          <img src="~/assets/img/dayoff/dayoff-booster.png" alt="Energie highlight">
+          <img src="~/assets/img/types/booster.png" alt="Energie highlight">
         </figure>
         <div class="day-highlights__title">
           <strong class="type--highlight">Boosters toegepast</strong>
-          <span>3x toegepast</span>
+          <span>{{ boosterParts.length }}x toegepast</span>
         </div>
       </li>
     </ul>
@@ -43,6 +43,21 @@ export default {
     playTrack () {
       this.$store.commit('track/setControls', 'play')
       this.$store.dispatch('modal/closeModal')
+    }
+  },
+
+  computed: {
+    boosterParts () {
+      const parts = this.$store.getters['track/energyParts']
+      return parts.filter(part => part.type === 'booster')
+    },
+    taskParts () {
+      const parts = this.$store.getters['track/energyParts']
+      return parts.filter(part => part.type !== 'booster')
+    },
+    bestTasks () {
+      const highestVal = Math.max(...this.taskParts.map(part => part.energyLevel))
+      return this.taskParts.filter(part => part.energyLevel === highestVal)
     }
   }
 }
