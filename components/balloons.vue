@@ -11,6 +11,17 @@
   </div>
 </template>
 
+<script>
+export default {
+  mounted () {
+    const that = this
+    setTimeout(function () {
+      that.$store.commit('track/setControls', 'play')
+    }, 3500)
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 @keyframes float {
   from {

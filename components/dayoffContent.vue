@@ -28,7 +28,7 @@
 
     <button class="button button--primary" @click="playTrack()">
       <img src="~/assets/img/icon-play.svg" alt="" class="icon">
-      <span>bekijk jouw baan</span>
+      <span>bekijk jouw baan nogmaals</span>
     </button>
     <button class="button-link button-link--primary">
       <img src="~/assets/img/icon-share.svg" alt="" class="icon">

@@ -10,13 +10,13 @@
         </template>
       </div>
       <track-overview v-if="$store.state.track.trackInited && $store.getters['auth/signedInState']" />
-      <div v-if="!dayDone" class="app-footer">
+      <div class="app-footer">
         <div class="container">
           <track-footer-actions v-if="$store.state.track.viewState === trackViewStates.OVERVIEW && $store.getters['auth/signedInState']" />
         </div>
       </div>
     </template>
-    <balloons v-if="modalType === 'dayOff'" />
+    <balloons v-if="dayDone" />
     <modal :open="modalActive" @action="handleModalAction()">
       <dayoff-content v-if="modalType === 'dayOff'" />
       <create-idea v-if="modalType === 'createIdea'" />
@@ -61,8 +61,8 @@ export default {
   beforeRouteEnter (to, from, next) {
     next((vm) => {
       if (to.query.dayoff) {
-        vm.$store.dispatch('modal/setActiveModal', 'dayOff')
         vm.dayDone = true
+        vm.$store.dispatch('day/setDone', true)
       }
     })
   },

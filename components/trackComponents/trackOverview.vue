@@ -63,8 +63,10 @@ export default {
 
   watch: {
     ballIsPlaying (e) {
-      if (!e) {
+      if (!e && !this.$store.state.day.isDone) {
         this.zoomOverview()
+      } else if (!e) {
+        this.$store.dispatch('modal/setActiveModal', 'dayOff')
       }
     },
     activeLocalPart: { // todo change to a getter for only energy? (depends on other model properties)

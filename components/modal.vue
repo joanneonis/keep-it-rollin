@@ -138,7 +138,7 @@ export default {
   pointer-events: none;
 
   .has-delay & {
-    animation: backgroundBlur 1s .5s;
+    animation: backgroundBlur .5s .5s;
     animation-fill-mode: forwards;
   }
 }
@@ -196,6 +196,6 @@ export default {
 }
 
 .has-delay .modal-up-enter-active {
-  transition-delay: 2.5s;
+  transition-delay: 1.5s;
 }
 </style>
