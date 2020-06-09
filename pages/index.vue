@@ -4,9 +4,11 @@
       <div class="app-container container">
         <intro v-if="!$store.getters['auth/signedInState']" />
         <template v-if="$store.getters['auth/signedInState']">
-          <first-item-of-day v-if="$store.state.track.viewState === trackViewStates.CREATION.FIRST" />
-          <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
-          <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
+          <transition name="slide-fade">
+            <first-item-of-day v-if="$store.state.track.viewState === trackViewStates.CREATION.FIRST" />
+            <create-task v-if="$store.state.track.viewState === trackViewStates.CREATION.TASK" />
+            <create-booster v-if="$store.state.track.viewState === trackViewStates.CREATION.BOOSTER" />
+          </transition>
         </template>
       </div>
       <track-overview v-if="$store.state.track.trackInited && $store.getters['auth/signedInState']" />
@@ -137,5 +139,16 @@ export default {
   bottom: 0;
   padding: 0 0 rem(30px);
   width: 100%;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all .5s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(60px);
+  opacity: 0;
 }
 </style>

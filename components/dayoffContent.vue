@@ -8,11 +8,11 @@
     <ul class="list-unstyled day-highlights">
       <li class="day-highlights__item">
         <figure class="day-highlights__image">
-          <img :src="require(`~/assets/img/types/${bestTasks[0].type}.png`)" alt="Energie highlight">
+          <img :src="require(`~/assets/img/types/${bestTasks.type}.png`)" alt="Energie highlight">
         </figure>
         <div class="day-highlights__title">
           <strong class="type--highlight">Meeste energie</strong>
-          <span>{{ bestTasks[0].title || bestTasks[0].type }}</span>
+          <span>{{ bestTasks.title || bestTasks.type }}</span>
         </div>
       </li>
       <li class="day-highlights__item">
@@ -20,8 +20,9 @@
           <img src="~/assets/img/types/booster.png" alt="Energie highlight">
         </figure>
         <div class="day-highlights__title">
-          <strong class="type--highlight">Boosters toegepast</strong>
-          <span>{{ boosterParts.length }}x toegepast</span>
+          <strong class="type--highlight">Boosters</strong>
+          <span v-if="boosterParts.length > 0">{{ boosterParts.length }}x toegepast</span>
+          <span>Helaas geen boosters vandaag...</span>
         </div>
       </li>
     </ul>
@@ -56,8 +57,11 @@ export default {
       return parts.filter(part => part.type !== 'booster')
     },
     bestTasks () {
-      const highestVal = Math.max(...this.taskParts.map(part => part.energyLevel))
-      return this.taskParts.filter(part => part.energyLevel === highestVal)
+      const energyLevels = this.taskParts.map(part => part.energyLevel)
+      const highestVal = Math.max(...energyLevels)
+      let itemWithHighest = this.taskParts.filter(part => parseInt(part.energyLevel) === highestVal)
+      itemWithHighest = itemWithHighest.length > 1 ? itemWithHighest[itemWithHighest.length - 1] : itemWithHighest[0]
+      return itemWithHighest
     }
   }
 }
