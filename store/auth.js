@@ -130,6 +130,7 @@ export const actions = {
   },
 
   async setSignedIn ({ commit, dispatch }, params) {
+    commit('setInitState', false)
     const { userId, userdata } = params
 
     commit('setUserId', userId)
