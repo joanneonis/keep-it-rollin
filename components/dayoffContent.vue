@@ -88,6 +88,7 @@ export default {
     align-items: flex-start;
     width: 100%;
     padding-left: rem(20px);
+    text-align: left;
   }
 
   &__item {
