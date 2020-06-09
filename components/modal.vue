@@ -118,7 +118,7 @@ export default {
   right: 0;
   z-index: 99999;
   bottom: 0;
-  overflow: scroll;
+  overflow: auto;
   pointer-events: none;
 
   &.is-open { pointer-events: auto; }
