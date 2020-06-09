@@ -19,11 +19,12 @@
       >
         <li
           v-for="(message, i) in messages"
-          :key="message.substring(0, 7)"
+          :key="message.substring(0, 4)"
           class="chatbot-messages__list__item chatbot-text-message"
           :class="{ 'skip-animation' : skipDelay }"
           :style="{'--item-index': i, '--item-delay': messageDelay(messages, i) }"
           v-html="$md.render(message)"
+          @click="checkAction(storyId)"
         />
         <li
           v-if="actions && actions[0]"
@@ -61,7 +62,8 @@ export default {
     ...mapState({
       messages: state => state.chatbot.activeMessages,
       actions: state => state.chatbot.activeActions,
-      timer: state => state.chatbot.timer
+      timer: state => state.chatbot.timer,
+      storyId: state => state.chatbot.storyId
     })
   },
 
@@ -115,6 +117,10 @@ export default {
 
     openModal () {
       this.$store.dispatch('modal/setActiveModal', 'botModal')
+    },
+
+    checkAction (id) {
+      if (id === 999999) { this.openModal() }
     }
   }
 }
@@ -203,7 +209,7 @@ $chatbot-icon-size: 60px;
     transform: rotate(45deg);
     width: $chatbot-message-icon-size;
     height: $chatbot-message-icon-size;
-    left: -4px;
+    left: -3px;
     top: 18px;
   }
 }

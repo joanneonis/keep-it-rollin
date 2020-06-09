@@ -42,8 +42,8 @@ export const mutations = {
 
   setToIdle (stateMutation) {
     const sm = stateMutation
-    sm.storyId = 0
-    sm.activeMessages = []
+    sm.storyId = 999999
+    sm.activeMessages = ['Advies nodig?']
     sm.activeActions = null
     sm.clickedAction = null
     sm.timer = 0
