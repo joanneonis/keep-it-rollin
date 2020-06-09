@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <img src="~/assets/img/tijdelijk-info.png" alt="">
-  </div>
+  <a href="/">
+    <img src="~/assets/img/temp/temp-info.png" alt="">
+  </a>
 </template>
 
 <script>
