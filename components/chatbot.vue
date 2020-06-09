@@ -137,13 +137,14 @@ $chatbot-icon-size: 60px;
   background: #fff;
   transition: all .2s;
   border: 3px solid transparent;
+  width: rem($chatbot-icon-size);
 
   &:hover {
     border-color: theme-color(secondary)
   }
 
   img {
-    width: rem($chatbot-icon-size);
+    width: 100%;
   }
 }
 
