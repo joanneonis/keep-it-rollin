@@ -22,7 +22,7 @@
         <div class="day-highlights__title">
           <strong class="type--highlight">Boosters</strong>
           <span v-if="boosterParts.length > 0">{{ boosterParts.length }}x toegepast</span>
-          <span>Helaas geen boosters vandaag...</span>
+          <span v-else>Helaas geen boosters vandaag...</span>
         </div>
       </li>
     </ul>
