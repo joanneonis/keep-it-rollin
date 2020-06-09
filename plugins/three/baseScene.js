@@ -4,7 +4,6 @@ import * as dat from 'dat.gui'
 import Stats from 'stats.js'
 
 // TODO delete stuff on destroy
-
 export class BaseScene {
   cameraOrigin = {
     x: -0.5,
@@ -27,6 +26,8 @@ export class BaseScene {
 
   loading = true
 
+  showStats = false // debugging purposes
+
   constructor (container, debug = false) {
     this.debug = debug
 
@@ -37,7 +38,7 @@ export class BaseScene {
     this.gui = new dat.GUI()
     this.gui.close()
 
-    this.stats = new Stats()
+    if (this.showStats) { this.stats = new Stats() }
 
     // scene
     this.scene = new THREE.Scene()
@@ -70,7 +71,7 @@ export class BaseScene {
     this.container.appendChild(this.renderer.domElement)
 
     // add stats to dom
-    this.container.appendChild(this.stats.dom)
+    if (this.showStats) { this.container.appendChild(this.stats.dom) }
 
     // init controls
     this.cameraControls = new CameraControls(this.camera, this.renderer.domElement)
@@ -109,7 +110,7 @@ export class BaseScene {
     this.raycaster.setFromCamera(this.mouseClick, this.camera)
 
     this.renderer.render(this.scene, this.camera)
-    this.stats.update()
+    if (this.showStats) { this.stats.update() }
   }
 
   // checks if mouse intersects with something in the trackpartgroup
