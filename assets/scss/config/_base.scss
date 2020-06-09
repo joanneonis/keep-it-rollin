@@ -17,6 +17,7 @@ $button-base-styles: (
   primary:      (theme-color(light), theme-color(primary)),
   secondary:    (theme-color(dark), theme-color(secondary)),
   danger:    (theme-color(light), color(red)),
+  white:    (gray-color(800), white),
 );
 
 // CookieNotice Config

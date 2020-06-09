@@ -9,12 +9,12 @@ export const staticMessages = {
     ],
     actions: [
       {
-        type: 'button--secondary',
+        type: 'button--white',
         text: 'Meer info',
         action: 'moreInfo'
       },
       {
-        type: 'button--primary',
+        type: 'button--secondary',
         text: 'Start met bouwen',
         action: 'start'
       }
@@ -28,12 +28,12 @@ export const staticMessages = {
     ],
     actions: [
       {
-        type: 'button--secondary',
+        type: 'button--white',
         text: 'Misschien later',
         action: 'later'
       },
       {
-        type: 'button--primary',
+        type: 'button--secondary',
         text: 'Koppel agenda',
         action: 'connectCalendar'
       }
