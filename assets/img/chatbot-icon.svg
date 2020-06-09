@@ -1,6 +1,6 @@
 <svg viewBox="0 0 65 64" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(.5)" fill="none" fill-rule="evenodd">
-    <circle fill="#FFF" cx="32" cy="32" r="32"/>
+    <!-- <circle fill="#FFF" cx="32" cy="32" r="32"/> -->
     <g transform="translate(11.327 10.761)">
       <ellipse fill="#F5BF92" cx="37.109" cy="27.056" rx="2.855" ry="2.87"/>
       <ellipse fill="#F5BF92" cx="4.486" cy="27.056" rx="2.855" ry="2.87"/>

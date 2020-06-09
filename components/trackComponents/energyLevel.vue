@@ -52,10 +52,17 @@ export default {
   &__image {
     width: 75px;
     background: white;
-    padding: 16px;
+    padding: 11px;
     border-radius: 50px;
     margin: 0;
+    transition: all .2s;
     box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
+
+    border: 3px solid transparent;
+
+    &:hover {
+      border-color: theme-color(secondary)
+    }
 
     // &--blij {
     //   background: #FFF2BA;

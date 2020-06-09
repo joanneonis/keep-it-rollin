@@ -1,7 +1,7 @@
 <template>
   <div class="chatbot">
     <figure class="chatbot-icon" @click="openModal()">
-      <img src="~/assets/img/chatbot-icon.svg" alt="Bobby">
+      <img src="~/assets/img/chatbot.svg" alt="Bobby">
     </figure>
     <div
       v-if="messages"
@@ -128,6 +128,13 @@ $chatbot-icon-size: 60px;
   border-radius: 100px;
   box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
   cursor: pointer;
+  background: #fff;
+  transition: all .2s;
+  border: 3px solid transparent;
+
+  &:hover {
+    border-color: theme-color(secondary)
+  }
 
   img {
     width: rem($chatbot-icon-size);
@@ -174,14 +181,16 @@ $chatbot-icon-size: 60px;
 }
 
 .chatbot-text-message {
-  background: #FFFFFF;
+  background: theme-color(primary);
   box-shadow: 1px 5px 16px 0 rgba(28,43,73,0.03);
   border-radius: 22px;
   padding: 10px 20px;
   position: relative;
   display: inline-block;
   max-width: 300px;
-  color: theme-color(primary-dark);
+  // color: theme-color(primary-dark);
+  color: #fff;
+  font-weight: 700;
 
   *:last-child {
     margin-bottom: 0;
@@ -190,7 +199,7 @@ $chatbot-icon-size: 60px;
   &:after {
     content: '';
     position: absolute;
-    background: white;
+    background: theme-color(primary);
     transform: rotate(45deg);
     width: $chatbot-message-icon-size;
     height: $chatbot-message-icon-size;
