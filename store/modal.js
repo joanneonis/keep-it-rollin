@@ -1,6 +1,6 @@
 /*
-* isActive { Boolean } is het modal open?
-* type { String } welk modal is actief
+* isActive { Boolean } trigger modal
+* type { String } what modal should be displayed
 */
 
 export const state = () => ({

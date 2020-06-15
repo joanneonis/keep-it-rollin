@@ -1,6 +1,6 @@
 <template>
   <div class="trackpart-slider">
-    <VueSlickCarousel v-bind="settings" ref="carousel">
+    <VueSlickCarousel ref="carousel" v-bind="settings">
       <div
         v-for="(part, key) in trackparts"
         :key="key"

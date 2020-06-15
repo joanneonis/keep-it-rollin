@@ -70,21 +70,11 @@ export default {
     }
   },
 
-  head () {
-    return {
-      htmlAttrs: {
-        class: 'disable-scroll'
-      }
-    }
-  },
-
   mounted () {
-    // const ctx = this
     document.addEventListener('keyup', this.handleEscape, true)
   },
 
   beforeDestroy () {
-    // const ctx = this
     document.removeEventListener('keyup', this.handleEscape, true)
   },
 
@@ -99,6 +89,14 @@ export default {
     handleEscape ($event) {
       if ($event.key === 'Escape') {
         this.close()
+      }
+    }
+  },
+
+  head () {
+    return {
+      htmlAttrs: {
+        class: 'disable-scroll'
       }
     }
   }

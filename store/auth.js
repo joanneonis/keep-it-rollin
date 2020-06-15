@@ -31,50 +31,27 @@ export const state = () => ({
   userUid: null,
   userData: null,
   freePlay: false
-  // errorDetected: false,
 })
 
 export const mutations = {
-  // if true, loading authentication is done
-  setInitState (stateMutation, boolean) {
-    const sm = stateMutation
-
-    sm.authInited = boolean
-  },
-  // update sign in state
-  setAuthState (stateMutation, boolean) {
-    const sm = stateMutation
-
-    sm.authed = boolean
-  },
-
-  setUserId (stateMutation, uid) {
-    const sm = stateMutation
-
-    sm.userUid = uid
-  },
-
-  setUserData (stateMutation, user) {
-    const sm = stateMutation
-
-    sm.userData = user
-  }
+  setInitState (stateMutation, boolean) { stateMutation.authInited = boolean }, // if true, loading authentication is done
+  setAuthState (stateMutation, boolean) { stateMutation.authed = boolean }, // update sign in state
+  setUserId (stateMutation, uid) { stateMutation.userUid = uid },
+  setUserData (stateMutation, user) { stateMutation.userData = user }
 }
 
 export const actions = {
+  /*
+  * Checks all signed in methods (local and Gapi + Firbease login)
+  * and updates store userdata
+  */
   async checkLogin ({ commit, dispatch }) {
-    const freeplay = localStorage.getItem('freeplayToken')
-    const lastFreeSession = localStorage.getItem('freeplaySession')
-
-    console.log('lastFreeSession', lastFreeSession, moment().format('DDMMYYYY'))
-
-    if (freeplay && lastFreeSession === moment().format('DDMMYYYY')) {
+    // check localSession
+    if (hasLocalSession()) {
       dispatch('setSignedIn', {
         userdata: { displayName: 'player' },
-        userId: freeplay
+        userId: hasLocalSession().freeplay
       })
-
-      return
     }
 
     // checks if user is signed in through gapi
@@ -85,6 +62,7 @@ export const actions = {
     firebase.auth().onAuthStateChanged(async function (user) {
       // User is signed in.
       if (user && isAuthed) {
+        // get stored userdata
         await getUserDocs(user.providerData[0])
 
         dispatch('setSignedIn', {
@@ -99,6 +77,10 @@ export const actions = {
     })
   },
 
+  /*
+  * Init Gapi client
+  * Client is used for retrieving Google (Calendar) Data
+  */
   async initClient () {
     const that = this
     await apiInstance.load('client:auth2', async () => {
@@ -108,27 +90,28 @@ export const actions = {
   },
 
   async handleAuth ({ commit, dispatch }) {
+    // Signin Google
     const googleAuth = apiInstance.auth2.getAuthInstance()
     const googleUser = await googleAuth.signIn()
 
+    // Use same token for Firebase login
     const token = googleUser.getAuthResponse().id_token
     const credential = firebase.auth.GoogleAuthProvider.credential(token)
 
-    let firebaseResponse
     try {
-      firebaseResponse = await firebase.auth().signInWithCredential(credential)
+      const firebaseResponse = await firebase.auth().signInWithCredential(credential)
+      const userData = await getUserDocs(firebaseResponse.user)
+
+      dispatch('setSignedIn', {
+        userdata: userData,
+        userId: firebaseResponse.user.uid
+      })
     } catch (error) {
       console.log(error)
     }
-
-    const userData = await getUserDocs(firebaseResponse.user)
-
-    dispatch('setSignedIn', {
-      userdata: userData,
-      userId: firebaseResponse.user.uid
-    })
   },
 
+  // updates all userdata and gets trackData
   async setSignedIn ({ commit, dispatch }, params) {
     commit('setInitState', false)
     const { userId, userdata } = params
@@ -140,15 +123,15 @@ export const actions = {
     commit('setInitState', true)
   },
 
+  // Sign out in all instances
   handleSignout ({ commit }) {
-    const auth2 = apiInstance.auth2.getAuthInstance()
+    // Firebase signout
     firebase.auth().signOut()
 
-    // also remove freeplay things
+    // Remove localStorage freeplayMode
     localStorage.clear()
-    localStorage.removeItem('freeplayToken')
 
-    auth2.signOut().then(() => {
+    apiInstance.auth2.getAuthInstance().signOut().then(() => {
       commit('setUserState', '')
       commit('setUserData', {})
       commit('setAuthState', false)
@@ -157,6 +140,7 @@ export const actions = {
     })
   },
 
+  // Set signin method (localstorage) for freePlay
   handleFreePlay ({ commit, dispatch }) {
     localStorage.setItem('freeplayToken', uuidv4())
     localStorage.setItem('freeplaySession', moment().format('DDMMYYYY'))
@@ -201,4 +185,15 @@ function getUserDocs (firebaseUser) {
 
         return userData
       })
+}
+
+function hasLocalSession () {
+  const freeplay = localStorage.getItem('freeplayToken')
+  const lastFreeSession = localStorage.getItem('freeplaySession')
+
+  if (freeplay && lastFreeSession === moment().format('DDMMYYYY')) {
+    return { freeplay, lastFreeSession }
+  } else {
+    return false
+  }
 }

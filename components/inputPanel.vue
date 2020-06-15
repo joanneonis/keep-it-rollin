@@ -2,8 +2,8 @@
   <section class="input-panel">
     <button
       v-if="hasClose"
-      @click="close()"
       class="button-link button-link--primary input-panel__close"
+      @click="close()"
     >
       annuleren
     </button>

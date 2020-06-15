@@ -1,6 +1,7 @@
 <template>
   <section>
     <h3>Opgehaalde kalenderitems</h3>
+    <p>Voorbeeld Calendarkoppeling, het ophalen van items.</p>
     <ul>
       <li
         v-for="item in calendarItems"

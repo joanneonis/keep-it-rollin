@@ -20,10 +20,10 @@
     </template>
     <balloons v-if="dayDone" />
     <modal :open="modalActive" @action="handleModalAction()">
-      <dayoff-content v-if="modalType === 'dayOff'" />
-      <create-idea v-if="modalType === 'createIdea'" />
+      <bobby v-if="modalType === 'bobby'" />
+      <day-off v-if="modalType === 'dayOff'" />
       <energy-stats v-if="modalType === 'energyStats'" />
-      <bot-modal v-if="modalType === 'botModal'" />
+      <create-idea v-if="modalType === 'createIdea'" />
     </modal>
   </div>
 </template>
@@ -32,17 +32,19 @@
 import { mapState } from 'vuex'
 import { trackViewStates } from '~/helpers/trackHelpers'
 import intro from '~/components/intro'
-import firstItemOfDay from '~/components/trackCreation/firstItemOfDay' // TODO dynamic import with inputcards
+import firstItemOfDay from '~/components/trackCreation/firstItemOfDay'
 import trackOverview from '~/components/trackComponents/trackOverview'
 import trackFooterActions from '~/components/trackComponents/trackFooterActions'
 import createTask from '~/components/trackCreation/createTask'
 import createBooster from '~/components/trackCreation/createBooster'
 import balloons from '~/components/balloons'
+
+// modal
 import modal from '~/components/modal'
-import dayoffContent from '~/components/dayoffContent'
-import createIdea from '~/components/createIdea'
-import energyStats from '~/components/energyStats'
-import botModal from '~/components/botModal'
+import createIdea from '~/components/modals/createIdea'
+import energyStats from '~/components/modals/energyStats'
+import dayOff from '~/components/modals/dayOff'
+import bobby from '~/components/modals/Bobby'
 
 export default {
   components: {
@@ -52,12 +54,12 @@ export default {
     trackFooterActions,
     createTask,
     createBooster,
-    dayoffContent,
+    dayOff,
     balloons,
     modal,
     createIdea,
     energyStats,
-    botModal
+    bobby
   },
 
   beforeRouteEnter (to, from, next) {
@@ -69,16 +71,10 @@ export default {
     })
   },
 
-  // watch: {
-  //   modalActive (val) {
-  //   }
-  // },
-
-  computed: {
-    ...mapState({
-      modalType: state => state.modal.type,
-      modalActive: state => state.modal.isActive
-    })
+  async fetch ({ store }) {
+    await store.dispatch('auth/initClient')
+    await store.dispatch('auth/checkLogin')
+    await store.dispatch('track/getTrack')
   },
 
   data () {
@@ -94,10 +90,11 @@ export default {
     }
   },
 
-  async fetch ({ store }) {
-    await store.dispatch('auth/initClient')
-    await store.dispatch('auth/checkLogin')
-    await store.dispatch('track/getTrack')
+  computed: {
+    ...mapState({
+      modalType: state => state.modal.type,
+      modalActive: state => state.modal.isActive
+    })
   },
 
   mounted () {
@@ -110,10 +107,6 @@ export default {
   },
 
   methods: {
-    signOut () {
-      this.$store.dispatch('auth/handleSignout')
-    },
-
     capitalizeFirstLetter (string) {
       if (!string) { return '' }
       return string.charAt(0).toUpperCase() + string.slice(1)

@@ -8,7 +8,6 @@
       ref="chatbotMessages"
       class="chatbot-messages is--animating"
     >
-      <!-- :leave-active-class="messages.length > 0 ? 'fade-out' : 'no-transition'" -->
       <transition-group
         key="messageList"
         :name="'slide-fade'"
@@ -23,8 +22,8 @@
           class="chatbot-messages__list__item chatbot-text-message"
           :class="{ 'skip-animation' : skipDelay }"
           :style="{'--item-index': i, '--item-delay': messageDelay(messages, i) }"
-          v-html="$md.render(message)"
           @click="checkAction(storyId)"
+          v-html="$md.render(message)"
         />
         <li
           v-if="actions && actions[0]"
@@ -116,7 +115,7 @@ export default {
     },
 
     openModal () {
-      this.$store.dispatch('modal/setActiveModal', 'botModal')
+      this.$store.dispatch('modal/setActiveModal', 'bobby')
     },
 
     checkAction (id) {
@@ -178,12 +177,7 @@ $chatbot-icon-size: 60px;
   align-items: flex-start;
 
   .is--animating &__item {
-    // transform: translate(0, 20px);
-    // opacity: 0;
     margin-bottom: rem(7px);
-    // animation: fadeUp .3s;
-    // animation-delay: calc(1s * var(--item-delay));
-    // animation-fill-mode: forwards;
   }
 }
 
@@ -195,7 +189,6 @@ $chatbot-icon-size: 60px;
   position: relative;
   display: inline-block;
   max-width: 300px;
-  // color: theme-color(primary-dark);
   color: #fff;
   font-weight: 700;
 
@@ -220,8 +213,6 @@ $chatbot-icon-size: 60px;
 }
 
 $temp-duration: .25s;
-/* Enter and leave animations can use different */
-/* durations and timing functions.              */
 .slide-fade-enter-active {
   transition: all $temp-duration ease;
   transition-delay: calc(1s * var(--item-delay));
@@ -232,7 +223,6 @@ $temp-duration: .25s;
   }
 }
 .slide-fade-leave-active {
-  // position: absolute;
   transition: all $temp-duration ease;
   display: none;
 }

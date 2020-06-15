@@ -15,6 +15,7 @@ export const state = () => ({
 })
 
 export const mutations = {
+  // sets messages for the bot to display
   setActiveMessages (stateMutation, input) {
     const sm = stateMutation
 
@@ -30,16 +31,19 @@ export const mutations = {
     }
   },
 
+  // add actions
   setAction (stateMutation, action) {
     const sm = stateMutation
     sm.clickedAction = action
   },
 
+  // set timer after which the messages dissapear
   setTimer (stateMutation, time) {
     const sm = stateMutation
     sm.timer = time
   },
 
+  // delete active messages
   setToIdle (stateMutation) {
     const sm = stateMutation
     sm.storyId = 999999

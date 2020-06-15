@@ -1,6 +1,5 @@
 /*
-* isActive { Boolean } is het modal open?
-* type { String } welk modal is actief
+* isDone { Boolean } Check if day is finished
 */
 
 export const state = () => ({
